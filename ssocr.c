@@ -1509,18 +1509,13 @@ int main(int argc, char **argv)
                              absolute_threshold, verbose, debug_output);
 
     /* process commands */
-    if(verbose) /* then print found commands */
-    {
-      if(optind >= argc-1)
-      {
+    if(verbose) /* then print found commands */ {
+      if(optind >= argc-1) {
 	fprintf(stderr, "no commands given, using image %s unmodified\n",
                         argv[argc-1]);
-      }
-      else
-      {
+      } else {
 	fprintf(stderr, "got commands");
-	for(i=optind; i<argc-1; i++)
-	{
+	for(i=optind; i<argc-1; i++) {
 	  fprintf(stderr, " %s", argv[i]);
 	  if(debug_output) {
 	    fprintf(stderr, " (argv[%d])", i);
@@ -1529,33 +1524,24 @@ int main(int argc, char **argv)
 	fprintf(stderr, "\n");
       }
     }
-    if(optind < argc-1) /* then process commands */
-    {
-      for(i=optind; i<argc-1; i++)
-      {
-	if(strcasecmp("dilation",argv[i]) == 0)
-	{
+    if(optind < argc-1) /* then process commands */ {
+      for(i=optind; i<argc-1; i++) {
+	if(strcasecmp("dilation",argv[i]) == 0) {
 	  if(verbose) fputs(" processing dilation\n", stderr);
 	  new_image = dilation(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("erosion",argv[i]) == 0)
-	{
+	} else if(strcasecmp("erosion",argv[i]) == 0) {
 	  if(verbose) fputs(" processing erosion\n", stderr);
 	  new_image = erosion(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("opening",argv[i]) == 0)
-	{
+	} else if(strcasecmp("opening",argv[i]) == 0) {
 	  int n=atoi(argv[i+1]);
-	  if((n>0) && (i+1<argc-1))
-	  {
-	    if(verbose)
-	    {
+	  if((n>0) && (i+1<argc-1)) {
+	    if(verbose) {
 	      fprintf(stderr, " processing opening %d", n);
 	      if(debug_output) {
 		fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1564,23 +1550,17 @@ int main(int argc, char **argv)
 	    }
 	    i++;
 	    new_image = opening(&image, thresh, lt, n);
-	  }
-	  else
-	  {
+	  } else {
 	    if(verbose) fputs(" processing opening (1)\n", stderr);
 	    new_image = opening(&image, thresh, lt, 1);
 	  }
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("closing",argv[i]) == 0)
-	{
+	} else if(strcasecmp("closing",argv[i]) == 0) {
 	  int n=atoi(argv[i+1]);
-	  if((n>0) && (i+1<argc-1))
-	  {
-	    if(verbose)
-	    {
+	  if((n>0) && (i+1<argc-1)) {
+	    if(verbose) {
 	      fprintf(stderr, " processing closing %d", n);
 	      if(debug_output) {
 		fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1589,34 +1569,26 @@ int main(int argc, char **argv)
 	    }
 	    i++;
 	    new_image = closing(&image, thresh, lt, n);
-	  }
-	  else
-	  {
+	  } else {
 	    if(verbose) fputs(" processing closing (1)\n", stderr);
 	    new_image = closing(&image, thresh, lt, 1);
 	  }
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("remove_isolated",argv[i]) == 0)
-	{
+	} else if(strcasecmp("remove_isolated",argv[i]) == 0) {
 	  if(verbose) fputs(" processing remove_isolated\n", stderr);
 	  new_image = remove_isolated(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("make_mono",argv[i]) == 0)
-	{
+	} else if(strcasecmp("make_mono",argv[i]) == 0) {
 	  if(verbose) fputs(" processing make_mono\n", stderr);
 	  new_image = make_mono(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("white_border",argv[i]) == 0)
-	{
+	} else if(strcasecmp("white_border",argv[i]) == 0) {
 	  int bdwidth=atoi(argv[i+1]);
 	  if((bdwidth>0) && (i+1<argc-1)) {
 	    if(verbose) {
@@ -1628,8 +1600,7 @@ int main(int argc, char **argv)
 	    }
 	    new_image = white_border(&image, bdwidth);
 	    i++;
-	  }
-	  else {
+	  } else {
 	    if(verbose)
 	      fputs(" processing white_border (1)\n", stderr);
 	    new_image = white_border(&image, 1);
@@ -1637,11 +1608,8 @@ int main(int argc, char **argv)
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("shear",argv[i]) == 0)
-	{
-	  if(verbose)
-	  {
+	} else if(strcasecmp("shear",argv[i]) == 0) {
+	  if(verbose) {
 	    fprintf(stderr, " processing shear %d", atoi(argv[i+1]));
 	    if(debug_output) {
 	      fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1658,12 +1626,9 @@ int main(int argc, char **argv)
 	    fprintf(stderr, "error: shear command needs an argument\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("set_pixels_filter",argv[i]) == 0)
-	{
+	} else if(strcasecmp("set_pixels_filter",argv[i]) == 0) {
 	  int mask;
-	  if(verbose)
-	  {
+	  if(verbose) {
 	    fprintf(stderr," processing set_pixels_filter %d", atoi(argv[i+1]));
 	    if(debug_output) {
 	      fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1681,12 +1646,9 @@ int main(int argc, char **argv)
 		"error: set_pixels_filter command needs an argument\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("keep_pixels_filter",argv[i]) == 0)
-	{
+	} else if(strcasecmp("keep_pixels_filter",argv[i]) == 0) {
 	  int mask;
-	  if(verbose)
-	  {
+	  if(verbose) {
 	    fprintf(stderr," processing keep_pixels_filter %d",atoi(argv[i+1]));
 	    if(debug_output) {
 	      fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1704,9 +1666,7 @@ int main(int argc, char **argv)
 		"error: keep_pixels_filter command needs an argument\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("dynamic_threshold",argv[i]) == 0)
-	{
+	} else if(strcasecmp("dynamic_threshold",argv[i]) == 0) {
 	  if(i+2<argc-1) {
 	    int ww, wh;
 	    ww = atoi(argv[i+1]);
@@ -1728,49 +1688,37 @@ int main(int argc, char **argv)
 		"error: dynamic_threshold command needs two arguments\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("rgb_threshold",argv[i]) == 0)
-	{
+	} else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
 	  if(verbose) fputs(" processing rgb_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_ALL);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("r_threshold",argv[i]) == 0)
-	{
+	} else if(strcasecmp("r_threshold",argv[i]) == 0) {
 	  if(verbose) fputs(" processing r_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_RED);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("g_threshold",argv[i]) == 0)
-	{
+	} else if(strcasecmp("g_threshold",argv[i]) == 0) {
 	  if(verbose) fputs(" processing g_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_GREEN);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("b_threshold",argv[i]) == 0)
-	{
+	} else if(strcasecmp("b_threshold",argv[i]) == 0) {
 	  if(verbose) fputs(" processing b_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_BLUE);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("invert",argv[i]) == 0)
-	{
+	} else if(strcasecmp("invert",argv[i]) == 0) {
 	  if(verbose) fputs(" processing invert\n", stderr);
 	  new_image = invert(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("grey_stretch",argv[i]) == 0)
-	{
+	} else if(strcasecmp("grey_stretch",argv[i]) == 0) {
 	  if(i+2<argc-1) {
 	    double t1, t2;
 	    t1 = atof(argv[i+1]);
@@ -1806,17 +1754,13 @@ int main(int argc, char **argv)
 		"error: grey_stretch command needs two arguments\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("greyscale",argv[i]) == 0)
-	{
+	} else if(strcasecmp("greyscale",argv[i]) == 0) {
 	  if(verbose) fputs(" processing greyscale\n", stderr);
 	  new_image = greyscale(&image, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
 	  image = new_image;
-	}
-	else if(strcasecmp("crop",argv[i]) == 0)
-	{
+	} else if(strcasecmp("crop",argv[i]) == 0) {
 	  if(i+4<argc-1) {
 	    int x, y, cw, ch; /* lw = crop width, lh = crop height */
 	    x = atoi(argv[i+1]);
@@ -1861,11 +1805,8 @@ int main(int argc, char **argv)
 	    fprintf(stderr, "error: crop command needs 4 arguments\n");
 	    exit(99);
 	  }
-	}
-	else if(strcasecmp("rotate",argv[i]) == 0)
-	{
-	  if(verbose)
-	  {
+	} else if(strcasecmp("rotate",argv[i]) == 0) {
+	  if(verbose) {
 	    fprintf(stderr, " processing rotate %f", atof(argv[i+1]));
 	    if(debug_output) {
 	      fprintf(stderr, " (from string %s)", argv[i+1]);
@@ -1882,9 +1823,7 @@ int main(int argc, char **argv)
 	    fprintf(stderr, "error: rotate command needs an argument\n");
 	    exit(99);
 	  }
-	}
-	else
-	{
+	} else {
 	  fprintf(stderr, " unknown command \"%s\"\n", argv[i]);
 	}
       }
@@ -1929,36 +1868,28 @@ int main(int argc, char **argv)
     /* horizontal partition */
     state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
     d = 0;
-    for(i=0; i<w; i++)
-    {
+    for(i=0; i<w; i++) {
       /* check if column is completely light or not */
       col = UNKNOWN;
       found_pixels = 0;
-      for(j=0; j<h; j++)
-      {
+      for(j=0; j<h; j++) {
 	imlib_image_query_pixel(i, j, &color);
 	lum = get_lum(&color, lt);
-	if(is_pixel_set(lum, thresh)) /* dark */
-	{
+	if(is_pixel_set(lum, thresh)) /* dark */ {
 	  found_pixels++;
-	  if(found_pixels > ignore_pixels)
-	  {
+	  if(found_pixels > ignore_pixels) {
 	    /* 1 dark pixels darken the whole column */
 	    col = (ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT;
 	  }
-	}
-	else if(col == UNKNOWN) /* light */
-	{
+	} else if(col == UNKNOWN) /* light */ {
 	  col = (ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK;
 	}
       }
       /* save digit position and draw partition line for DEBUG */
       if((state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT))
-	  && (col == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT)))
+	  && (col == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT))) {
 	/* beginning of digit */
-      {
-	if(d>=number_of_digits)
-	{
+	if(d>=number_of_digits) {
 	  fprintf(stderr, "found too many digits (%d)\n", d+1);
 	  if(use_debug_image) {
 	    /* get file format for debug image */
@@ -1998,11 +1929,10 @@ int main(int argc, char **argv)
 	  imlib_context_set_image(image);
 	}
 	state = (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK;
-      }
-      else if((state ==
+      } else if((state ==
 	        ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK))
-		&& (col == ((ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK))) /* end of digit */
-      {
+		&& (col == ((ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK))){
+        /* end of digit */
 	digits[d].x2 = i;
 	digits[d].y2 = h-1;
 	d++;
@@ -2020,15 +1950,13 @@ int main(int argc, char **argv)
      * i.e. after the last digit some light was found
      * if it is still searching for light end the digit at the border of the
      * image */
-    if(state == (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK)
-    {
+    if(state == (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK) {
       digits[d].x2 = w-1;
       digits[d].y2 = h-1;
       d++;
       state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
     }
-    if(d != number_of_digits)
-    {
+    if(d != number_of_digits) {
       fprintf(stderr, "found only %d of %d digits\n", d, number_of_digits);
       if(use_debug_image) {
 	/* get file format for debug image */
@@ -2063,8 +1991,7 @@ int main(int argc, char **argv)
 
     if(debug_output) {
       fprintf(stderr, "found %d digits\n", d);
-      for(d=0; d<number_of_digits; d++)
-      {
+      for(d=0; d<number_of_digits; d++) {
 	fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%f%%)\n", d,
 	                digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
 	                digits[d].x2 - digits[d].x1,
@@ -2074,8 +2001,7 @@ int main(int argc, char **argv)
 
     /* at this point the digit 1 can be identified, because it is smaller than
      * the other digits */
-    for(i=0; i<number_of_digits; i++)
-    {
+    for(i=0; i<number_of_digits; i++) {
 #if 0
       /* if width of digit is less than 1/2 of (whole width/number_of_digits)
        * it is a 1 (this works for more than 1 digit only)
@@ -2101,40 +2027,31 @@ int main(int argc, char **argv)
     }
 
     /* find upper and lower boundaries of every digit */
-    for(d=0; d<number_of_digits; d++)
-    {
+    for(d=0; d<number_of_digits; d++) {
       int found_top=0;
       state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
       /* start from top of image and scan rows for dark pixel(s) */
-      for(j=0; j<h; j++)
-      {
+      for(j=0; j<h; j++) {
 	row = UNKNOWN;
 	found_pixels = 0;
 	/* is row dark or light? */
-	for(i=digits[d].x1; i<=digits[d].x2; i++)
-	{
+	for(i=digits[d].x1; i<=digits[d].x2; i++) {
 	  imlib_image_query_pixel(i,j, &color);
 	  lum = get_lum(&color, lt);
-	  if(is_pixel_set(lum, thresh)) /* dark */
-	  {
+	  if(is_pixel_set(lum, thresh)) /* dark */ {
 	    found_pixels++;
-	    if(found_pixels > ignore_pixels)
-	    {
+	    if(found_pixels > ignore_pixels) {
 	      /* 1 pixels darken row */
 	      row = (ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT;
 	    }
-	  }
-	  else if(row == UNKNOWN)
-	  {
+	  } else if(row == UNKNOWN) {
 	    row = (ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK;
 	  }
 	}
 	/* save position of digit and draw partition line for DEBUG */
 	if((state == ((ssocr_foreground == SSOCR_BLACK)?FIND_DARK:FIND_LIGHT))
-	    && (row == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT)))
-	{
-	  if(found_top) /* then we are searching for the bottom */
-	  {
+	    && (row == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT))) {
+	  if(found_top) /* then we are searching for the bottom */ {
 	    digits[d].y2 = j;
 	    state = (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK;
 	    if(use_debug_image) {
@@ -2144,9 +2061,7 @@ int main(int argc, char **argv)
 				    digits[d].x2,digits[d].y2,0);
 	      imlib_context_set_image(image);
 	    }
-	  }
-	  else /* found the top line */
-	  {
+	  } else /* found the top line */ {
 	    digits[d].y1 = j;
 	    found_top = 1;
 	    state = (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK;
@@ -2158,11 +2073,9 @@ int main(int argc, char **argv)
 	      imlib_context_set_image(image);
 	    }
 	  }
-	}
-	else if((state ==
+	} else if((state ==
 	    ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK)) &&
-	    (row == ((ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK)))
-	{
+	    (row == ((ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK))) {
 	  /* found_top has to be 1 because otherwise we were still looking for
 	   * dark */
 	  digits[d].y2 = j;
@@ -2177,8 +2090,7 @@ int main(int argc, char **argv)
 	}
       }
       /* if we are still looking for light, use the bottom */
-      if(state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK))
-      {
+      if(state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK)){
 	digits[d].y2 = h-1;
 	state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
 	if(use_debug_image) {
@@ -2194,8 +2106,7 @@ int main(int argc, char **argv)
     /* draw rectangles around digits */
       imlib_context_set_image(debug_image);
       imlib_context_set_color(128,128,128,255); /* grey line */
-      for(d=0; d<number_of_digits; d++)
-      {
+      for(d=0; d<number_of_digits; d++) {
 	imlib_image_draw_rectangle(digits[d].x1, digits[d].y1,
 	    digits[d].x2-digits[d].x1, digits[d].y2-digits[d].y1);
       }
@@ -2204,13 +2115,11 @@ int main(int argc, char **argv)
 
     /* now the digits are located and they have to be identified */
     /* iterate over digits */
-    for(d=0; d<number_of_digits; d++)
-    {
+    for(d=0; d<number_of_digits; d++) {
       int middle=0, quarter=0, three_quarters=0; /* scanlines */
       int d_height=0, d_width=0; /* height and width of digit */
       /* if digits[d].digit == D_ONE do nothing */
-      if((digits[d].digit == D_UNKNOWN))
-      {
+      if((digits[d].digit == D_UNKNOWN)) {
 	int third=1; /* in which third we are */
 	int half;
 	found_pixels=0; /* how many pixels are already found */
@@ -2219,24 +2128,17 @@ int main(int argc, char **argv)
 	/* check horizontal segments */
 	/* vertical scan at x == middle */
 	middle = (digits[d].x1 + digits[d].x2) / 2;
-	for(j=digits[d].y1; j<=digits[d].y2; j++)
-	{
+	for(j=digits[d].y1; j<=digits[d].y2; j++) {
 	  imlib_image_query_pixel(middle, j, &color);
 	  lum = get_lum(&color, lt);
-	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */
-	  {
+	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
 	    if(use_debug_image) {
 	      imlib_context_set_image(debug_image);
-	      if(third == 1)
-	      {
+	      if(third == 1) {
 		imlib_context_set_color(255,0,0,255);
-	      }
-	      else if(third == 2)
-	      {
+	      } else if(third == 2) {
 		imlib_context_set_color(0,255,0,255);
-	      }
-	      else if(third == 3)
-	      {
+	      } else if(third == 3) {
 		imlib_context_set_color(0,0,255,255);
 	      }
 	      imlib_image_draw_pixel(middle,j,0);
@@ -2245,20 +2147,15 @@ int main(int argc, char **argv)
 	    found_pixels++;
 	  }
 	  /* pixels in first third count towards upper segment */
-	  if(j > digits[d].y1 + d_height/3 && third == 1)
-	  {
-	    if(found_pixels >= need_pixels)
-	    {
+	  if(j > digits[d].y1 + d_height/3 && third == 1) {
+	    if(found_pixels >= need_pixels) {
 	      digits[d].digit |= HORIZ_UP; /* add upper segment */
 	    }
 	    found_pixels = 0;
 	    third++;
-	  }
+	  } else if(j > digits[d].y1 + 2*d_height/3 && third == 2) {
 	  /* pixels in second third count towards middle segment */
-	  else if(j > digits[d].y1 + 2*d_height/3 && third == 2)
-	  {
-	    if(found_pixels >= need_pixels)
-	    {
+	    if(found_pixels >= need_pixels) {
 	      digits[d].digit |= HORIZ_MID; /* add middle segment */
 	    }
 	    found_pixels = 0;
@@ -2266,27 +2163,21 @@ int main(int argc, char **argv)
 	  }
 	}
 	/* found_pixels contains pixels of last third */
-	if(found_pixels >= need_pixels)
-	{
+	if(found_pixels >= need_pixels) {
 	  digits[d].digit |= HORIZ_DOWN; /* add lower segment */
 	}
 	found_pixels = 0;
 	/* check upper vertical segments */
 	half=1; /* in which half we are */
 	quarter = digits[d].y1 + (digits[d].y2 - digits[d].y1) / 4;
-	for(i=digits[d].x1; i<=digits[d].x2; i++)
-	{
+	for(i=digits[d].x1; i<=digits[d].x2; i++) {
 	  imlib_image_query_pixel(i, quarter, &color);
 	  lum = get_lum(&color, lt);
-	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */
-	  {
+	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
 	    if(use_debug_image) {
-	      if(half == 1)
-	      {
+	      if(half == 1) {
 		imlib_context_set_color(255,0,0,255);
-	      }
-	      else if(half == 2)
-	      {
+	      } else if(half == 2) {
 		imlib_context_set_color(0,255,0,255);
 	      }
 	      imlib_context_set_image(debug_image);
@@ -2295,18 +2186,15 @@ int main(int argc, char **argv)
 	    }
 	    found_pixels++;
 	  }
-	  if(i >= middle && half == 1)
-	  {
-	    if(found_pixels >= need_pixels)
-	    {
+	  if(i >= middle && half == 1) {
+	    if(found_pixels >= need_pixels) {
 	      digits[d].digit |= VERT_LEFT_UP;
 	    }
 	    found_pixels = 0;
 	    half++;
 	  }
 	}
-	if(found_pixels >= need_pixels)
-	{
+	if(found_pixels >= need_pixels) {
 	  digits[d].digit |= VERT_RIGHT_UP;
 	}
 	found_pixels = 0;
@@ -2314,19 +2202,14 @@ int main(int argc, char **argv)
 	/* check lower vertical segments */
 	half=1; /* in which half we are */
 	three_quarters = digits[d].y1 + 3 * (digits[d].y2 - digits[d].y1) / 4;
-	for(i=digits[d].x1; i<=digits[d].x2; i++)
-	{
+	for(i=digits[d].x1; i<=digits[d].x2; i++) {
 	  imlib_image_query_pixel(i, three_quarters, &color);
 	  lum = get_lum(&color, lt);
-	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */
-	  {
+	  if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
 	    if(use_debug_image) {
-	      if(half == 1)
-	      {
+	      if(half == 1) {
 		imlib_context_set_color(255,0,0,255);
-	      }
-	      else if(half == 2)
-	      {
+	      } else if(half == 2) {
 		imlib_context_set_color(0,255,0,255);
 	      }
 	      imlib_context_set_image(debug_image);
@@ -2335,18 +2218,15 @@ int main(int argc, char **argv)
 	    }
 	    found_pixels++;
 	  }
-	  if(i >= middle && half == 1)
-	  {
-	    if(found_pixels >= need_pixels)
-	    {
+	  if(i >= middle && half == 1) {
+	    if(found_pixels >= need_pixels) {
 	      digits[d].digit |= VERT_LEFT_DOWN;
 	    }
 	    found_pixels = 0;
 	    half++;
 	  }
 	}
-	if(found_pixels >= need_pixels)
-	{
+	if(found_pixels >= need_pixels) {
 	  digits[d].digit |= VERT_RIGHT_DOWN;
 	}
 	found_pixels = 0;
@@ -2354,10 +2234,8 @@ int main(int argc, char **argv)
     }
 
     /* print digits */
-    for(i=0; i<number_of_digits; i++)
-    {
-      switch(digits[i].digit)
-      {
+    for(i=0; i<number_of_digits; i++) {
+      switch(digits[i].digit) {
 	case D_ZERO: putchar('0'); break;
 	case D_ONE: putchar('1'); break;
 	case D_TWO: putchar('2'); break;
