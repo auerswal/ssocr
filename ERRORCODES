@@ -1,0 +1,6 @@
+0: given number of digits recognized
+1: program did not find given number of digits
+2: a digit was not recognized
+3: successful image processing only
+42: correct use of -h, -V, -l help
+99: other error
