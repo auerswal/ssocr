@@ -176,8 +176,8 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
                          luminance_t lt);
 
 /* use dynamic (aka adaptive) thresholding to create monochrome image */
-Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t, luminance_t lt
-                              ,int ww, int wh);
+Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t,
+                              luminance_t lt ,int ww, int wh);
 
 /* make black and white */
 Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt);
