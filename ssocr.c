@@ -184,15 +184,13 @@ Imlib_Image closing(Imlib_Image *source_image,double thresh,luminance_t lt,int n
   imlib_context_set_image(*source_image);
   temp_image1 = temp_image2 = imlib_clone_image();
   for(i=0; i<n; i++)
-  {
-    temp_image2 = dilation(&temp_image1, thresh, lt);
+  { temp_image2 = dilation(&temp_image1, thresh, lt);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
     temp_image1 = temp_image2;
   }
   /* erosion n times */
-  for(i=0; i<n; i++)
-  {
+  for(i=0; i<n; i++) {
     temp_image2 = erosion(&temp_image1, thresh, lt);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
@@ -208,16 +206,14 @@ Imlib_Image opening(Imlib_Image *source_image,double thresh,luminance_t lt,int n
   /* erosion n times */
   imlib_context_set_image(*source_image);
   temp_image1 = temp_image2 = imlib_clone_image();
-  for(i=0; i<n; i++)
-  {
+  for(i=0; i<n; i++) {
     temp_image2 = erosion(&temp_image1, thresh, lt);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
     temp_image1 = temp_image2;
   }
   /* dilation n times */
-  for(i=0; i<n; i++)
-  {
+  for(i=0; i<n; i++) {
     temp_image2 = dilation(&temp_image1, thresh, lt);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
@@ -395,23 +391,18 @@ Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t, luminance_t l
   new_image = imlib_clone_image();
 
   /* check for every pixel if it should be set in filtered image */
-  for(x=0; x<width; x++)
-  {
-    for(y=0; y<height; y++)
-    {
+  for(x=0; x<width; x++) {
+    for(y=0; y<height; y++) {
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
       thresh = get_threshold(source_image, t/100.0, lt, x-ww/2, y-ww/2, ww, wh);
-      if(is_pixel_set(lum, thresh))
-      {
+      if(is_pixel_set(lum, thresh)) {
         /* draw a black (foreground) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(FG);
         imlib_image_draw_pixel(x,y,0);
         imlib_context_set_image(*source_image);
-      }
-      else
-      {
+      } else {
         /* draw a white (background) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(BG);
@@ -497,10 +488,8 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
   new_image = imlib_clone_image();
 
   /* check for every pixel if it should be set in filtered image */
-  for(x=0; x<width; x++)
-  {
-    for(y=0; y<height; y++)
-    {
+  for(x=0; x<width; x++) {
+    for(y=0; y<height; y++) {
       imlib_image_query_pixel(x, y, &pixel);
       set_pixel=0;
       switch(channel) {
@@ -516,16 +505,13 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
                   channel);
           break;
       }
-      if(set_pixel)
-      {
+      if(set_pixel) {
         /* draw a black (foreground) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(FG);
         imlib_image_draw_pixel(x,y,0);
         imlib_context_set_image(*source_image);
-      }
-      else
-      {
+      } else {
         /* draw a white (background) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(BG);
@@ -581,26 +567,18 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
   width = imlib_image_get_width();
 
   /* special value -1 for width or height means image width/height */
-  if(w == -1)
-    w = width;
-  if(h == -1)
-    h = width;
+  if(w == -1) w = width;
+  if(h == -1) h = width;
 
   /* assure valid coordinates */
-  if(x+w > width)
-    x = width-w;
-  if(y+h > height)
-    y = height-h;
-  if(x<0)
-    x=0;
-  if(y<0)
-    y=0;
+  if(x+w > width) x = width-w;
+  if(y+h > height) y = height-h;
+  if(x<0) x=0;
+  if(y<0) y=0;
 
   /* find the threshold value to differentiate between dark and light */
-  for(xi=0; (xi<w) && (xi<width); xi++)
-  {
-    for(yi=0; (yi<h) && (yi<height); yi++)
-    {
+  for(xi=0; (xi<w) && (xi<width); xi++) {
+    for(yi=0; (yi<h) && (yi<height); yi++) {
       imlib_image_query_pixel(xi, yi, &color);
       lum = get_lum(&color, lt);
       if(lum < minval) minval = lum;
@@ -711,26 +689,18 @@ double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,
   width = imlib_image_get_width();
 
   /* special value -1 for width or height means image width/height */
-  if(w == -1)
-    w = width;
-  if(h == -1)
-    h = width;
+  if(w == -1) w = width;
+  if(h == -1) h = width;
 
   /* assure valid coordinates */
-  if(x+w > width)
-    x = width-w;
-  if(y+h > height)
-    y = height-h;
-  if(x<0)
-    x=0;
-  if(y<0)
-    y=0;
+  if(x+w > width) x = width-w;
+  if(y+h > height) y = height-h;
+  if(x<0) x=0;
+  if(y<0) y=0;
 
   /* find the minimum value in the image */
-  for(xi=0; (xi<w) && (xi<width); xi++)
-  {
-    for(yi=0; (yi<h) && (yi<height); yi++)
-    {
+  for(xi=0; (xi<w) && (xi<width); xi++) {
+    for(yi=0; (yi<h) && (yi<height); yi++) {
       imlib_image_query_pixel(xi, yi, &color);
       lum = clip(get_lum(&color, lt),0,255);
       if(lum < minval) minval = lum;
@@ -763,26 +733,18 @@ double get_maxval(Imlib_Image *source_image, int x, int y, int w, int h,
   width = imlib_image_get_width();
 
   /* special value -1 for width or height means image width/height */
-  if(w == -1)
-    w = width;
-  if(h == -1)
-    h = width;
+  if(w == -1) w = width;
+  if(h == -1) h = width;
 
   /* assure valid coordinates */
-  if(x+w > width)
-    x = width-w;
-  if(y+h > height)
-    y = height-h;
-  if(x<0)
-    x=0;
-  if(y<0)
-    y=0;
+  if(x+w > width) x = width-w;
+  if(y+h > height) y = height-h;
+  if(x<0) x=0;
+  if(y<0) y=0;
 
   /* find the minimum value in the image */
-  for(xi=0; (xi<w) && (xi<width); xi++)
-  {
-    for(yi=0; (yi<h) && (yi<height); yi++)
-    {
+  for(xi=0; (xi<w) && (xi<width); xi++) {
+    for(yi=0; (yi<h) && (yi<height); yi++) {
       imlib_image_query_pixel(xi, yi, &color);
       lum = clip(get_lum(&color, lt),0,255);
       if(lum > maxval) maxval = lum;
@@ -814,10 +776,8 @@ Imlib_Image white_border(Imlib_Image *source_image, int bdwidth)
   new_image = imlib_clone_image();
 
   /* assure border width has a legal value */
-  if(bdwidth > width/2)
-    bdwidth = width/2;
-  if(bdwidth > height/2)
-    bdwidth = height/2;
+  if(bdwidth > width/2) bdwidth = width/2;
+  if(bdwidth > height/2) bdwidth = height/2;
 
   /* draw white (background) rectangle around new image */
   for(x=0, y=0; x<bdwidth; x++, y++) {
@@ -852,12 +812,10 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   new_image = imlib_clone_image();
 
   /* move every line to the right */
-  for(y=1; y<height; y++)
-  {
+  for(y=1; y<height; y++) {
     shift = y * offset / (height-1);
     /* copy pixels */
-    for(x=width-1; x>0+shift; x--)
-    {
+    for(x=width-1; x>0+shift; x--) {
       imlib_image_query_pixel(x-shift, y, &color_return);
       imlib_context_set_image(new_image);
       imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
@@ -867,8 +825,7 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
     /* fill with white (background) */
     imlib_context_set_image(new_image);
     ssocr_set_imlib_color(BG);
-    for(x=0; x<shift; x++)
-    {
+    for(x=0; x<shift; x++) {
       imlib_image_draw_pixel(x,y,0);
     }
     imlib_context_set_image(*source_image);
@@ -987,22 +944,17 @@ Imlib_Image invert(Imlib_Image *source_image, double thresh, luminance_t lt)
   new_image = imlib_clone_image();
 
   /* check for every pixel if it should be set in filtered image */
-  for(x=0; x<width; x++)
-  {
-    for(y=0; y<height; y++)
-    {
+  for(x=0; x<width; x++) {
+    for(y=0; y<height; y++) {
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
-      if(is_pixel_set(lum, thresh))
-      {
+      if(is_pixel_set(lum, thresh)) {
         /* draw a white (background) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(BG);
         imlib_image_draw_pixel(x,y,0);
         imlib_context_set_image(*source_image);
-      }
-      else
-      {
+      } else {
         /* draw a black (foreground) pixel */
         imlib_context_set_image(new_image);
         ssocr_set_imlib_color(FG);
@@ -1035,18 +987,12 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h)
   height = imlib_image_get_height();
 
   /* get sane values */
-  if(x < 0)
-    x = 0;
-  if(y < 0)
-    y = 0;
-  if(x >= width)
-    x = width - 1;
-  if(y >= height)
-    y = height - 1;
-  if(x + w > width)
-    w = width - x;
-  if(y + h > height)
-    h = height - x;
+  if(x < 0) x = 0;
+  if(y < 0) y = 0;
+  if(x >= width) x = width - 1;
+  if(y >= height) y = height - 1;
+  if(x + w > width) w = width - x;
+  if(y + h > height) h = height - x;
 
   /* create the new image */
   imlib_context_set_image(*source_image);
@@ -1317,15 +1263,13 @@ int main(int argc, char **argv)
   luminance_t lt=DEFAULT_LUM_FORMULA; /* luminance function */
 
   /* if we provided no arguments to the program exit */
-  if (argc < 2)
-  {
+  if (argc < 2) {
     usage(argv[0], stderr);
     exit(99);
   }
 
   /* parse command line */
-  while (1)
-  {
+  while (1) {
     int option_index = 0;
     char c;
     static struct option long_options[] = {
@@ -1352,8 +1296,7 @@ int main(int argc, char **argv)
     };
     c = getopt_long (argc, argv, "hVt:vaTn:i:d:o:O:D::pPf:b:Igl:",
                      long_options, &option_index);
-    if (c == -1)
-      break; /* leaves while (1) loop */
+    if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
       case 'h':
         usage(argv[0],stdout);
@@ -1527,8 +1470,7 @@ int main(int argc, char **argv)
   }
 
   /* if no argument left exit the program */
-  if(optind >= argc)
-  {
+  if(optind >= argc) {
     fprintf(stderr, "error: no image filename given\n");
     usage(argv[0], stderr);
     exit(99);
@@ -1538,15 +1480,13 @@ int main(int argc, char **argv)
   }
 
   /* load the image */
-  if(verbose)
-  {
+  if(verbose) {
     fprintf(stderr, "loading image %s\n", argv[argc-1]);
   }
   image = imlib_load_image_immediately_without_cache(argv[argc-1]);
 
   /* if the load was successful */
-  if (image)
-  {
+  if (image) {
     /* some variables */
     int w, h, lum;  /* width, height, pixel luminance */
     int col=UNKNOWN;  /* is column dark or light? */
@@ -1565,8 +1505,7 @@ int main(int argc, char **argv)
     }
 
     /* initialize some vars */
-    for(i=0; i<number_of_digits; i++)
-    {
+    for(i=0; i<number_of_digits; i++) {
       digits[i].x1 = digits[i].x2 = digits[i].y1 = digits[i].y2 = 0;
       digits[i].digit=D_UNKNOWN;
     }
