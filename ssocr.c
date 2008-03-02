@@ -544,12 +544,15 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int absolute_threshold, int verbose,
-                       int debug_output)
+                       int y, int w, int h, int absolute_threshold,
+                       int do_iterative_thresh, int verbose, int debug_output)
 {
   double t = thresh;
   if(!absolute_threshold) {
     t = get_threshold(image, thresh/100.0, lt, x, y, w, h);
+    if(do_iterative_thresh) {
+      t = iterative_threshold(image, t, lt, x, y, w, h);
+    }
   }
   if(verbose || debug_output) {
     fprintf(stderr, "using threshold %.2f\n", thresh);
@@ -609,6 +612,83 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
   imlib_context_set_image(current_image);
 
   return (minval + fraction * (maxval - minval)) * 100 / MAXRGB;
+}
+
+/* determine threshold by an iterative method */
+double iterative_threshold(Imlib_Image *source_image, double thresh,
+                           luminance_t lt, int x, int y, int w, int h)
+{
+  Imlib_Image current_image; /* save image pointer */
+  int height, width; /* image dimensions */
+  int xi,yi; /* iteration variables */
+  Imlib_Color color;
+  int lum; /* luminance of pixel */
+  unsigned int size_white, size_black; /* size of black and white groups */
+  unsigned long int sum_white, sum_black; /* sum of black and white groups */
+  unsigned int avg_white, avg_black; /* average values of black and white */
+  double old_thresh; /* old threshold computed by last iteration step */
+  double new_thresh; /* new threshold computed by current iteration step */
+  int thresh_lum; /* luminance value of threshold */
+
+  /* normalize threshold (was given as a percentage) */
+  new_thresh = thresh / 100.0;
+
+  /* save pointer to current image */
+  current_image = imlib_context_get_image();
+
+  /* get image dimensions */
+  imlib_context_set_image(*source_image);
+  height = imlib_image_get_height();
+  width = imlib_image_get_width();
+
+  /* special value -1 for width or height means image width/height */
+  if(w == -1) w = width;
+  if(h == -1) h = width;
+
+  /* assure valid coordinates */
+  if(x+w > width) x = width-w;
+  if(y+h > height) y = height-h;
+  if(x<0) x=0;
+  if(y<0) y=0;
+
+  /* find the threshold value to differentiate between dark and light */
+  do {
+    thresh_lum = 255 * new_thresh;
+    old_thresh = new_thresh;
+    size_black = sum_black = size_white = sum_white = 0;
+    for(xi=0; (xi<w) && (xi<width); xi++) {
+      for(yi=0; (yi<h) && (yi<height); yi++) {
+        imlib_image_query_pixel(xi, yi, &color);
+        lum = get_lum(&color, lt);
+        if(lum < thresh_lum) {
+          size_black++;
+          sum_black += lum;
+        } else {
+          size_white++;
+          sum_white += lum;
+        }
+      }
+    }
+    if(!size_white) {
+      fprintf(stderr, "iterative_threshold(): error: no white pixels\n");
+      imlib_context_set_image(current_image);
+      return thresh;
+    }
+    if(!size_black) {
+      fprintf(stderr, "iterative_threshold(): error: no black pixels\n");
+      imlib_context_set_image(current_image);
+      return thresh;
+    }
+    avg_white = sum_white / size_white;
+    avg_black = sum_black / size_black;
+    new_thresh = (avg_white + avg_black) / (2.0 * MAXRGB);
+    /*fprintf(stderr, "iterative_threshold(): new_thresh = %f\n", new_thresh);*/
+  } while(fabs(new_thresh - old_thresh) > EPSILON);
+
+  /* restore image from before function call */
+  imlib_context_set_image(current_image);
+
+  return new_thresh * 100;
 }
 
 /* get minimum lum value */
@@ -1137,6 +1217,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -t, --threshold=THRESH   use THRESH (in percent) to distinguish black\n");
   fprintf(f, "                                  from white\n");
   fprintf(f, "         -a, --absolute-threshold don't adjust threshold to image\n");
+  fprintf(f, "         -T, --iter-threshold     use iterative thresholding method\n");
   fprintf(f, "         -n, --number-pixels=#    number of pixels needed to recognize a segment\n");
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
@@ -1224,6 +1305,7 @@ int main(int argc, char **argv)
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
   int absolute_threshold=0; /* absolute threshold given? */
+  int do_iterative_thresh=0; /* iterative threshold given? */
   int verbose=0;  /* be verbose? */
   char *output_file=NULL; /* wrie processed image to file */
   char *output_fmt=NULL; /* use this format */
@@ -1252,6 +1334,7 @@ int main(int argc, char **argv)
       {"threshold", 1, 0, 't'}, /* set threshold (instead of THRESHOLD) */
       {"verbose", 0, 0, 'v'}, /* talk about programm execution */
       {"absolute-threshold", 0, 0, 'a'}, /* use treshold value as provided */
+      {"iter-threshold", 0, 0, 'T'}, /* use treshold value as provided */
       {"number-pixels", 1, 0, 'n'}, /* pixels needed to regard segment as set */
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
@@ -1267,12 +1350,11 @@ int main(int argc, char **argv)
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:van:i:d:o:O:D::pPf:b:Igl:",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:o:O:D::pPf:b:Igl:",
                      long_options, &option_index);
     if (c == -1)
       break; /* leaves while (1) loop */
-    switch (c)
-    {
+    switch (c) {
       case 'h':
         usage(argv[0],stdout);
         exit (42);
@@ -1288,14 +1370,12 @@ int main(int argc, char **argv)
         }
         break;
       case 't':
-        if(optarg)
-        {
+        if(optarg) {
           thresh = atof(optarg);
           if(debug_output) {
             fprintf(stderr, "thresh = %f (default: %f)\n", thresh, THRESHOLD);
           }
-          if(thresh < 0.0 || 100.0 < thresh)
-          {
+          if(thresh < 0.0 || 100.0 < thresh) {
             thresh = THRESHOLD;
             if(verbose) {
               fprintf(stderr, "ignoring --treshold=%s\n", optarg);
@@ -1308,6 +1388,9 @@ int main(int argc, char **argv)
         break;
       case 'a':
         absolute_threshold=1;
+        break;
+      case 'T':
+        do_iterative_thresh=1;
         break;
       case 'n':
         if(optarg) {
@@ -1429,6 +1512,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "verbose=%d\nthresh=%f\n", verbose, thresh);
     fprintf(stderr, "print_info=%d\nadjust_grey=%d\n", print_info, adjust_grey);
     fprintf(stderr, "absolute_threshold=%d\n", absolute_threshold);
+    fprintf(stderr, "do_iterative_thresh=%d\n", do_iterative_thresh);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
     fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
@@ -1506,7 +1590,8 @@ int main(int argc, char **argv)
 
     /* adapt threshold to image */
     thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
-                             absolute_threshold, verbose, debug_output);
+                             absolute_threshold, do_iterative_thresh, verbose,
+                             debug_output);
 
     /* process commands */
     if(verbose) /* then print found commands */ {
@@ -1800,7 +1885,8 @@ int main(int argc, char **argv)
             }
             /* adapt threshold to cropped image */
             thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
-                                     absolute_threshold, verbose, debug_output);
+                                     absolute_threshold, do_iterative_thresh,
+                                     verbose, debug_output);
           } else {
             fprintf(stderr, "error: crop command needs 4 arguments\n");
             exit(99);

@@ -80,6 +80,9 @@
 
 #define DEBUG_IMAGE_NAME "testbild.png"
 
+/* doubles are assumed equal when they differ less than EPSILON */
+#define EPSILON 0.0000001
+
 /* types */
 
 typedef struct {
@@ -219,13 +222,17 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int absolute_threshold, int verbose,
-                       int debug_output);
+                       int y, int w, int h, int absolute_threshold,
+                       int iterative_threshold, int verbose, int debug_output);
 
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
 double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
                      int x, int y, int w, int h);
+
+/* determine threshold by an iterative method */
+double iterative_threshold(Imlib_Image *source_image, double thresh,
+                           luminance_t lt, int x, int y, int w, int h);
 
 /* get minimum grey value */
 double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,
