@@ -121,7 +121,7 @@ void usage(char *name, FILE *f);
 void print_lum_help(void);
 
 /* print version */
-void print_version(void);
+void print_version(FILE *f);
 
 /* parse luminance keyword */
 luminance_t parse_lum(char *keyword);

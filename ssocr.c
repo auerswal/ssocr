@@ -1100,20 +1100,21 @@ void print_lum_help(void)
 }
 
 /* print version */
-void print_version(void)
+void print_version(FILE *f)
 {
-  printf("Seven Segment Optical Character Recognition Version %s\n", VERSION);
-  printf("Copyright (C) 2004-2007 by Erik Auerswald"
-         " <auerswal@unix-ag.uni-kl.de>\n");
-  printf("This program comes with ABSOLUTELY NO WARRANTY\n");
-  printf("This is free software, and you are welcome to redistribute it under"
-         " the terms\nof the GPL version 3\n");
+  fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
+          VERSION);
+  fprintf(f, "Copyright (C) 2004-2007 by Erik Auerswald"
+             " <auerswal@unix-ag.uni-kl.de>\n");
+  fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
+  fprintf(f, "This is free software, and you are welcome to redistribute it"
+             " under the terms\nof the GPL version 3\n");
 }
 
 /* print usage */
 void usage(char *name, FILE *f)
 {
-  print_version();
+  print_version(f);
   fprintf(f, "\nUsage: %s [OPTION]... [COMMAND]... IMAGE\n", name);
   fprintf(f, "\nOptions: -h, --help               print this message\n");
   fprintf(f, "         -v, --verbose            talk about program execution\n");
@@ -1262,7 +1263,7 @@ int main(int argc, char **argv)
 	exit (42);
 	break;
       case 'V':
-	print_version();
+	print_version(stdout);
 	exit (42);
 	break;
       case 'v':
