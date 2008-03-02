@@ -82,8 +82,7 @@
 
 /* types */
 
-typedef struct
-{
+typedef struct {
   int x1,y1,x2,y2,digit;
 } digit_struct;
 
@@ -218,10 +217,15 @@ Imlib_Image greyscale(Imlib_Image *source_image, luminance_t lt);
 /* crop image */
 Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 
+/* adapt threshold to image values values */
+double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
+                       int y, int w, int h, int absolute_threshold, int verbose,
+                       int debug_output);
+
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
 double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
-                    int x, int y, int w, int h);
+                     int x, int y, int w, int h);
 
 /* get minimum grey value */
 double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,

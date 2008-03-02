@@ -542,6 +542,21 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
   return new_image;
 }
 
+/* adapt threshold to image values values */
+double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
+                       int y, int w, int h, int absolute_threshold, int verbose,
+                       int debug_output)
+{
+  double t = thresh;
+  if(!absolute_threshold) {
+    t = get_threshold(image, thresh/100.0, lt, x, y, w, h);
+  }
+  if(verbose || debug_output) {
+    fprintf(stderr, "using threshold %.2f\n", thresh);
+  }
+  return t;
+}
+
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
 double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
@@ -1490,12 +1505,8 @@ int main(int argc, char **argv)
     }
 
     /* adapt threshold to image */
-    if(!absolute_threshold) {
-      thresh = get_threshold(&image, thresh/100.0, lt, 0, 0, -1, -1);
-    }
-    if(verbose || debug_output) {
-      fprintf(stderr, "using threshold %.2f\n", thresh);
-    }
+    thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
+                             absolute_threshold, verbose, debug_output);
 
     /* process commands */
     if(verbose) /* then print found commands */
@@ -1524,7 +1535,7 @@ int main(int argc, char **argv)
       {
 	if(strcasecmp("dilation",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing dilation", stderr);
+	  if(verbose) fputs(" processing dilation\n", stderr);
 	  new_image = dilation(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1532,7 +1543,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("erosion",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing erosion", stderr);
+	  if(verbose) fputs(" processing erosion\n", stderr);
 	  new_image = erosion(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1556,7 +1567,7 @@ int main(int argc, char **argv)
 	  }
 	  else
 	  {
-	    if(verbose) fputs(" processing opening (1)", stderr);
+	    if(verbose) fputs(" processing opening (1)\n", stderr);
 	    new_image = opening(&image, thresh, lt, 1);
 	  }
 	  imlib_context_set_image(image);
@@ -1581,7 +1592,7 @@ int main(int argc, char **argv)
 	  }
 	  else
 	  {
-	    if(verbose) fputs(" processing closing (1)", stderr);
+	    if(verbose) fputs(" processing closing (1)\n", stderr);
 	    new_image = closing(&image, thresh, lt, 1);
 	  }
 	  imlib_context_set_image(image);
@@ -1590,7 +1601,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("remove_isolated",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing remove_isolated", stderr);
+	  if(verbose) fputs(" processing remove_isolated\n", stderr);
 	  new_image = remove_isolated(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1598,7 +1609,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("make_mono",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing make_mono", stderr);
+	  if(verbose) fputs(" processing make_mono\n", stderr);
 	  new_image = make_mono(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1620,7 +1631,7 @@ int main(int argc, char **argv)
 	  }
 	  else {
 	    if(verbose)
-	      fputs(" processing white_border (1)", stderr);
+	      fputs(" processing white_border (1)\n", stderr);
 	    new_image = white_border(&image, 1);
 	  }
 	  imlib_context_set_image(image);
@@ -1720,7 +1731,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("rgb_threshold",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing rgb_threshold", stderr);
+	  if(verbose) fputs(" processing rgb_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_ALL);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1728,7 +1739,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("r_threshold",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing r_threshold", stderr);
+	  if(verbose) fputs(" processing r_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_RED);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1736,7 +1747,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("g_threshold",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing g_threshold", stderr);
+	  if(verbose) fputs(" processing g_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_GREEN);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1744,7 +1755,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("b_threshold",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing b_threshold", stderr);
+	  if(verbose) fputs(" processing b_threshold\n", stderr);
 	  new_image = rgb_threshold(&image, thresh, CHAN_BLUE);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1752,7 +1763,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("invert",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing invert", stderr);
+	  if(verbose) fputs(" processing invert\n", stderr);
 	  new_image = invert(&image, thresh, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1798,7 +1809,7 @@ int main(int argc, char **argv)
 	}
 	else if(strcasecmp("greyscale",argv[i]) == 0)
 	{
-	  if(verbose) fputs(" processing greyscale", stderr);
+	  if(verbose) fputs(" processing greyscale\n", stderr);
 	  new_image = greyscale(&image, lt);
 	  imlib_context_set_image(image);
 	  imlib_free_image();
@@ -1844,12 +1855,8 @@ int main(int argc, char **argv)
 		              get_maxval(&image, 0, 0, -1, -1, lt));
 	    }
 	    /* adapt threshold to cropped image */
-	    if(!absolute_threshold) {
-	      thresh = get_threshold(&image, thresh/100.0, lt, 0, 0, -1, -1);
-	    }
-	    if(verbose || debug_output) {
-	      fprintf(stderr, "  using threshold %.2f after cropping\n",thresh);
-	    }
+            thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
+                                     absolute_threshold, verbose, debug_output);
 	  } else {
 	    fprintf(stderr, "error: crop command needs 4 arguments\n");
 	    exit(99);
