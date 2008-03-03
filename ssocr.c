@@ -535,13 +535,21 @@ double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
 {
   double t = thresh;
   if(!absolute_threshold) {
+    if(debug_output)
+      fprintf(stderr, "adjusting threshold to image: %f ->", t);
     t = get_threshold(image, thresh/100.0, lt, x, y, w, h);
+    if(debug_output)
+      fprintf(stderr, " %f\n", t);
     if(do_iterative_thresh) {
+      if(debug_output)
+        fprintf(stderr, "doing iterative_thresholding: %f ->", t);
       t = iterative_threshold(image, t, lt, x, y, w, h);
+      if(debug_output)
+        fprintf(stderr, " %f\n", t);
     }
   }
   if(verbose || debug_output) {
-    fprintf(stderr, "using threshold %.2f\n", thresh);
+    fprintf(stderr, "using threshold %.2f\n", t);
   }
   return t;
 }
