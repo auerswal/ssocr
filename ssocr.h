@@ -14,14 +14,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2007 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2008 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 
 #ifndef SSOCR2_H
 #define SSOCR2_H
 
 /* defines */
 
-#define VERSION "2.6.3"
+#define VERSION "2.7.0"
 
 /* colours used by ssocr */
 #define SSOCR_BLACK 0
