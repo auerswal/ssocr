@@ -639,14 +639,14 @@ double iterative_threshold(Imlib_Image *source_image, double thresh,
 
   /* find the threshold value to differentiate between dark and light */
   do {
-    thresh_lum = 255 * new_thresh;
+    thresh_lum = MAXRGB * new_thresh;
     old_thresh = new_thresh;
     size_black = sum_black = size_white = sum_white = 0;
     for(xi=0; (xi<w) && (xi<width); xi++) {
       for(yi=0; (yi<h) && (yi<height); yi++) {
         imlib_image_query_pixel(xi, yi, &color);
         lum = get_lum(&color, lt);
-        if(lum < thresh_lum) {
+        if(lum <= thresh_lum) {
           size_black++;
           sum_black += lum;
         } else {
@@ -1090,6 +1090,40 @@ int clip(int value, int min, int max)
   return (value < min) ? min : ((value > max) ? max : value);
 }
 
+/* save image to file */
+void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
+                const char *filename, int verbose)
+{
+  const char *tmp;
+  Imlib_Image *current_image;
+
+  current_image = imlib_context_get_image();
+  imlib_context_set_image(image);
+
+  /* get file format for image */
+  if(fmt) { /* use provided format string */
+    tmp = fmt;
+  } else { /* use file name extension */
+    tmp = strrchr(filename, '.');
+    if(tmp)
+      tmp++;
+  }
+  if(tmp) {
+    if(verbose)
+      fprintf(stderr, "saving %s image in %s format to file %s\n",
+                      image_type, tmp, filename);
+    imlib_image_set_format(tmp);
+  } else { /* use png as default */
+    if(verbose)
+      fprintf(stderr, "saving image in png format to file %s\n",
+                      filename);
+    imlib_image_set_format("png");
+  }
+  /* write image to disk */
+  imlib_save_image(filename);
+  imlib_context_set_image(current_image);
+}
+
 /* parse KEYWORD from --luminace option */
 luminance_t parse_lum(char *keyword)
 {
@@ -1505,7 +1539,6 @@ int main(int argc, char **argv)
     int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
     digit_struct *digits=NULL; /* position of digits in image */
     int found_pixels=0; /* how many pixels are already found */
-    char *tmp=NULL; /* used to find filename extension */
 
     if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
       perror("digits = calloc()");
@@ -1867,27 +1900,7 @@ int main(int argc, char **argv)
 
     /* write image to file if requested */
     if(output_file) {
-      /* get file format for output image */
-      if(output_fmt) { /* use provided format string */
-        tmp = output_fmt;
-      } else { /* use file name extension */
-        tmp = strrchr(output_file, '.');
-        if(tmp)
-          tmp++;
-      }
-      if(tmp) {
-        if(verbose)
-          fprintf(stderr, "saving output image in %s format to file %s\n",
-                          tmp, output_file);
-        imlib_image_set_format(tmp);
-      } else { /* use png as default */
-        if(verbose)
-          fprintf(stderr, "saving output image in png format to file %s\n",
-                          output_file);
-        imlib_image_set_format("png");
-      }
-      /* write output image to disk */
-      imlib_save_image(output_file);
+      save_image("output", image, output_fmt, output_file, verbose);
     }
 
     /* exit if only image processing shall be done */
@@ -1924,33 +1937,13 @@ int main(int argc, char **argv)
         /* beginning of digit */
         if(d>=number_of_digits) {
           fprintf(stderr, "found too many digits (%d)\n", d+1);
-          if(use_debug_image) {
-            /* get file format for debug image */
-            if(output_fmt) { /* use provided format string */
-              tmp = output_fmt;
-            } else { /* use file name extension */
-              tmp = strrchr(debug_image_file, '.');
-              if(tmp)
-                tmp++;
-            }
-            if(tmp) {
-              if(verbose)
-                fprintf(stderr, "saving debug image in %s format to file %s\n",
-                                tmp, debug_image_file);
-              imlib_image_set_format(tmp);
-            } else { /* use png as default */
-              if(verbose)
-                fprintf(stderr, "saving debug image in png format to file %s\n",
-                                debug_image_file);
-              imlib_image_set_format("png");
-            }
-            /* write debug image to disk */
-            imlib_context_set_image(debug_image);
-            imlib_save_image(debug_image_file);
-            imlib_free_image_and_decache();
-            imlib_context_set_image(image);
-          }
           imlib_free_image_and_decache();
+          if(use_debug_image) {
+            save_image("debug", debug_image, output_fmt, debug_image_file,
+                       verbose);
+            imlib_context_set_image(debug_image);
+            imlib_free_image_and_decache();
+          }
           exit(1);
         }
         digits[d].x1 = i;
@@ -1991,33 +1984,12 @@ int main(int argc, char **argv)
     }
     if(d != number_of_digits) {
       fprintf(stderr, "found only %d of %d digits\n", d, number_of_digits);
-      if(use_debug_image) {
-        /* get file format for debug image */
-        if(output_fmt) { /* use provided format string */
-          tmp = output_fmt;
-        } else { /* use file name extension */
-          tmp = strrchr(debug_image_file, '.');
-          if(tmp)
-            tmp++;
-        }
-        if(tmp) {
-          if(verbose)
-            fprintf(stderr, "saving debug image in %s format to file %s\n",
-                            tmp, debug_image_file);
-          imlib_image_set_format(tmp);
-        } else { /* use png as default */
-          if(verbose)
-            fprintf(stderr, "saving debug image in png format to file %s\n",
-                            debug_image_file);
-          imlib_image_set_format("png");
-        }
-        /* write debug image to disk */
-        imlib_context_set_image(debug_image);
-        imlib_save_image(debug_image_file);
-        imlib_free_image_and_decache();
-        imlib_context_set_image(image);
-      }
       imlib_free_image_and_decache();
+      if(use_debug_image) {
+        save_image("debug", debug_image, output_fmt, debug_image_file, verbose);
+        imlib_context_set_image(debug_image);
+        imlib_free_image_and_decache();
+      }
       exit(1);
     }
     dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
@@ -2035,6 +2007,7 @@ int main(int argc, char **argv)
     /* at this point the digit 1 can be identified, because it is smaller than
      * the other digits */
     for(i=0; i<number_of_digits; i++) {
+/* keep this code as documentation of the original algorithm */
 #if 0
       /* if width of digit is less than 1/2 of (whole width/number_of_digits)
        * it is a 1 (this works for more than 1 digit only)
@@ -2285,35 +2258,13 @@ int main(int argc, char **argv)
     }
     putchar('\n');
 
-    if(use_debug_image) {
-      /* get file format for debug image */
-      if(output_fmt) { /* use provided format string */
-        tmp = output_fmt;
-      } else { /* use file name extension */
-        tmp = strrchr(debug_image_file, '.');
-        if(tmp)
-          tmp++;
-      }
-      if(tmp) {
-        if(verbose)
-          fprintf(stderr, "saving debug image in %s format to file %s\n",
-                          tmp, debug_image_file);
-        imlib_image_set_format(tmp);
-      } else { /* use png as default */
-        if(verbose)
-          fprintf(stderr, "saving debug image in png format to file %s\n",
-                          debug_image_file);
-        imlib_image_set_format("png");
-      }
-      /* write debug image to disk */
-      imlib_context_set_image(debug_image);
-      imlib_save_image(debug_image_file);
-      imlib_free_image_and_decache();
-      imlib_context_set_image(image);
-    }
-
     /* clean up... */
     imlib_free_image_and_decache();
+    if(use_debug_image) {
+      save_image("debug", debug_image, output_fmt, debug_image_file, verbose);
+      imlib_context_set_image(debug_image);
+      imlib_free_image_and_decache();
+    }
   } else {
     fprintf(stderr, "could not load image %s\n", argv[argc-1]);
     exit(99);

@@ -275,4 +275,8 @@ int clip(int value, int min, int max);
 /* print image info */
 void print_info(Imlib_Image *source_image);
 
+/* save image to file */
+void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
+                const char *filename, int verbose);
+
 #endif /* SSOCR2_H */
