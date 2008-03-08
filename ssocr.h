@@ -70,7 +70,6 @@
 #define D_UNKNOWN 0
 
 #define NUMBER_OF_DIGITS 6 /* in this special case */
-#define SPACES 1 /* for segment_display string */
 
 /* to find segment need # of pixels */
 #define NEED_PIXELS 1
