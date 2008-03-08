@@ -223,7 +223,7 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
                        int y, int w, int h, int absolute_threshold,
-                       int iterative_threshold, int verbose, int debug_output);
+                       int iterative_threshold, int verbose);
 
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */

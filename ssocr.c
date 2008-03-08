@@ -531,7 +531,7 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
                        int y, int w, int h, int absolute_threshold,
-                       int do_iterative_thresh, int verbose, int debug_output)
+                       int do_iterative_thresh, int verbose)
 {
   double t = thresh;
   if(!absolute_threshold) {
@@ -1570,8 +1570,7 @@ int main(int argc, char **argv)
 
     /* adapt threshold to image */
     thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
-                             absolute_threshold, do_iterative_thresh, verbose,
-                             debug_output);
+                             absolute_threshold, do_iterative_thresh, verbose);
 
     /* process commands */
     if(verbose) /* then print found commands */ {
@@ -1866,7 +1865,7 @@ int main(int argc, char **argv)
             /* adapt threshold to cropped image */
             thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
                                      absolute_threshold, do_iterative_thresh,
-                                     verbose, debug_output);
+                                     verbose);
           } else {
             fprintf(stderr, "error: crop command needs 4 arguments\n");
             exit(99);
