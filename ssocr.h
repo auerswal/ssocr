@@ -82,6 +82,16 @@
 /* doubles are assumed equal when they differ less than EPSILON */
 #define EPSILON 0.0000001
 
+/* flags set by options */
+#define ABSOLUTE_THRESHOLD 1
+#define DO_ITERATIVE_THRESHOLD (1<<1)
+#define VERBOSE (1<<2)
+#define USE_DEBUG_IMAGE (1<<3)
+#define PROCESS_ONLY (1<<4)
+#define PRINT_INFO (1<<5)
+#define ADJUST_GREY (1<<6)
+#define DEBUG_OUTPUT (1<<7)
+
 /* types */
 
 typedef struct {
@@ -221,8 +231,7 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int absolute_threshold,
-                       int iterative_threshold, int verbose);
+                       int y, int w, int h, int flags);
 
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
@@ -276,6 +285,6 @@ void print_info(Imlib_Image *source_image);
 
 /* save image to file */
 void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
-                const char *filename, int verbose);
+                const char *filename, int flags);
 
 #endif /* SSOCR2_H */

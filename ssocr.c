@@ -40,7 +40,6 @@
 /* global variables */
 int ssocr_foreground = SSOCR_BLACK;
 int ssocr_background = SSOCR_WHITE;
-int debug_output=0; /* print debug output? */
 
 /* functions */
 
@@ -530,25 +529,24 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int absolute_threshold,
-                       int do_iterative_thresh, int verbose)
+                       int y, int w, int h, int flags)
 {
   double t = thresh;
-  if(!absolute_threshold) {
-    if(debug_output)
+  if(!(flags & ABSOLUTE_THRESHOLD)) {
+    if(flags & DEBUG_OUTPUT)
       fprintf(stderr, "adjusting threshold to image: %f ->", t);
     t = get_threshold(image, thresh/100.0, lt, x, y, w, h);
-    if(debug_output)
+    if(flags & DEBUG_OUTPUT)
       fprintf(stderr, " %f\n", t);
-    if(do_iterative_thresh) {
-      if(debug_output)
+    if(flags & DO_ITERATIVE_THRESHOLD) {
+      if(flags & DEBUG_OUTPUT)
         fprintf(stderr, "doing iterative_thresholding: %f ->", t);
       t = iterative_threshold(image, t, lt, x, y, w, h);
-      if(debug_output)
+      if(flags & DEBUG_OUTPUT)
         fprintf(stderr, " %f\n", t);
     }
   }
-  if(verbose || debug_output) {
+  if((flags & VERBOSE) || (flags & DEBUG_OUTPUT)) {
     fprintf(stderr, "using threshold %.2f\n", t);
   }
   return t;
@@ -1092,7 +1090,7 @@ int clip(int value, int min, int max)
 
 /* save image to file */
 void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
-                const char *filename, int verbose)
+                const char *filename, int flags)
 {
   const char *tmp;
   Imlib_Image *current_image;
@@ -1109,12 +1107,12 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
       tmp++;
   }
   if(tmp) {
-    if(verbose)
+    if(flags & VERBOSE)
       fprintf(stderr, "saving %s image in %s format to file %s\n",
                       image_type, tmp, filename);
     imlib_image_set_format(tmp);
   } else { /* use png as default */
-    if(verbose)
+    if(flags & VERBOSE)
       fprintf(stderr, "saving image in png format to file %s\n",
                       filename);
     imlib_image_set_format("png");
@@ -1292,16 +1290,10 @@ int main(int argc, char **argv)
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
-  int absolute_threshold=0; /* absolute threshold given? */
-  int do_iterative_thresh=0; /* iterative threshold given? */
-  int verbose=0;  /* be verbose? */
   char *output_file=NULL; /* wrie processed image to file */
   char *output_fmt=NULL; /* use this format */
-  int use_debug_image=0; /* write a debug image... */
   char *debug_image_file=NULL; /* ...to this file */
-  int process_only=0; /* image processing only (no OCR)? */
-  int print_info=0; /* print image info? */
-  int adjust_grey=0; /* use T1 and T2 as percentages of used luminance values*/
+  int flags=0; /* set by options, see #defines on .h file */
   luminance_t lt=DEFAULT_LUM_FORMULA; /* luminance function */
 
   /* if we provided no arguments to the program exit */
@@ -1349,34 +1341,32 @@ int main(int argc, char **argv)
         exit (42);
         break;
       case 'v':
-        verbose=1;
-        if(debug_output) {
-          fprintf(stderr, "verbose=%d\n", verbose);
+        flags |= VERBOSE;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & VERBOSE=%d\n", flags & VERBOSE);
         }
         break;
       case 't':
         if(optarg) {
           thresh = atof(optarg);
-          if(debug_output) {
+          if(flags & DEBUG_OUTPUT) {
             fprintf(stderr, "thresh = %f (default: %f)\n", thresh, THRESHOLD);
           }
           if(thresh < 0.0 || 100.0 < thresh) {
             thresh = THRESHOLD;
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, "ignoring --treshold=%s\n", optarg);
             }
           }
-          if(debug_output) {
+          if(flags & DEBUG_OUTPUT) {
             fprintf(stderr, "thresh = %f (default: %f)\n", thresh, THRESHOLD);
           }
         }
         break;
       case 'a':
-        absolute_threshold=1;
-        break;
+        flags |= ABSOLUTE_THRESHOLD; break;
       case 'T':
-        do_iterative_thresh=1;
-        break;
+	flags |= DO_ITERATIVE_THRESHOLD; break;
       case 'n':
         if(optarg) {
           need_pixels = atoi(optarg);
@@ -1415,7 +1405,7 @@ int main(int argc, char **argv)
         }
         break;
       case 'D':
-        use_debug_image = 1;
+        flags |= USE_DEBUG_IMAGE;
         if(optarg) {
           debug_image_file = strdup(optarg);
         } else {
@@ -1423,11 +1413,9 @@ int main(int argc, char **argv)
         }
         break;
       case 'p':
-        process_only = 1;
-        break;
+        flags |= PROCESS_ONLY; break;
       case 'P':
-        debug_output = 1;
-        break;
+        flags |= DEBUG_OUTPUT; break;
       case 'f':
         if(optarg) {
           if(strcasecmp(optarg, "black") == 0) {
@@ -1459,15 +1447,15 @@ int main(int argc, char **argv)
         }
         break;
       case 'I':
-        print_info=1;
-        if(debug_output) {
-          fprintf(stderr, "print_info=%d\n", print_info);
+        flags |= PRINT_INFO;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & PRINT_INFO=%d\n", flags & PRINT_INFO);
         }
         break;
       case 'g':
-        adjust_grey=1;
-        if(debug_output) {
-          fprintf(stderr, "adjust_grey=%d\n", adjust_grey);
+        flags |= ADJUST_GREY;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & ADJUST_GREY=%d\n", flags & ADJUST_GREY);
         }
         break;
       case 'l':
@@ -1492,12 +1480,14 @@ int main(int argc, char **argv)
         exit(99);
     }
   }
-  if(debug_output) {
+  if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "================================================================================\n");
-    fprintf(stderr, "verbose=%d\nthresh=%f\n", verbose, thresh);
-    fprintf(stderr, "print_info=%d\nadjust_grey=%d\n", print_info, adjust_grey);
-    fprintf(stderr, "absolute_threshold=%d\n", absolute_threshold);
-    fprintf(stderr, "do_iterative_thresh=%d\n", do_iterative_thresh);
+    fprintf(stderr, "flags & VERBOSE=%d\nthresh=%f\n", flags & VERBOSE, thresh);
+    fprintf(stderr, "flags & PRINT_INFO=%d\nflags & ADJUST_GREY=%d\n",
+            flags & PRINT_INFO, flags & ADJUST_GREY);
+    fprintf(stderr, "flags & ABSOLUTE_THRESHOLD=%d\n",flags&ABSOLUTE_THRESHOLD);
+    fprintf(stderr, "flags & DO_ITERATIVE_THRESHOLD=%d\n",
+                    flags & DO_ITERATIVE_THRESHOLD);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
     fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
@@ -1517,12 +1507,12 @@ int main(int argc, char **argv)
     usage(argv[0], stderr);
     exit(99);
   }
-  if(debug_output) {
+  if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "argv[argc-1]=%s used as image file name\n", argv[argc-1]);
   }
 
   /* load the image */
-  if(verbose) {
+  if(flags & VERBOSE) {
     fprintf(stderr, "loading image %s\n", argv[argc-1]);
   }
   image = imlib_load_image_immediately_without_cache(argv[argc-1]);
@@ -1557,23 +1547,22 @@ int main(int argc, char **argv)
     /* get image parameters */
     w = imlib_image_get_width();
     h = imlib_image_get_height();
-    if(debug_output || print_info) {
+    if((flags & DEBUG_OUTPUT) || (flags & PRINT_INFO)) {
       fprintf(stderr, "image width: %d\nimage height: %d\n",w,h);
     }
 
     /* get minimum and maximum "value" values */
-    if(debug_output || print_info) {
+    if((flags & DEBUG_OUTPUT) || (flags & PRINT_INFO)) {
       fprintf(stderr, "%.2f <= lum <= %.2f (lum should be in [0,255])\n",
                       get_minval(&image, 0, 0, -1, -1, lt),
                       get_maxval(&image, 0, 0, -1, -1, lt));
     }
 
     /* adapt threshold to image */
-    thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
-                             absolute_threshold, do_iterative_thresh, verbose);
+    thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);
 
     /* process commands */
-    if(verbose) /* then print found commands */ {
+    if(flags & VERBOSE) /* then print found commands */ {
       if(optind >= argc-1) {
         fprintf(stderr, "no commands given, using image %s unmodified\n",
                         argv[argc-1]);
@@ -1581,7 +1570,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "got commands");
         for(i=optind; i<argc-1; i++) {
           fprintf(stderr, " %s", argv[i]);
-          if(debug_output) {
+          if(flags & DEBUG_OUTPUT) {
             fprintf(stderr, " (argv[%d])", i);
           }
         }
@@ -1591,13 +1580,13 @@ int main(int argc, char **argv)
     if(optind < argc-1) /* then process commands */ {
       for(i=optind; i<argc-1; i++) {
         if(strcasecmp("dilation",argv[i]) == 0) {
-          if(verbose) fputs(" processing dilation\n", stderr);
+          if(flags & VERBOSE) fputs(" processing dilation\n", stderr);
           new_image = dilation(&image, thresh, lt);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("erosion",argv[i]) == 0) {
-          if(verbose) fputs(" processing erosion\n", stderr);
+          if(flags & VERBOSE) fputs(" processing erosion\n", stderr);
           new_image = erosion(&image, thresh, lt);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1605,9 +1594,9 @@ int main(int argc, char **argv)
         } else if(strcasecmp("opening",argv[i]) == 0) {
           int n=atoi(argv[i+1]);
           if((n>0) && (i+1<argc-1)) {
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, " processing opening %d", n);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr, " (from string %s)", argv[i+1]);
               }
               fprintf(stderr, "\n");
@@ -1615,7 +1604,7 @@ int main(int argc, char **argv)
             i++;
             new_image = opening(&image, thresh, lt, n);
           } else {
-            if(verbose) fputs(" processing opening (1)\n", stderr);
+            if(flags & VERBOSE) fputs(" processing opening (1)\n", stderr);
             new_image = opening(&image, thresh, lt, 1);
           }
           imlib_context_set_image(image);
@@ -1624,9 +1613,9 @@ int main(int argc, char **argv)
         } else if(strcasecmp("closing",argv[i]) == 0) {
           int n=atoi(argv[i+1]);
           if((n>0) && (i+1<argc-1)) {
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, " processing closing %d", n);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr, " (from string %s)", argv[i+1]);
               }
               fprintf(stderr, "\n");
@@ -1634,20 +1623,20 @@ int main(int argc, char **argv)
             i++;
             new_image = closing(&image, thresh, lt, n);
           } else {
-            if(verbose) fputs(" processing closing (1)\n", stderr);
+            if(flags & VERBOSE) fputs(" processing closing (1)\n", stderr);
             new_image = closing(&image, thresh, lt, 1);
           }
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("remove_isolated",argv[i]) == 0) {
-          if(verbose) fputs(" processing remove_isolated\n", stderr);
+          if(flags & VERBOSE) fputs(" processing remove_isolated\n", stderr);
           new_image = remove_isolated(&image, thresh, lt);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("make_mono",argv[i]) == 0) {
-          if(verbose) fputs(" processing make_mono\n", stderr);
+          if(flags & VERBOSE) fputs(" processing make_mono\n", stderr);
           new_image = make_mono(&image, thresh, lt);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1655,9 +1644,9 @@ int main(int argc, char **argv)
         } else if(strcasecmp("white_border",argv[i]) == 0) {
           int bdwidth=atoi(argv[i+1]);
           if((bdwidth>0) && (i+1<argc-1)) {
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, " processing white_border %d", bdwidth);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr, " (from string %s)", argv[i+1]);
               }
               fprintf(stderr, "\n");
@@ -1665,7 +1654,7 @@ int main(int argc, char **argv)
             new_image = white_border(&image, bdwidth);
             i++;
           } else {
-            if(verbose)
+            if(flags & VERBOSE)
               fputs(" processing white_border (1)\n", stderr);
             new_image = white_border(&image, 1);
           }
@@ -1673,9 +1662,9 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("shear",argv[i]) == 0) {
-          if(verbose) {
+          if(flags & VERBOSE) {
             fprintf(stderr, " processing shear %d", atoi(argv[i+1]));
-            if(debug_output) {
+            if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, " (from string %s)", argv[i+1]);
             }
             fprintf(stderr, "\n");
@@ -1692,9 +1681,9 @@ int main(int argc, char **argv)
           }
         } else if(strcasecmp("set_pixels_filter",argv[i]) == 0) {
           int mask;
-          if(verbose) {
+          if(flags & VERBOSE) {
             fprintf(stderr," processing set_pixels_filter %d", atoi(argv[i+1]));
-            if(debug_output) {
+            if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, " (from string %s)", argv[i+1]);
             }
             fprintf(stderr, "\n");
@@ -1712,9 +1701,9 @@ int main(int argc, char **argv)
           }
         } else if(strcasecmp("keep_pixels_filter",argv[i]) == 0) {
           int mask;
-          if(verbose) {
+          if(flags & VERBOSE) {
             fprintf(stderr," processing keep_pixels_filter %d",atoi(argv[i+1]));
-            if(debug_output) {
+            if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, " (from string %s)", argv[i+1]);
             }
             fprintf(stderr, "\n");
@@ -1735,9 +1724,9 @@ int main(int argc, char **argv)
             int ww, wh;
             ww = atoi(argv[i+1]);
             wh = atoi(argv[i+2]);
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, " processing dynamic_threshold %d %d", ww, wh);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr," (from strings %s and %s)",argv[i+1],argv[i+2]);
               }
               fprintf(stderr, "\n");
@@ -1753,31 +1742,31 @@ int main(int argc, char **argv)
             exit(99);
           }
         } else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
-          if(verbose) fputs(" processing rgb_threshold\n", stderr);
+          if(flags & VERBOSE) fputs(" processing rgb_threshold\n", stderr);
           new_image = rgb_threshold(&image, thresh, CHAN_ALL);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("r_threshold",argv[i]) == 0) {
-          if(verbose) fputs(" processing r_threshold\n", stderr);
+          if(flags & VERBOSE) fputs(" processing r_threshold\n", stderr);
           new_image = rgb_threshold(&image, thresh, CHAN_RED);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("g_threshold",argv[i]) == 0) {
-          if(verbose) fputs(" processing g_threshold\n", stderr);
+          if(flags & VERBOSE) fputs(" processing g_threshold\n", stderr);
           new_image = rgb_threshold(&image, thresh, CHAN_GREEN);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("b_threshold",argv[i]) == 0) {
-          if(verbose) fputs(" processing b_threshold\n", stderr);
+          if(flags & VERBOSE) fputs(" processing b_threshold\n", stderr);
           new_image = rgb_threshold(&image, thresh, CHAN_BLUE);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else if(strcasecmp("invert",argv[i]) == 0) {
-          if(verbose) fputs(" processing invert\n", stderr);
+          if(flags & VERBOSE) fputs(" processing invert\n", stderr);
           new_image = invert(&image, thresh, lt);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1787,16 +1776,16 @@ int main(int argc, char **argv)
             double t1, t2;
             t1 = atof(argv[i+1]);
             t2 = atof(argv[i+2]);
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr, " processing grey_stretch %.2f %.2f", t1, t2);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr," (from strings %s and %s)",argv[i+1],argv[i+2]);
               }
               fprintf(stderr, "\n");
             }
-            if(adjust_grey) {
+            if(flags & ADJUST_GREY) {
               double min=-1.0, max=-1.0;
-              if(verbose) {
+              if(flags & VERBOSE) {
                 fprintf(stderr, " adjusting T1=%.2f and T2=%.2f to image\n",
                                 t1, t2);
               }
@@ -1804,7 +1793,7 @@ int main(int argc, char **argv)
               max = get_maxval(&image, 0, 0, -1, -1, lt);
               t1 = min + t1/100.0 * (max - min);
               t2 = min + t2/100.0 * (max - min);
-              if(verbose) {
+              if(flags & VERBOSE) {
                 fprintf(stderr, " adjusted to T1=%.2f and T2=%.2f\n", t1, t2);
               }
             }
@@ -1819,7 +1808,7 @@ int main(int argc, char **argv)
             exit(99);
           }
         } else if(strcasecmp("greyscale",argv[i]) == 0) {
-          if(verbose) fputs(" processing greyscale\n", stderr);
+          if(flags & VERBOSE) fputs(" processing greyscale\n", stderr);
           new_image = greyscale(&image, lt);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1831,11 +1820,11 @@ int main(int argc, char **argv)
             y = atoi(argv[i+2]);
             cw = atoi(argv[i+3]);
             ch = atoi(argv[i+4]);
-            if(verbose) {
+            if(flags & VERBOSE) {
               fprintf(stderr,
                       " cropping from (%d,%d) to (%d,%d) [width %d, height %d]",
                       x, y, x+cw, y+ch, cw, ch);
-              if(debug_output) {
+              if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr, " (from strings %s, %s, %s, and %s)", argv[i+1],
                         argv[i+2], argv[i+3], argv[i+4]);
               }
@@ -1851,29 +1840,27 @@ int main(int argc, char **argv)
             /* get cropped image dimensions */
             w = imlib_image_get_width();
             h = imlib_image_get_height();
-            if(debug_output || verbose) {
+            if((flags & DEBUG_OUTPUT) || (flags & VERBOSE)) {
               fprintf(stderr, "  cropped image width: %d\n"
                               "  cropped image height: %d\n", w, h);
             }
             /* get minimum and maximum "value" values in cropped image */
-            if(debug_output || print_info || verbose) {
+            if((flags&DEBUG_OUTPUT) || (flags&PRINT_INFO) || (flags&VERBOSE)) {
               fprintf(stderr, "  %.2f <= lum <= %.2f in cropped image"
                               " (lum should be in [0,255])\n",
                               get_minval(&image, 0, 0, -1, -1, lt),
                               get_maxval(&image, 0, 0, -1, -1, lt));
             }
             /* adapt threshold to cropped image */
-            thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1,
-                                     absolute_threshold, do_iterative_thresh,
-                                     verbose);
+            thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);
           } else {
             fprintf(stderr, "error: crop command needs 4 arguments\n");
             exit(99);
           }
         } else if(strcasecmp("rotate",argv[i]) == 0) {
-          if(verbose) {
+          if(flags & VERBOSE) {
             fprintf(stderr, " processing rotate %f", atof(argv[i+1]));
-            if(debug_output) {
+            if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, " (from string %s)", argv[i+1]);
             }
             fprintf(stderr, "\n");
@@ -1899,13 +1886,13 @@ int main(int argc, char **argv)
 
     /* write image to file if requested */
     if(output_file) {
-      save_image("output", image, output_fmt, output_file, verbose);
+      save_image("output", image, output_fmt, output_file, flags);
     }
 
     /* exit if only image processing shall be done */
-    if(process_only) exit(3);
+    if(flags & PROCESS_ONLY) exit(3);
 
-    if(use_debug_image) {
+    if(flags & USE_DEBUG_IMAGE) {
       /* copy processed image to debug image */
       debug_image = imlib_clone_image();
     }
@@ -1937,9 +1924,8 @@ int main(int argc, char **argv)
         if(d>=number_of_digits) {
           fprintf(stderr, "found too many digits (%d)\n", d+1);
           imlib_free_image_and_decache();
-          if(use_debug_image) {
-            save_image("debug", debug_image, output_fmt, debug_image_file,
-                       verbose);
+          if(flags & USE_DEBUG_IMAGE) {
+            save_image("debug", debug_image, output_fmt,debug_image_file,flags);
             imlib_context_set_image(debug_image);
             imlib_free_image_and_decache();
           }
@@ -1947,7 +1933,7 @@ int main(int argc, char **argv)
         }
         digits[d].x1 = i;
         digits[d].y1 = 0;
-        if(use_debug_image) {
+        if(flags & USE_DEBUG_IMAGE) {
           imlib_context_set_image(debug_image);
           imlib_context_set_color(255,0,0,255);/* red line for start of digit */
           imlib_image_draw_line(i,0,i,h-1,0);
@@ -1961,7 +1947,7 @@ int main(int argc, char **argv)
         digits[d].x2 = i;
         digits[d].y2 = h-1;
         d++;
-        if(use_debug_image) {
+        if(flags & USE_DEBUG_IMAGE) {
           imlib_context_set_image(debug_image);
           imlib_context_set_color(0,0,255,255); /* blue line for end of digit */
           imlib_image_draw_line(i,0,i,h-1,0);
@@ -1984,8 +1970,8 @@ int main(int argc, char **argv)
     if(d != number_of_digits) {
       fprintf(stderr, "found only %d of %d digits\n", d, number_of_digits);
       imlib_free_image_and_decache();
-      if(use_debug_image) {
-        save_image("debug", debug_image, output_fmt, debug_image_file, verbose);
+      if(flags & USE_DEBUG_IMAGE) {
+        save_image("debug", debug_image, output_fmt, debug_image_file, flags);
         imlib_context_set_image(debug_image);
         imlib_free_image_and_decache();
       }
@@ -1993,7 +1979,7 @@ int main(int argc, char **argv)
     }
     dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
 
-    if(debug_output) {
+    if(flags & DEBUG_OUTPUT) {
       fprintf(stderr, "found %d digits\n", d);
       for(d=0; d<number_of_digits; d++) {
         fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%f%%)\n", d,
@@ -2021,7 +2007,7 @@ int main(int argc, char **argv)
        * (1/3 is arbitarily chosen -- normally seven segment displays use
        * digits that are 2 times as high as wide) */
       if((digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1) > 2) {
-        if(debug_output) {
+        if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                  i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
                  (digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1));
@@ -2059,7 +2045,7 @@ int main(int argc, char **argv)
           if(found_top) /* then we are searching for the bottom */ {
             digits[d].y2 = j;
             state = (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK;
-            if(use_debug_image) {
+            if(flags & USE_DEBUG_IMAGE) {
               imlib_context_set_image(debug_image);
               imlib_context_set_color(0,255,0,255); /* green line */
               imlib_image_draw_line(digits[d].x1,digits[d].y2,
@@ -2070,7 +2056,7 @@ int main(int argc, char **argv)
             digits[d].y1 = j;
             found_top = 1;
             state = (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK;
-            if(use_debug_image) {
+            if(flags & USE_DEBUG_IMAGE) {
               imlib_context_set_image(debug_image);
               imlib_context_set_color(0,255,0,255); /* green line */
               imlib_image_draw_line(digits[d].x1,digits[d].y1,
@@ -2085,7 +2071,7 @@ int main(int argc, char **argv)
            * dark */
           digits[d].y2 = j;
           state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
-          if(use_debug_image) {
+          if(flags & USE_DEBUG_IMAGE) {
             imlib_context_set_image(debug_image);
             imlib_context_set_color(0,255,0,255); /* green line */
             imlib_image_draw_line(digits[d].x1,digits[d].y2,
@@ -2098,7 +2084,7 @@ int main(int argc, char **argv)
       if(state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK)){
         digits[d].y2 = h-1;
         state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
-        if(use_debug_image) {
+        if(flags & USE_DEBUG_IMAGE) {
           imlib_context_set_image(debug_image);
           imlib_context_set_color(0,255,0,255); /* green line */
           imlib_image_draw_line(digits[d].x1,digits[d].y2,
@@ -2107,7 +2093,7 @@ int main(int argc, char **argv)
         }
       }
     }
-    if(use_debug_image) {
+    if(flags & USE_DEBUG_IMAGE) {
     /* draw rectangles around digits */
       imlib_context_set_image(debug_image);
       imlib_context_set_color(128,128,128,255); /* grey line */
@@ -2137,7 +2123,7 @@ int main(int argc, char **argv)
           imlib_image_query_pixel(middle, j, &color);
           lum = get_lum(&color, lt);
           if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-            if(use_debug_image) {
+            if(flags & USE_DEBUG_IMAGE) {
               imlib_context_set_image(debug_image);
               if(third == 1) {
                 imlib_context_set_color(255,0,0,255);
@@ -2179,7 +2165,7 @@ int main(int argc, char **argv)
           imlib_image_query_pixel(i, quarter, &color);
           lum = get_lum(&color, lt);
           if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-            if(use_debug_image) {
+            if(flags & USE_DEBUG_IMAGE) {
               if(half == 1) {
                 imlib_context_set_color(255,0,0,255);
               } else if(half == 2) {
@@ -2211,7 +2197,7 @@ int main(int argc, char **argv)
           imlib_image_query_pixel(i, three_quarters, &color);
           lum = get_lum(&color, lt);
           if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-            if(use_debug_image) {
+            if(flags & USE_DEBUG_IMAGE) {
               if(half == 1) {
                 imlib_context_set_color(255,0,0,255);
               } else if(half == 2) {
@@ -2259,8 +2245,8 @@ int main(int argc, char **argv)
 
     /* clean up... */
     imlib_free_image_and_decache();
-    if(use_debug_image) {
-      save_image("debug", debug_image, output_fmt, debug_image_file, verbose);
+    if(flags & USE_DEBUG_IMAGE) {
+      save_image("debug", debug_image, output_fmt, debug_image_file, flags);
       imlib_context_set_image(debug_image);
       imlib_free_image_and_decache();
     }
