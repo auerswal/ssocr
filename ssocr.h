@@ -147,7 +147,7 @@ void set_fg_color(int color);
 void set_bg_color(int color);
 
 /* set imlib color */
-void ssocr_set_imlib_color(fg_bg_t color);
+void ssocr_set_color(fg_bg_t color);
 
 /* draw a fore- or background pixel */
 void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color);

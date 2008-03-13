@@ -58,7 +58,7 @@ void set_bg_color(int color)
 }
 
 /* set imlib color */
-void ssocr_set_imlib_color(fg_bg_t color)
+void ssocr_set_color(fg_bg_t color)
 {
   switch(color) {
     case FG:
@@ -70,7 +70,7 @@ void ssocr_set_imlib_color(fg_bg_t color)
                               ssocr_background, 255);
       break;
     default:
-      fprintf(stderr, "error: ssocr_set_imlib_color(): unknown color %d\n",
+      fprintf(stderr, "error: ssocr_set_color(): unknown color %d\n",
           color);
       exit(99);
       break;
@@ -84,7 +84,7 @@ void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
 
   current_image = imlib_context_get_image();
   imlib_context_set_image(image);
-  ssocr_set_imlib_color(color);
+  ssocr_set_color(color);
   imlib_image_draw_pixel(x,y,0);
   imlib_context_set_image(current_image);
 }
@@ -263,7 +263,7 @@ Imlib_Image keep_pixels_filter(Imlib_Image *source_image, double thresh,
 
   /* draw white (background) rectangle to clear new image */
   imlib_context_set_image(new_image);
-  ssocr_set_imlib_color(BG);
+  ssocr_set_color(BG);
   imlib_image_draw_rectangle(0, 0, width, height);
   imlib_context_set_image(*source_image);
 
@@ -772,7 +772,7 @@ Imlib_Image white_border(Imlib_Image *source_image, int bdwidth)
   /* draw white (background) rectangle around new image */
   for(x=0, y=0; x<bdwidth; x++, y++) {
     imlib_context_set_image(new_image);
-    ssocr_set_imlib_color(BG);
+    ssocr_set_color(BG);
     imlib_image_draw_rectangle(x, y, width-2*x, height-2*y);
   }
 
@@ -859,7 +859,7 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
         imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
       } else {
         imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
+        ssocr_set_color(BG);
       }
       imlib_image_draw_pixel(x,y,0);
       imlib_context_set_image(*source_image);
