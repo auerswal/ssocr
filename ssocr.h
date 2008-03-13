@@ -149,6 +149,15 @@ void set_bg_color(int color);
 /* set imlib color */
 void ssocr_set_imlib_color(fg_bg_t color);
 
+/* draw a fore- or background pixel */
+void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color);
+
+/* draw a foreground pixel */
+void draw_fg_pixel(Imlib_Image *image, int x, int y);
+
+/* draw a background pixel */
+void draw_bg_pixel(Imlib_Image *image, int x, int y);
+
 /* check if a pixel is set regarding current foreground/background colors */
 int is_pixel_set(int value, double threshold);
 
@@ -187,7 +196,7 @@ Imlib_Image remove_isolated(Imlib_Image *source_image, double thresh,
 Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
                          luminance_t lt);
 
-/* use dynamic (aka adaptive) thresholding to create monochrome image */
+/* use dynamic (aka adaptive) local thresholding to create monochrome image */
 Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t,
                               luminance_t lt ,int ww, int wh);
 

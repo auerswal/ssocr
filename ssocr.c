@@ -77,6 +77,30 @@ void ssocr_set_imlib_color(fg_bg_t color)
   }
 }
 
+/* draw a fore- or background pixel */
+void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
+{
+  Imlib_Image *current_image; /* save current image */
+
+  current_image = imlib_context_get_image();
+  imlib_context_set_image(image);
+  ssocr_set_imlib_color(color);
+  imlib_image_draw_pixel(x,y,0);
+  imlib_context_set_image(current_image);
+}
+
+/* draw a foreground pixel */
+void draw_fg_pixel(Imlib_Image *image, int x, int y)
+{
+  draw_pixel(image, x, y, ssocr_foreground);
+}
+
+/* draw a background pixel */
+void draw_bg_pixel(Imlib_Image *image, int x, int y)
+{
+  draw_pixel(image, x, y, ssocr_background);
+}
+
 /* check if a pixel is set regarding current foreground/background colors */
 int is_pixel_set(int value, double threshold)
 {
@@ -143,17 +167,9 @@ Imlib_Image set_pixels_filter(Imlib_Image *source_image, double thresh,
       }
       /* set pixel if at least mask pixels around it are set */
       if(set_pixel >= mask) {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       } else {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       }
     }
   }
@@ -182,8 +198,8 @@ Imlib_Image closing(Imlib_Image *source_image,double thresh,luminance_t lt,int n
   /* dilation n times */
   imlib_context_set_image(*source_image);
   temp_image1 = temp_image2 = imlib_clone_image();
-  for(i=0; i<n; i++)
-  { temp_image2 = dilation(&temp_image1, thresh, lt);
+  for(i=0; i<n; i++) {
+    temp_image2 = dilation(&temp_image1, thresh, lt);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
     temp_image1 = temp_image2;
@@ -273,17 +289,9 @@ Imlib_Image keep_pixels_filter(Imlib_Image *source_image, double thresh,
       /* set pixel if at least mask pixels around it are set */
       /* mask = 1 keeps all pixels */
       if(set_pixel > mask) {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       } else {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       }
     }
   }
@@ -319,15 +327,6 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
     exit(99);
   }
 
-  /* save pointer to current image */
-  current_image = imlib_context_get_image();
-
-  /* create a new image */
-  imlib_context_set_image(*source_image);
-  height = imlib_image_get_height();
-  width = imlib_image_get_width();
-  new_image = imlib_clone_image();
-
   /* check if 0 < t1,t2 < MAXRGB */
   if(t1 <= 0.0) {
     fprintf(stderr, "error: grey_stretch(): t1=%.2f <= 0.0\n", t1);
@@ -337,6 +336,15 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
     fprintf(stderr, "error: grey_stretch(): t2=%.2f >= %d.0\n", t2, MAXRGB);
     exit(99);
   }
+
+  /* save pointer to current image */
+  current_image = imlib_context_get_image();
+
+  /* create a new image */
+  imlib_context_set_image(*source_image);
+  height = imlib_image_get_height();
+  width = imlib_image_get_width();
+  new_image = imlib_clone_image();
 
   /* grey stretch image */
   for(x=0; x<width; x++) {
@@ -366,11 +374,11 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
   return new_image;
 }
 
-/* use dynamic (aka adaptive) thresholding to create monochrome image */
+/* use dynamic (aka adaptive) local thresholding to create monochrome image */
 /* ww and wh are the width and height of the rectangle used to find the
  * threshold value */
-Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t, luminance_t lt
-                              ,int ww, int wh)
+Imlib_Image dynamic_threshold(Imlib_Image *source_image,double t,luminance_t lt,
+                              int ww, int wh)
 {
   Imlib_Image new_image; /* construct filtered image here */
   Imlib_Image current_image; /* save image pointer */
@@ -396,17 +404,9 @@ Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t, luminance_t l
       lum = get_lum(&color, lt);
       thresh = get_threshold(source_image, t/100.0, lt, x-ww/2, y-ww/2, ww, wh);
       if(is_pixel_set(lum, thresh)) {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       } else {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       }
     }
   }
@@ -443,17 +443,9 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
       if(is_pixel_set(lum, thresh)) {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       } else {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       }
     }
   }
@@ -505,17 +497,9 @@ Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
           break;
       }
       if(set_pixel) {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       } else {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       }
     }
   }
@@ -829,12 +813,9 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
       imlib_context_set_image(*source_image);
     }
     /* fill with white (background) */
-    imlib_context_set_image(new_image);
-    ssocr_set_imlib_color(BG);
     for(x=0; x<shift; x++) {
-      imlib_image_draw_pixel(x,y,0);
+      draw_bg_pixel(new_image, x, y);
     }
-    imlib_context_set_image(*source_image);
   }
 
   /* restore image from before function call */
@@ -955,17 +936,9 @@ Imlib_Image invert(Imlib_Image *source_image, double thresh, luminance_t lt)
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
       if(is_pixel_set(lum, thresh)) {
-        /* draw a white (background) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(BG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_bg_pixel(new_image, x, y);
       } else {
-        /* draw a black (foreground) pixel */
-        imlib_context_set_image(new_image);
-        ssocr_set_imlib_color(FG);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_fg_pixel(new_image, x, y);
       }
     }
   }
