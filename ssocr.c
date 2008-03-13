@@ -92,13 +92,13 @@ void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
 /* draw a foreground pixel */
 void draw_fg_pixel(Imlib_Image *image, int x, int y)
 {
-  draw_pixel(image, x, y, ssocr_foreground);
+  draw_pixel(image, x, y, FG);
 }
 
 /* draw a background pixel */
 void draw_bg_pixel(Imlib_Image *image, int x, int y)
 {
-  draw_pixel(image, x, y, ssocr_background);
+  draw_pixel(image, x, y, BG);
 }
 
 /* check if a pixel is set regarding current foreground/background colors */
