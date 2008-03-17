@@ -808,7 +808,8 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
     for(x=width-1; x>0+shift; x--) {
       imlib_image_query_pixel(x-shift, y, &color_return);
       imlib_context_set_image(new_image);
-      imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+      imlib_context_set_color(color_return.red, color_return.green,
+                              color_return.blue, color_return.alpha);
       imlib_image_draw_pixel(x,y,0);
       imlib_context_set_image(*source_image);
     }
@@ -1157,7 +1158,7 @@ void print_lum_help(void)
 void print_version(FILE *f)
 {
   fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
-          VERSION);
+             VERSION);
   fprintf(f, "Copyright (C) 2004-2008 by Erik Auerswald"
              " <auerswal@unix-ag.uni-kl.de>\n");
   fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
