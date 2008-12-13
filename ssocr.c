@@ -1977,10 +1977,10 @@ int main(int argc, char **argv)
         digits[i].digit = D_ONE;
       }
 #else
-      /* if width of digit is less than 1/3 of its height it is a 1
-       * (1/3 is arbitarily chosen -- normally seven segment displays use
+      /* if width of digit is less than 1/4 of its height it is a 1
+       * (1/4 is arbitarily chosen -- normally seven segment displays use
        * digits that are 2 times as high as wide) */
-      if((digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1) > 2) {
+      if((digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1) > 3) {
         if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                  i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
