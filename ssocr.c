@@ -1344,7 +1344,7 @@ int main(int argc, char **argv)
       case 'a':
         flags |= ABSOLUTE_THRESHOLD; break;
       case 'T':
-	flags |= DO_ITERATIVE_THRESHOLD; break;
+        flags |= DO_ITERATIVE_THRESHOLD; break;
       case 'n':
         if(optarg) {
           need_pixels = atoi(optarg);
@@ -1971,7 +1971,7 @@ int main(int argc, char **argv)
       fprintf(stderr, "found %d digits\n", d);
       for(d=0; d<number_of_digits; d++) {
         fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
-	                "height/width (int): %d\n", d,
+                        "height/width (int): %d\n", d,
                         digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
                         digits[d].x2 - digits[d].x1,
                         ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
