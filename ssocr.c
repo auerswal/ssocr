@@ -1182,6 +1182,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
   fprintf(f, "         -d, --number-digits=#    number of digits in image\n");
+  fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
   fprintf(f, "         -o, --output-image=FILE  write processed image to FILE\n");
   fprintf(f, "         -O, --output-format=FMT  use output format FMT (Imlib2 formats)\n");
   fprintf(f, "         -p, --process-only       do image processing only, no OCR\n");
@@ -1262,6 +1263,7 @@ int main(int argc, char **argv)
   int need_pixels = NEED_PIXELS; /*pixels needed to recognize a segment as set*/
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
+  int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
@@ -1291,6 +1293,7 @@ int main(int argc, char **argv)
       {"number-pixels", 1, 0, 'n'}, /* pixels needed to regard segment as set */
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
+      {"one-ratio", 1, 0, 'r'}, /* wheight/width threshold to recognize a one */
       {"output-image", 1, 0, 'o'}, /* write processed image to given file */
       {"output-format", 1, 0, 'O'}, /* format of output image */
       {"debug-image", 2, 0, 'D'}, /* write a debug image */
@@ -1303,7 +1306,7 @@ int main(int argc, char **argv)
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:o:O:D::pPf:b:Igl:",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:o:O:D::pPf:b:Igl:",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -1366,6 +1369,15 @@ int main(int argc, char **argv)
           if(number_of_digits < 0) {
             fprintf(stderr, "warning: ignoring --number-digits=%s\n", optarg);
             number_of_digits = NUMBER_OF_DIGITS;
+          }
+        }
+        break;
+      case 'r':
+        if(optarg) {
+          one_ratio = atoi(optarg);
+          if(one_ratio < 2) {
+            fprintf(stderr, "warning: ignoring --one-ratio=%s\n", optarg);
+            one_ratio = ONE_RATIO;
           }
         }
         break;
@@ -1472,7 +1484,7 @@ int main(int argc, char **argv)
                     (ssocr_background == SSOCR_BLACK) ? "black" : "white");
     fprintf(stderr, "luminance  = ");
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
-    fprintf(stderr, "height/width threshold = %d\n", ONE_RATIO);
+    fprintf(stderr, "height/width threshold = %d\n", one_ratio);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
   }
@@ -1971,10 +1983,10 @@ int main(int argc, char **argv)
     /* at this point the digit 1 can be identified, because it is smaller than
      * the other digits */
     for(i=0; i<number_of_digits; i++) {
-      /* if width of digit is less than 1/ONE_RATIO of its height it is a 1
+      /* if width of digit is less than 1/one_ratio of its height it is a 1
        * (the default 1/4 is arbitarily chosen -- normally seven segment
        * displays use digits that are 2 times as high as wide) */
-      if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > ONE_RATIO) {
+      if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > one_ratio) {
         if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                  i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
