@@ -1224,16 +1224,17 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  pixels set (including checked position)\n");
   fprintf(f, "          keep_pixels_filter MASK keeps pixels that have at least MASK neighbor\n");
   fprintf(f, "                                  pixels set (not counting the checked pixel)\n");
-  fprintf(f, "\nDefaults: needed pixels  = %2d\n", NEED_PIXELS);
-  fprintf(f, "          ignored pixels = %2d\n", IGNORE_PIXELS);
-  fprintf(f, "          no. of digits  = %2d\n", NUMBER_OF_DIGITS);
-  fprintf(f, "          threshold      = %5.2f\n", THRESHOLD);
-  fprintf(f, "          foreground     = %s\n",
+  fprintf(f, "\nDefaults: needed pixels          = %2d\n", NEED_PIXELS);
+  fprintf(f, "          ignored pixels         = %2d\n", IGNORE_PIXELS);
+  fprintf(f, "          no. of digits          = %2d\n", NUMBER_OF_DIGITS);
+  fprintf(f, "          threshold              = %5.2f\n", THRESHOLD);
+  fprintf(f, "          foreground             = %s\n",
       (ssocr_foreground == SSOCR_BLACK) ? "black" : "white");
-  fprintf(f, "          background     = %s\n",
+  fprintf(f, "          background             = %s\n",
       (ssocr_background == SSOCR_BLACK) ? "black" : "white");
-  fprintf(f, "          luminance      = ");
+  fprintf(f, "          luminance              = ");
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
+  fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");
   fprintf(f, "           they are given, in the resulting image the given number of digits\n");
   fprintf(f, "           are searched and recognized, after which the recognized number is\n");
@@ -1471,6 +1472,7 @@ int main(int argc, char **argv)
                     (ssocr_background == SSOCR_BLACK) ? "black" : "white");
     fprintf(stderr, "luminance  = ");
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
+    fprintf(stderr, "height/width threshold = %d\n", ONE_RATIO);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
   }
@@ -1956,31 +1958,23 @@ int main(int argc, char **argv)
     if(flags & DEBUG_OUTPUT) {
       fprintf(stderr, "found %d digits\n", d);
       for(d=0; d<number_of_digits; d++) {
-        fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%f%%)\n", d,
+        fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
+	                "height/width (int): %d\n", d,
                         digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
                         digits[d].x2 - digits[d].x1,
-                        ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w);
+                        ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
+                        (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1)
+               );
       }
     }
 
     /* at this point the digit 1 can be identified, because it is smaller than
      * the other digits */
     for(i=0; i<number_of_digits; i++) {
-/* keep this code as documentation of the original algorithm */
-#if 0
-      /* if width of digit is less than 1/2 of (whole width/number_of_digits)
-       * it is a 1 (this works for more than 1 digit only)
-       * this cannot dscriminate between the two vertical segments to the
-       * right or to the left */
-      if((digits[i].x2 - digits[i].x1) < (dig_w / (2*number_of_digits)))
-      {
-        digits[i].digit = D_ONE;
-      }
-#else
-      /* if width of digit is less than 1/4 of its height it is a 1
-       * (1/4 is arbitarily chosen -- normally seven segment displays use
-       * digits that are 2 times as high as wide) */
-      if((digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1) > 3) {
+      /* if width of digit is less than 1/ONE_RATIO of its height it is a 1
+       * (the default 1/4 is arbitarily chosen -- normally seven segment
+       * displays use digits that are 2 times as high as wide) */
+      if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > ONE_RATIO) {
         if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                  i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
@@ -1988,7 +1982,6 @@ int main(int argc, char **argv)
         }
         digits[i].digit = D_ONE;
       }
-#endif
     }
 
     /* find upper and lower boundaries of every digit */

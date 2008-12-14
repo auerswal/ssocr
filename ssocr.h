@@ -71,6 +71,9 @@
 
 #define NUMBER_OF_DIGITS 6 /* in this special case */
 
+/* a one is recognized by a height/width ratio > ONE_RATIO (as ints) */
+#define ONE_RATIO 3
+
 /* to find segment need # of pixels */
 #define NEED_PIXELS 1
 
