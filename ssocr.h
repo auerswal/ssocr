@@ -21,7 +21,7 @@
 
 /* defines */
 
-#define VERSION "2.7.0"
+#define VERSION "2.8.0"
 
 /* colours used by ssocr */
 #define SSOCR_BLACK 0
