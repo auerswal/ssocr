@@ -1,4 +1,4 @@
-/* Seven Segment Optical Character Recognition */
+/* Seven Segment Optical Character Recognition Help Functions */
 
 /*  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,11 +16,21 @@
 
 /* Copyright (C) 2004-2009 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 
-#ifndef SSOCR2_H
-#define SSOCR2_H
+#ifndef SSOCR2_HELP_H
+#define SSOCR2_HELP_H
 
-typedef struct {
-  int x1,y1,x2,y2,digit;
-} digit_struct;
+/* functions */
 
-#endif /* SSOCR2_H */
+/* print usage */
+void usage(char *name, FILE *f);
+
+/* print help for luminance functions */
+void print_lum_help(void);
+
+/* print version */
+void print_version(FILE *f);
+
+/* print luminance keyword */
+void print_lum_key(luminance_t lt, FILE *f);
+
+#endif /* SSOCR2_HELP_H */
