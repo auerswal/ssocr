@@ -75,7 +75,7 @@ int main(int argc, char **argv)
   /* parse command line */
   while (1) {
     int option_index = 0;
-    char c;
+    int c;
     static struct option long_options[] = {
       {"help", 0, 0, 'h'}, /* print help */
       {"version", 0, 0, 'V'}, /* show version */
