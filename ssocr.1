@@ -1,0 +1,309 @@
+.TH ssocr 1
+.SH NAME
+ssocr \- optical recognition of seven segment displays
+.SH SYNOPSIS
+.B ssocr [OPTION]... [COMMAND]... IMAGE
+.SH DESCRIPTION
+.B ssocr
+reads an image file containing the picture of a seven segment display,
+recognizes the displayed numbers and prints them to standard output.
+All image formats known by imlib2 are supported.
+.B ssocr
+provides several image manipulation algorithms to enhance noisy images.
+.SH OPTIONS
+.SS -h, --help
+Write a help message to standard output.
+The default settings are shown as well.
+.SS -V, --version
+Write version information to standard output.
+.SS -v, --verbose
+Print information about program execution to standard error.
+.SS -t, --threshold THRESHOLD
+Specify a percentage value as luminance threshold to differentiate between
+black and white. This threshold is adjusted to the luminance values occuring
+in the image, unless option
+.B --absolute-threshold
+is used. The default threshold is
+.IR 50 .
+.SS -a, --absolute-threshold
+Do not adjust the threshold to the luminance values occuring in the image.
+.SS -T, --iter-threshold
+Use an iterative method (one-dimensional k-means clustering) to determine the
+threshold. The starting value can be specified with the
+.B --threshold
+option.
+.SS -n, --number-pixels NUMBER
+Set the number of foreground pixels that have to be found in a scanline to
+recognize a segment.
+Can be used to ignore some noise in the picture.
+See the web page of
+.BR ssocr (1)
+for a description of the algorithm.
+.SS -i, --ignore-pixels NUMBER
+Set the number of foreground pixels that are ignored when deciding if a column
+consists only of background or foreground pixels.
+Can be used to ignore some noise in the picture.
+See the web page of
+.BR ssocr (1)
+for a description of the algorithm.
+.SS -d, --number-digits NUMBER
+Specifies the number of digits shown in the image. Default value is
+.IR 6 .
+.SS -r, --one-ratio RATIO
+Set the height/width ratio threshold to recognize a digit as a one.
+RATIO takes integers only.
+See the web page of
+.BR ssocr (1)
+for a description of the algorithm.
+.SS -o, --output-image FILE
+Write the processed image to FILE.
+Unless this option is used no image is written to disk.
+If a standard filename extension is used it is interpreted as the image
+format to use.
+Can be useful together with the
+.B --process-only
+option.
+.SS -O, --output-format FORMAT
+Specify the image format to use with
+.BR --output-image .
+This format must be recognized by imlib2.
+Standard filename extensions are used to describe the format.
+Overwrites the image file format automatically determined via the filename.
+If no format is specified via this option or the filename,
+.IR png
+is used.
+.SS -p, --process-only
+Use
+.BR ssocr (1)
+as an image manipulation program.
+No image recognition is performed.
+Should be used together with the
+-B --output-image
+option.
+.SS -D, --debug-image[=FILE]
+Write a debug image showing the results of thresholding, segmentation and
+character recognition to disk.
+The image is written to the file
+.I testbild.png
+unless a filename
+.B FILE
+is given.
+.SS -P, --debug-output
+Print information helpful for debugging to standard error.
+.SS -f, --foreground COLOR
+Specify the foreground color (either
+.I black
+or
+.IR white ).
+This automatically sets the background color as well.
+Default is
+.IR black .
+.SS -b, --background COLOR
+Specify the background color (either
+.I black
+or
+.IR white ).
+This automatically sets the foreground color as well.
+Default is
+.IR white .
+.SS -I, --print-info
+Prints image dimensions and range of used luminance values to standard error.
+.SS -g, --adjust-grey
+Interpret the values
+.B T1
+and
+.B T2
+given to the command
+.B grey_stretch
+as percentages instead of absolut luminance values.
+.SS -l, --luminance KEYWORD
+Choose the type of luminace computation.
+Using
+.I help
+as
+.B KEYWORD
+prints the list of implemented luminance keywords with a short description of
+the used formula.
+The default of
+.I Rec709
+should work well in most cases.
+.SH COMMANDS
+.SS dilation
+Filter image using dilation algorithm.
+Any pixel with at least one neighbor pixel set in the source image will be
+set in the filtered image.
+.SS erosion
+Filter image using erosion algorithm.
+Any pixel with every neighbor pixel set in the source image will be set
+in the filtered image.
+.SS closing [N]
+Filter image using closing algorithm, i.e. erosion and then dilation.
+If a number
+.B N
+>
+.I 1
+is specified,
+.B N
+times dilation and then
+.B N
+times erosion is executed.
+.SS opening [N]
+Filter image using opening algorithm, i.e. dilation and then erosion.
+If a number
+.B N
+>
+.I 1
+is specified,
+.B N
+times dilation and then
+.B N
+times erosion is executed.
+.SS remove_isolated
+Remove any foreground pixels without neighboring foreground pixels.
+.SS make_mono
+Convert the image to monochrome using thresholding.
+The threshold can be specified with option
+.B --threshold
+and is adjusted to the used luminance interval of the image unless option
+.B --absolute-threshold
+is used.
+.SS greyscale
+Transform image to grey values using luminance.
+The formula to compute luminance can be specified using option
+.BR --luminance .
+.SS invert
+Set every foreground pixel to background color and vice versa.
+.SS grey_stretch T1 T2
+Transform image so that the luminance interval [
+.BR T1 , T2
+] is projected to [
+.IR 0 , 255
+] with any value below
+.B T1
+set to
+.I 0
+and any value above
+.B T2
+set to
+.IR 255 .
+.SS dynamic_threshold W H
+Convert the image to monochrome using dynamic thresholding a.k.a local
+adaptive thresholding.
+A window of width W  and height H around the current pixel is used to determine
+the (local) thresholding value.
+.SS rgb_threshold
+Convert the image to monochrome using simple thresholding for every color
+channel.
+If any of the red, green or blue values is below the threshold, the pixel is
+set to black.
+You should use
+.B --luminance=minimum
+and
+.B make_mono
+or
+.B dynamic_threshold
+instead.
+.SS r_threshold
+Convert the image to monochrome using simple thresholding.
+Only the red color channel is used.
+You should use
+.B --luminance red
+and
+.B make_mono
+or
+.B dynamic_threshold
+instead.
+.SS g_threshold
+Convert the image to monochrome using simple thresholding.
+Only the green color channel is used.
+You should use
+.B --luminance green
+and
+.B make_mono
+or
+.B dynamic_threshold
+instead.
+.SS b_threshold
+Convert the image to monochrome using simple thresholding.
+Only the blue color channel is used.
+You should use
+.B --luminance blue
+and
+.B make_mono
+or
+.B dynamic_threshold
+instead.
+.SS white_border [WIDTH]
+The border of the image is set to the foreground color.
+This border is one pixel wide unless a
+.B WIDTH
+>
+.I 1
+is specified.
+.SS shear OFFSET
+Shear the image
+.B OFFSET
+pixels to the right.
+The
+.B OFFSET
+is used at the bottom.
+Image dimensions do not change,
+pixels in background color are used for pixels that are outside the image
+and shifted inside.
+Pixels shifted out of the image are dropped.
+Many seven segment displays use slightly skewed digits,
+this command can be used to compensate this.
+.SS rotate THETA
+Rotate the image
+.B THETA
+degrees clockwise around the center of the image.
+Image dimensions do not change,
+pixels rotated out of the image area are dropped,
+pixels from outside the image rotated into the new image are set to the
+background color.
+.SS crop X Y W H
+Use only the subpicture with upper left corner (
+.BR X , Y
+), width
+.B W
+and height
+.BR H .
+.SS set_pixels_filter MASK
+Set every pixel in the filtered image that has at least
+.B MASK
+neighbor pixels set in the source image.
+.SS keep_pixels_filter MASK
+Keep only those foreground pixels in the filtered image that have at least
+.B MASK
+neighbor pixels set in the source image (not counting the checked pixel itself).
+.SH "LUMINANCE KEYWORDS"
+.IP \(bu
+rec601
+.IP \(bu
+rec709
+.IP \(bu
+linear
+.IP \(bu
+minimum
+.IP \(bu
+maximum
+.IP \(bu
+red
+.IP \(bu
+green
+.IP \(bu
+blue
+.SH BUGS
+Image I/O cannot use pipes due to limitations of Imlib2.
+.P
+imlib2 (and therefore
+.BR ssocr (1))
+does not work well with
+.BR Netpbm (1)
+images.
+.SH AUTHOR
+.B ssocr
+was written by Erik Auerswald <auerswal@unix-ag.uni-kl.de>.
+.SH "SEE ALSO"
+.BR netpbm (1),
+.BR ImageMagick (1)
