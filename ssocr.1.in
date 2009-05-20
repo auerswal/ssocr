@@ -1,4 +1,4 @@
-.TH ssocr 1 "OCR for seven segment displays"
+.TH ssocr 1 "@DATE@" @VERSION@ "OCR for seven segment displays"
 .SH NAME
 ssocr \- optical recognition of seven segment displays
 .SH SYNOPSIS
