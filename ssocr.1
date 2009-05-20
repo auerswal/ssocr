@@ -1,4 +1,4 @@
-.TH ssocr 1
+.TH ssocr 1 "OCR for seven segment displays"
 .SH NAME
 ssocr \- optical recognition of seven segment displays
 .SH SYNOPSIS
@@ -6,7 +6,7 @@ ssocr \- optical recognition of seven segment displays
 .SH DESCRIPTION
 .B ssocr
 reads an image file containing the picture of a seven segment display,
-recognizes the displayed numbers and prints them to standard output.
+recognizes the displayed digits and prints them to standard output.
 All image formats known by imlib2 are supported.
 .B ssocr
 provides several image manipulation algorithms to enhance noisy images.
@@ -20,7 +20,7 @@ Write version information to standard output.
 Print information about program execution to standard error.
 .SS -t, --threshold THRESHOLD
 Specify a percentage value as luminance threshold to differentiate between
-black and white. This threshold is adjusted to the luminance values occuring
+black and white. This threshold is adjusted to the luminance values occurring
 in the image, unless option
 .B --absolute-threshold
 is used. The default threshold is
@@ -130,11 +130,11 @@ should work well in most cases.
 .SH COMMANDS
 .SS dilation
 Filter image using dilation algorithm.
-Any pixel with at least one neighbor pixel set in the source image will be
+Any pixel with at least one neighbour pixel set in the source image will be
 set in the filtered image.
 .SS erosion
 Filter image using erosion algorithm.
-Any pixel with every neighbor pixel set in the source image will be set
+Any pixel with every neighbour pixel set in the source image will be set
 in the filtered image.
 .SS closing [N]
 Filter image using closing algorithm, i.e. erosion and then dilation.
@@ -159,7 +159,7 @@ times dilation and then
 .B N
 times erosion is executed.
 .SS remove_isolated
-Remove any foreground pixels without neighboring foreground pixels.
+Remove any foreground pixels without neighbouring foreground pixels.
 .SS make_mono
 Convert the image to monochrome using thresholding.
 The threshold can be specified with option
@@ -271,11 +271,11 @@ and height
 .SS set_pixels_filter MASK
 Set every pixel in the filtered image that has at least
 .B MASK
-neighbor pixels set in the source image.
+neighbour pixels set in the source image.
 .SS keep_pixels_filter MASK
 Keep only those foreground pixels in the filtered image that have at least
 .B MASK
-neighbor pixels set in the source image (not counting the checked pixel itself).
+neighbour pixels set in the source image (not counting the checked pixel itself).
 .SH "LUMINANCE KEYWORDS"
 .IP \(bu
 rec601
@@ -306,4 +306,6 @@ images.
 was written by Erik Auerswald <auerswal@unix-ag.uni-kl.de>.
 .SH "SEE ALSO"
 .BR netpbm (1),
-.BR ImageMagick (1)
+.BR ImageMagick (1),
+.P
+http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
