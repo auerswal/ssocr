@@ -17,9 +17,9 @@ ssocr.1: ssocr.1.in
 	sed -e "s/@VERSION@/$(VERSION)/" -e "s/@DATE@/$(shell date -I)/" <$< >$@
 
 install: all
-	install -s -m 0755 ssocr $(BINDIR)/ssocr
-	install -m 0644 ssocr.1 $(MANDIR)/ssocr.1
-	gzip -9 $(MANDIR)/ssocr.1
+	install -s -m 0755 ssocr $(DESTDIR)$(BINDIR)/ssocr
+	install -m 0644 ssocr.1 $(DESTDIR)$(MANDIR)/ssocr.1
+	gzip -9 $(DESTDIR)$(MANDIR)/ssocr.1
 
 clean:
 	$(RM) ssocr ssocr.1 *.o *~ testbild.png
