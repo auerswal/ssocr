@@ -307,9 +307,9 @@ Imlib_Image remove_isolated(Imlib_Image *source_image, double thresh,
   return keep_pixels_filter(source_image, thresh, lt, 1);
 }
 
-/* grey stretching, i.e. lum<t1 => lum=0, lum>t2 => lum=100,
+/* gray stretching, i.e. lum<t1 => lum=0, lum>t2 => lum=100,
  * else lum=((lum-t1)*MAXRGB)/(t2-t1) */
-Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
+Imlib_Image gray_stretch(Imlib_Image *source_image, double t1, double t2,
                          luminance_t lt)
 {
   Imlib_Image new_image; /* construct filtered image here */
@@ -321,17 +321,17 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
 
   /* do nothing if t1>=t2 */
   if(t1 >= t2) {
-    fprintf(stderr, "error: grey_stretch(): t1=%.2f >= t2=%.2f\n", t1, t2);
+    fprintf(stderr, "error: gray_stretch(): t1=%.2f >= t2=%.2f\n", t1, t2);
     exit(99);
   }
 
   /* check if 0 < t1,t2 < MAXRGB */
   if(t1 <= 0.0) {
-    fprintf(stderr, "error: grey_stretch(): t1=%.2f <= 0.0\n", t1);
+    fprintf(stderr, "error: gray_stretch(): t1=%.2f <= 0.0\n", t1);
     exit(99);
   }
   if(t2 >= MAXRGB) {
-    fprintf(stderr, "error: grey_stretch(): t2=%.2f >= %d.0\n", t2, MAXRGB);
+    fprintf(stderr, "error: gray_stretch(): t2=%.2f >= %d.0\n", t2, MAXRGB);
     exit(99);
   }
 
@@ -344,7 +344,7 @@ Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
   width = imlib_image_get_width();
   new_image = imlib_clone_image();
 
-  /* grey stretch image */
+  /* gray stretch image */
   for(x=0; x<width; x++) {
     for(y=0; y<height; y++) {
       imlib_image_query_pixel(x, y, &color);
@@ -877,10 +877,10 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
   return new_image;
 }
 
-/* turn image to greyscale */
-Imlib_Image greyscale(Imlib_Image *source_image, luminance_t lt)
+/* turn image to grayscale */
+Imlib_Image grayscale(Imlib_Image *source_image, luminance_t lt)
 {
-  Imlib_Image new_image; /* construct greyscale image here */
+  Imlib_Image new_image; /* construct grayscale image here */
   Imlib_Image current_image; /* save image pointer */
   int height, width; /* image dimensions */
   int x,y; /* iteration variables */
@@ -896,7 +896,7 @@ Imlib_Image greyscale(Imlib_Image *source_image, luminance_t lt)
   width = imlib_image_get_width();
   new_image = imlib_clone_image();
 
-  /* transform image to greyscale */
+  /* transform image to grayscale */
   for(x=0; x<width; x++) {
     for(y=0; y<height; y++) {
       imlib_context_set_image(*source_image);

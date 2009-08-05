@@ -73,9 +73,9 @@ Imlib_Image keep_pixels_filter(Imlib_Image *source_image, double thresh,
 Imlib_Image remove_isolated(Imlib_Image *source_image, double thresh,
                             luminance_t lt);
 
-/* grey stretching, i.e. lum<t1 => lum=0, lum>t2 => lum=100,
+/* gray stretching, i.e. lum<t1 => lum=0, lum>t2 => lum=100,
  * else lum=((lum-t1)*MAXRGB)/(t2-t1) */
-Imlib_Image grey_stretch(Imlib_Image *source_image, double t1, double t2,
+Imlib_Image gray_stretch(Imlib_Image *source_image, double t1, double t2,
                          luminance_t lt);
 
 /* use dynamic (aka adaptive) local thresholding to create monochrome image */
@@ -114,8 +114,8 @@ Imlib_Image shear(Imlib_Image *source_image, int offset);
 /* rotate the image */
 Imlib_Image rotate(Imlib_Image *source_image, double theta);
 
-/* turn image to greyscale */
-Imlib_Image greyscale(Imlib_Image *source_image, luminance_t lt);
+/* turn image to grayscale */
+Imlib_Image grayscale(Imlib_Image *source_image, luminance_t lt);
 
 /* crop image */
 Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
@@ -133,11 +133,11 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
 double iterative_threshold(Imlib_Image *source_image, double thresh,
                            luminance_t lt, int x, int y, int w, int h);
 
-/* get minimum grey value */
+/* get minimum gray value */
 double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,
                  luminance_t lt);
 
-/* get maximum grey value */
+/* get maximum gray value */
 double get_maxval(Imlib_Image *source_image, int x, int y, int w, int h,
                  luminance_t lt);
 

@@ -86,7 +86,7 @@
 #define ADJUST_GREY (1<<6)
 #define DEBUG_OUTPUT (1<<7)
 
-/* colours used by ssocr */
+/* colors used by ssocr */
 #define SSOCR_BLACK 0
 #define SSOCR_WHITE 255
 

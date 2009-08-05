@@ -108,13 +108,13 @@ Default is
 .IR white .
 .SS -I, --print-info
 Prints image dimensions and range of used luminance values to standard error.
-.SS -g, --adjust-grey
+.SS -g, --adjust-gray
 Interpret the values
 .B T1
 and
 .B T2
 given to the command
-.B grey_stretch
+.B gray_stretch
 as percentages instead of absolut luminance values.
 .SS -l, --luminance KEYWORD
 Choose the type of luminace computation.
@@ -167,13 +167,13 @@ The threshold can be specified with option
 and is adjusted to the used luminance interval of the image unless option
 .B --absolute-threshold
 is used.
-.SS greyscale
-Transform image to grey values using luminance.
+.SS grayscale
+Transform image to gray values using luminance.
 The formula to compute luminance can be specified using option
 .BR --luminance .
 .SS invert
 Set every foreground pixel to background color and vice versa.
-.SS grey_stretch T1 T2
+.SS gray_stretch T1 T2
 Transform image so that the luminance interval [
 .BR T1 , T2
 ] is projected to [

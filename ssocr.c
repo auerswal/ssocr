@@ -95,7 +95,7 @@ int main(int argc, char **argv)
       {"foreground", 1, 0, 'f'}, /* set foreground color */
       {"background", 1, 0, 'b'}, /* set background color */
       {"print-info", 0, 0, 'I'}, /* print image info */
-      {"adjust-grey", 0, 0, 'g'}, /* use T1 and T2 as perecntages of used vals*/
+      {"adjust-gray", 0, 0, 'g'}, /* use T1 and T2 as perecntages of used vals*/
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {0, 0, 0, 0} /* terminate long options */
     };
@@ -552,13 +552,13 @@ int main(int argc, char **argv)
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
-        } else if(strcasecmp("grey_stretch",argv[i]) == 0) {
+        } else if(strcasecmp("gray_stretch",argv[i]) == 0) {
           if(i+2<argc-1) {
             double t1, t2;
             t1 = atof(argv[i+1]);
             t2 = atof(argv[i+2]);
             if(flags & VERBOSE) {
-              fprintf(stderr, " processing grey_stretch %.2f %.2f", t1, t2);
+              fprintf(stderr, " processing gray_stretch %.2f %.2f", t1, t2);
               if(flags & DEBUG_OUTPUT) {
                 fprintf(stderr," (from strings %s and %s)",argv[i+1],argv[i+2]);
               }
@@ -578,19 +578,19 @@ int main(int argc, char **argv)
                 fprintf(stderr, " adjusted to T1=%.2f and T2=%.2f\n", t1, t2);
               }
             }
-            i+=2; /* skip the arguments to grey_stretch */
-            new_image = grey_stretch(&image, t1, t2, lt);
+            i+=2; /* skip the arguments to gray_stretch */
+            new_image = gray_stretch(&image, t1, t2, lt);
             imlib_context_set_image(image);
             imlib_free_image();
             image = new_image;
           } else {
             fprintf(stderr,
-                "error: grey_stretch command needs two arguments\n");
+                "error: gray_stretch command needs two arguments\n");
             exit(99);
           }
-        } else if(strcasecmp("greyscale",argv[i]) == 0) {
-          if(flags & VERBOSE) fputs(" processing greyscale\n", stderr);
-          new_image = greyscale(&image, lt);
+        } else if(strcasecmp("grayscale",argv[i]) == 0) {
+          if(flags & VERBOSE) fputs(" processing grayscale\n", stderr);
+          new_image = grayscale(&image, lt);
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
@@ -868,7 +868,7 @@ int main(int argc, char **argv)
     if(flags & USE_DEBUG_IMAGE) {
     /* draw rectangles around digits */
       imlib_context_set_image(debug_image);
-      imlib_context_set_color(128,128,128,255); /* grey line */
+      imlib_context_set_color(128,128,128,255); /* gray line */
       for(d=0; d<number_of_digits; d++) {
         imlib_image_draw_rectangle(digits[d].x1, digits[d].y1,
             digits[d].x2-digits[d].x1, digits[d].y2-digits[d].y1);

@@ -98,7 +98,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -f, --foreground=COLOR   set foreground color (black or white)\n");
   fprintf(f, "         -b, --background=COLOR   set foreground color (black or white)\n");
   fprintf(f, "         -I, --print-info         print image dimensions and used lum values\n");
-  fprintf(f, "         -g, --adjust-grey        use T1 and T2 as percentages of used values\n");
+  fprintf(f, "         -g, --adjust-gray        use T1 and T2 as percentages of used values\n");
   fprintf(f, "         -l, --luminance=KEYWORD  compute luminance using formula KEYWORD\n");
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
   fprintf(f, "\nCommands: dilation                dilation algorithm (with mask of 1 pixel)\n");
@@ -109,9 +109,9 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  ([N times] erosion then [N times] dilation)\n");
   fprintf(f, "          remove_isolated         remove isolated pixels\n");
   fprintf(f, "          make_mono               make image monochrome\n");
-  fprintf(f, "          greyscale               transform image to greyscale\n");
+  fprintf(f, "          grayscale               transform image to grayscale\n");
   fprintf(f, "          invert                  make inverted monochrome image\n");
-  fprintf(f, "          grey_stretch T1 T2      stretch luminance values\n");
+  fprintf(f, "          gray_stretch T1 T2      stretch luminance values\n");
   fprintf(f, "                                  from [T1,T2] to [0,255]\n");
   fprintf(f, "          dynamic_threshold W H   make image monochrome w. dynamic thresholding\n");
   fprintf(f, "                                  with a window of width W and height H\n");
