@@ -16,6 +16,9 @@ help.o: help.c defines.h imgproc.h help.h
 ssocr.1: ssocr.1.in
 	sed -e "s/@VERSION@/$(VERSION)/" -e "s/@DATE@/$(shell date -I)/" <$< >$@
 
+ssocr-manpage.html: ssocr.1
+	rman -f html -r '' $< >$@
+
 install: all
 	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)
 	install -s -m 0755 ssocr $(DESTDIR)$(BINDIR)/ssocr
@@ -23,4 +26,4 @@ install: all
 	gzip -9 $(DESTDIR)$(MANDIR)/ssocr.1
 
 clean:
-	$(RM) ssocr ssocr.1 *.o *~ testbild.png
+	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html
