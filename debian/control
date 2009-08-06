@@ -1,0 +1,15 @@
+Source: ssocr
+Section: graphics
+Priority: optional
+Maintainer: Erik Auerswald <auerswal@unix-ag.uni-kl.de>
+Build-Depends: debhelper (>= 7), libimlib2-dev, libfreetype6-dev, zlib1g-dev, libx11-dev, libxext-dev
+Standards-Version: 3.8.1
+Homepage: http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+
+Package: ssocr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: OCR for seven segment displays
+ Seven Segment Optical Character Recognition or ssocr for short is a program
+ to recognize digits of a seven segment display. An image of one row of digits
+ is used for input and the recognized number is written to the standard output.

@@ -25,5 +25,16 @@ install: all
 	install -m 0644 ssocr.1 $(DESTDIR)$(MANDIR)/ssocr.1
 	gzip -9 $(DESTDIR)$(MANDIR)/ssocr.1
 
+deb: debian/changelog debian/control debian/rules clean
+	mkdir ssocr-$(VERSION)
+	cp -r Makefile *.[ch] *.in debian ssocr-$(VERSION)
+	(cd ssocr-$(VERSION); fakeroot debian/rules binary)
+
+tar: clean
+	mkdir ssocr-$(VERSION)
+	cp -r Makefile *.[ch] *.in ssocr-$(VERSION)
+	tar cvfj ssocr-$(VERSION).tar.bz2 ssocr-$(VERSION)
+
 clean:
-	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html
+	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.deb *.bz2
+	$(RM) -r ssocr-$(VERSION)
