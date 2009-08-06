@@ -309,7 +309,7 @@ blue
 .SH BUGS
 Image I/O cannot use pipes due to limitations of Imlib2.
 .P
-imlib2 (and therefore
+Imlib2 (and therefore
 .BR ssocr (1))
 does not work well with
 .BR Netpbm (1)
