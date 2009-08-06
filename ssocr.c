@@ -66,6 +66,16 @@ int main(int argc, char **argv)
   int flags=0; /* set by options, see #defines on .h file */
   luminance_t lt=DEFAULT_LUM_FORMULA; /* luminance function */
 
+  int w, h, lum;  /* width, height, pixel luminance */
+  int col=UNKNOWN;  /* is column dark or light? */
+  int row=UNKNOWN;  /* is row dark or light? */
+  int dig_w;  /* width of digit part of image */
+  Imlib_Color color; /* Imlib2 RGBA color structure */
+  /* state of search */
+  int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
+  digit_struct *digits=NULL; /* position of digits in image */
+  int found_pixels=0; /* how many pixels are already found */
+
   /* if we provided no arguments to the program exit */
   if (argc < 2) {
     usage(argv[0], stderr);
@@ -301,18 +311,6 @@ int main(int argc, char **argv)
     fprintf(stderr, "could not load image %s\n", argv[argc-1]);
     exit(99);
   }
-
-  {
-    /* some variables */
-    int w, h, lum;  /* width, height, pixel luminance */
-    int col=UNKNOWN;  /* is column dark or light? */
-    int row=UNKNOWN;  /* is row dark or light? */
-    int dig_w;  /* width of digit part of image */
-    Imlib_Color color; /* Imlib2 RGBA color structure */
-    /* state of search */
-    int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
-    digit_struct *digits=NULL; /* position of digits in image */
-    int found_pixels=0; /* how many pixels are already found */
 
     if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
       perror("digits = calloc()");
@@ -1025,7 +1023,6 @@ int main(int argc, char **argv)
       imlib_context_set_image(debug_image);
       imlib_free_image_and_decache();
     }
-  }
 
   /* determin error code */
   if(unknown_digit) {
