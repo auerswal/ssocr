@@ -293,6 +293,19 @@ red
 green
 .IP \(bu
 blue
+.SH EXIT STATUS
+.IP \(bu
+0, if the correct number of digits have been recognized
+.IP \(bu
+1, if an incorrect number of digits have been found
+.IP \(bu
+2, if not all digits have been recognized
+.IP \(bu
+3, if only image processing was requested and successful
+.IP \(bu
+42, if help or version info was requested
+.IP \(bu
+99, if some other error occured
 .SH BUGS
 Image I/O cannot use pipes due to limitations of Imlib2.
 .P
