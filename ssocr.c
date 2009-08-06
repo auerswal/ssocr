@@ -297,9 +297,12 @@ int main(int argc, char **argv)
     fprintf(stderr, "loading image %s\n", argv[argc-1]);
   }
   image = imlib_load_image_immediately_without_cache(argv[argc-1]);
+  if (!image) {
+    fprintf(stderr, "could not load image %s\n", argv[argc-1]);
+    exit(99);
+  }
 
-  /* if the load was successful */
-  if (image) {
+  {
     /* some variables */
     int w, h, lum;  /* width, height, pixel luminance */
     int col=UNKNOWN;  /* is column dark or light? */
@@ -1022,9 +1025,6 @@ int main(int argc, char **argv)
       imlib_context_set_image(debug_image);
       imlib_free_image_and_decache();
     }
-  } else {
-    fprintf(stderr, "could not load image %s\n", argv[argc-1]);
-    exit(99);
   }
 
   /* determin error code */
