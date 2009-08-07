@@ -37,4 +37,4 @@ tar: clean
 
 clean:
 	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.deb *.bz2
-	$(RM) -r ssocr-$(VERSION)
+	$(RM) -r ssocr-$(VERSION) ssocr-?.?.?
