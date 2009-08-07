@@ -83,7 +83,7 @@
 #define USE_DEBUG_IMAGE (1<<3)
 #define PROCESS_ONLY (1<<4)
 #define PRINT_INFO (1<<5)
-#define ADJUST_GREY (1<<6)
+#define ADJUST_GRAY (1<<6)
 #define DEBUG_OUTPUT (1<<7)
 
 /* colors used by ssocr */

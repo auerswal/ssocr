@@ -277,9 +277,9 @@ int main(int argc, char **argv)
         }
         break;
       case 'g':
-        flags |= ADJUST_GREY;
+        flags |= ADJUST_GRAY;
         if(flags & DEBUG_OUTPUT) {
-          fprintf(stderr, "flags & ADJUST_GREY=%d\n", flags & ADJUST_GREY);
+          fprintf(stderr, "flags & ADJUST_GRAY=%d\n", flags & ADJUST_GRAY);
         }
         break;
       case 'l':
@@ -307,8 +307,8 @@ int main(int argc, char **argv)
   if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "================================================================================\n");
     fprintf(stderr, "flags & VERBOSE=%d\nthresh=%f\n", flags & VERBOSE, thresh);
-    fprintf(stderr, "flags & PRINT_INFO=%d\nflags & ADJUST_GREY=%d\n",
-            flags & PRINT_INFO, flags & ADJUST_GREY);
+    fprintf(stderr, "flags & PRINT_INFO=%d\nflags & ADJUST_GRAY=%d\n",
+            flags & PRINT_INFO, flags & ADJUST_GRAY);
     fprintf(stderr, "flags & ABSOLUTE_THRESHOLD=%d\n",flags&ABSOLUTE_THRESHOLD);
     fprintf(stderr, "flags & DO_ITERATIVE_THRESHOLD=%d\n",
                     flags & DO_ITERATIVE_THRESHOLD);
@@ -611,7 +611,7 @@ int main(int argc, char **argv)
             }
             fprintf(stderr, "\n");
           }
-          if(flags & ADJUST_GREY) {
+          if(flags & ADJUST_GRAY) {
             double min=-1.0, max=-1.0;
             if(flags & VERBOSE) {
               fprintf(stderr, " adjusting T1=%.2f and T2=%.2f to image\n",
