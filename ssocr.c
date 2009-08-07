@@ -25,7 +25,7 @@
 #include <stdlib.h>         /* exit */
 
 /* string manipulation */
-#include <string.h>         /* strcpy */
+#include <string.h>         /* strcpy, strdup */
 
 /* option parsing */
 #include <getopt.h>         /* getopt */
@@ -43,6 +43,38 @@ static int ssocr_background = SSOCR_WHITE;
 
 /* functions */
 
+/* copy image from stdin to a temporary file and return the filename */
+static char * tmp_imgfile(void)
+{
+  char *name;
+  int handle;
+  unsigned char buf;
+  ssize_t count;
+
+  name = strdup("ssocr.img.XXXXXX");
+  if(!name) {
+    perror("tmp_imgfile() - strdup()");
+    exit(99);
+  }
+  handle = mkstemp(name);
+  if(handle < 0) {
+    perror("could not create temporary file");
+    exit(99);
+  }
+  while((fread(&buf, sizeof(char), 1, stdin)) > 0) {
+    count = write(handle, &buf, 1);
+    if (count <= 0) break;
+  }
+  close(handle); /* filehandle is no longer needed, Imlib2 uses filename */
+  if(ferror(stdin) || (count <= 0)) {
+    perror("could not copy image data to temporary file");
+    unlink(name);
+    exit(99);
+  }
+  
+  return name;
+}
+
 /*** main() ***/
 
 int main(int argc, char **argv)
@@ -50,6 +82,8 @@ int main(int argc, char **argv)
   Imlib_Image image=NULL; /* an image handle */
   Imlib_Image new_image=NULL; /* a temporary image handle */
   Imlib_Image debug_image=NULL; /* DEBUG */
+  char *imgfile=NULL; /* filename of image file */
+  int use_tmpfile=0; /* flag to know if temporary image file is used */
 
   int i, j, d;  /* iteration variables */
   int unknown_digit=0; /* was one of the 6 found digits an unknown one? */
@@ -303,12 +337,24 @@ int main(int argc, char **argv)
   }
 
   /* load the image */
-  if(flags & VERBOSE) {
-    fprintf(stderr, "loading image %s\n", argv[argc-1]);
+  imgfile = argv[argc-1];
+  if(strcmp("-", imgfile) == 0) /* read image from stdin? */ {
+    if(flags & VERBOSE)
+      fprintf(stderr, "using temporary file to hold data from stdin\n");
+    use_tmpfile = 1;
+    imgfile = tmp_imgfile();
   }
-  image = imlib_load_image_immediately_without_cache(argv[argc-1]);
-  if (!image) {
-    fprintf(stderr, "could not load image %s\n", argv[argc-1]);
+  if(flags & VERBOSE) {
+    fprintf(stderr, "loading image %s\n", imgfile);
+  }
+  image = imlib_load_image_immediately_without_cache(imgfile);
+  if(use_tmpfile) {
+    if(flags & VERBOSE)
+      fprintf(stderr, "removing temporary image file %s\n", imgfile);
+    unlink(imgfile);
+  }
+  if(!image) {
+    fprintf(stderr, "could not load image %s\n", imgfile);
     exit(99);
   }
 
@@ -347,7 +393,7 @@ int main(int argc, char **argv)
   if(flags & VERBOSE) /* then print found commands */ {
     if(optind >= argc-1) {
       fprintf(stderr, "no commands given, using image %s unmodified\n",
-                      argv[argc-1]);
+                      imgfile);
     } else {
       fprintf(stderr, "got commands");
       for(i=optind; i<argc-1; i++) {
