@@ -148,7 +148,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "           are searched and recognized, after which the recognized number is\n");
   fprintf(f, "           written to STDOUT.\n");
   fprintf(f, "           The recognition algorithm works with set or unset pixels and uses\n");
-  fprintf(f, "           the given THRESHOLD to decide if a pixel is set or not.\n\n");
+  fprintf(f, "           the given THRESHOLD to decide if a pixel is set or not.\n");
+  fprintf(f, "           Use - for IMAGE to read the image from STDIN.\n\n");
   fprintf(f, "Exit Codes:  0 if correct number of digits have been recognized\n");
   fprintf(f, "             1 if a different number of digits have been found\n");
   fprintf(f, "             2 if one of the digits could not be recognized\n");

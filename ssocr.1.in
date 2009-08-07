@@ -8,6 +8,9 @@ ssocr \- optical recognition of seven segment displays
 reads an image file containing the picture of a seven segment display,
 recognizes the displayed digits and prints them to standard output.
 All image formats known by imlib2 are supported.
+Use
+.B -
+as file name to read the image from standard input.
 .B ssocr
 provides several image manipulation algorithms to enhance noisy images.
 .SH OPTIONS
