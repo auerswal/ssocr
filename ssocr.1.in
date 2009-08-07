@@ -310,8 +310,6 @@ blue
 .IP \(bu
 99, if some other error occured
 .SH BUGS
-Image I/O cannot use pipes due to limitations of Imlib2.
-.P
 Imlib2 (and therefore
 .BR ssocr (1))
 does not work well with
