@@ -1,3 +1,9 @@
+ssocr (2.9.0-1) unstable; urgency=low
+
+  * Handle image data on stdin
+
+ -- Erik Auerswald <auerswal@unix-ag.uni-kl.de>  Thu, 07 Aug 2009 09:16:53 +0200
+
 ssocr (2.8.4-1) unstable; urgency=low
 
   * Initial release
