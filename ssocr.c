@@ -352,6 +352,8 @@ int main(int argc, char **argv)
     if(flags & VERBOSE)
       fprintf(stderr, "removing temporary image file %s\n", imgfile);
     unlink(imgfile);
+    free(imgfile);
+    imgfile = argv[argc-1];
   }
   if(!image) {
     fprintf(stderr, "could not load image %s\n", imgfile);
