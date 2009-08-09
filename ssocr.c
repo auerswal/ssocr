@@ -53,7 +53,7 @@ static char * tmp_imgfile(void)
 
   name = strdup("ssocr.img.XXXXXX");
   if(!name) {
-    perror("tmp_imgfile() - strdup()");
+    perror("tmp_imgfile(): strdup() failed");
     exit(99);
   }
   handle = mkstemp(name);
