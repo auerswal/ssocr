@@ -46,21 +46,40 @@ static int ssocr_background = SSOCR_WHITE;
 /* copy image from stdin to a temporary file and return the filename */
 static char * tmp_imgfile(void)
 {
+  char *dir;
   char *name;
+  size_t pattern_len;
   int handle;
   unsigned char buf;
   ssize_t count;
 
-  name = strdup("ssocr.img.XXXXXX");
+  /* find a suitable place (directory) for the tmp file and create pattern */
+  dir = getenv("TMP");
+  if(dir)
+    pattern_len = strlen(dir) + strlen(DIR_SEP) + strlen(TMP_FILE_PATTERN) + 1;
+  else
+    pattern_len = strlen(TMP_FILE_DIR) + strlen(DIR_SEP)
+                + strlen(TMP_FILE_PATTERN) + 1;
+  name = malloc(pattern_len);
   if(!name) {
-    perror("tmp_imgfile(): strdup() failed");
+    perror("could not allocate memory for name of temporary file");
     exit(99);
   }
+  if(dir)
+    name = strcat(name, dir);
+  else
+    name = strcat(name, TMP_FILE_DIR);
+  name = strcat(name, DIR_SEP);
+  name = strcat(name, TMP_FILE_PATTERN);
+
+  /* create temporary file */
   handle = mkstemp(name);
   if(handle < 0) {
     perror("could not create temporary file");
     exit(99);
   }
+
+  /* copy image data from stdin to tmp file */
   while((fread(&buf, sizeof(char), 1, stdin)) > 0) {
     count = write(handle, &buf, 1);
     if (count <= 0) break;

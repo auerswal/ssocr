@@ -74,6 +74,9 @@
 /* ignore # of pixels when checking a column fo black or white */
 #define IGNORE_PIXELS 0
 
+#define DIR_SEP "/"
+#define TMP_FILE_DIR "/tmp"
+#define TMP_FILE_PATTERN "ssocr.img.XXXXXX"
 #define DEBUG_IMAGE_NAME "testbild.png"
 
 /* flags set by options */
