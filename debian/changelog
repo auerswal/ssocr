@@ -1,8 +1,14 @@
+ssocr (2.9.1-1) unstable; urgency=low
+
+  * Dont create temporary file in current directory
+
+ -- Erik Auerswald <auerswal@unix-ag.uni-kl.de>  Sun, 09 Aug 2009 08:08:00 +0200
+
 ssocr (2.9.0-1) unstable; urgency=low
 
   * Handle image data on stdin
 
- -- Erik Auerswald <auerswal@unix-ag.uni-kl.de>  Thu, 07 Aug 2009 09:16:53 +0200
+ -- Erik Auerswald <auerswal@unix-ag.uni-kl.de>  Fri, 07 Aug 2009 09:16:53 +0200
 
 ssocr (2.8.4-1) unstable; urgency=low
 
