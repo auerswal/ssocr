@@ -31,6 +31,9 @@
 #include <getopt.h>         /* getopt */
 #include <unistd.h>         /* getopt */
 
+/* file permissions */
+#include <sys/stat.h>       /* umask */
+
 /* my headers */
 #include "defines.h"        /* defines */
 #include "ssocr.h"          /* types */
@@ -81,6 +84,7 @@ static char * tmp_imgfile(int flags)
     fprintf(stderr, "pattern for temporary file is %s\n", name);
 
   /* create temporary file */
+  umask(S_IRWXG | S_IRWXO);
   handle = mkstemp(name);
   if(handle < 0) {
     perror("could not create temporary file");
