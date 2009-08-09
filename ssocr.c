@@ -44,7 +44,7 @@ static int ssocr_background = SSOCR_WHITE;
 /* functions */
 
 /* copy image from stdin to a temporary file and return the filename */
-static char * tmp_imgfile(void)
+static char * tmp_imgfile(int flags)
 {
   char *dir;
   char *name;
@@ -55,11 +55,17 @@ static char * tmp_imgfile(void)
 
   /* find a suitable place (directory) for the tmp file and create pattern */
   dir = getenv("TMP");
-  if(dir)
+  if(dir) {
+    if(flags & DEBUG_OUTPUT)
+      fprintf(stderr, "using %s for temporary files, from $TMP env variable\n",
+              dir);
     pattern_len = strlen(dir) + strlen(DIR_SEP) + strlen(TMP_FILE_PATTERN) + 1;
-  else
+  } else {
+    if(flags & DEBUG_OUTPUT)
+      fprintf(stderr, "using " TMP_FILE_DIR " for temporary files\n");
     pattern_len = strlen(TMP_FILE_DIR) + strlen(DIR_SEP)
                 + strlen(TMP_FILE_PATTERN) + 1;
+  }
   name = malloc(pattern_len);
   if(!name) {
     perror("could not allocate memory for name of temporary file");
@@ -71,6 +77,8 @@ static char * tmp_imgfile(void)
     name = strcat(name, TMP_FILE_DIR);
   name = strcat(name, DIR_SEP);
   name = strcat(name, TMP_FILE_PATTERN);
+  if(flags & DEBUG_OUTPUT)
+    fprintf(stderr, "pattern for temporary file is %s\n", name);
 
   /* create temporary file */
   handle = mkstemp(name);
@@ -361,7 +369,7 @@ int main(int argc, char **argv)
     if(flags & VERBOSE)
       fprintf(stderr, "using temporary file to hold data from stdin\n");
     use_tmpfile = 1;
-    imgfile = tmp_imgfile();
+    imgfile = tmp_imgfile(flags);
   }
   if(flags & VERBOSE) {
     fprintf(stderr, "loading image %s\n", imgfile);
