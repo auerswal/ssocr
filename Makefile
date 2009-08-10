@@ -31,6 +31,9 @@ ssocr-dir:
 	install -d ssocr-$(VERSION)/debian
 	install debian/* ssocr-$(VERSION)/debian
 
+debian/changelog:
+	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * Debian package of current ssocr version\n\n -- $(USER)  $(shell date -R)\n" >$@
+
 deb: debian/changelog debian/control debian/rules ssocr-dir
 	(cd ssocr-$(VERSION); fakeroot debian/rules binary; fakeroot debian/rules clean)
 
@@ -39,4 +42,7 @@ tar: ssocr-dir
 
 clean:
 	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.deb *.bz2
+	$(RM) debian/changelog
 	$(RM) -r ssocr-$(VERSION) ssocr-?.?.?
+
+.PHONY: debian/changelog
