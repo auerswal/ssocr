@@ -32,7 +32,7 @@
 
 /* my headers */
 #include "defines.h"        /* defines */
-#include "imgproc.h"        /* defines */
+#include "imgproc.h"        /* image processing */
 #include "help.h"           /* online help */
 
 /* global variables */
