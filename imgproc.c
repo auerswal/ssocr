@@ -1085,16 +1085,16 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
   }
   if(tmp) {
     if(flags & VERBOSE)
-      fprintf(stderr, "saving %s image in %s format to file %s\n",
-                      image_type, tmp, filename);
+      fprintf(stderr, "using %s format for %s image\n", image_type, tmp);
     imlib_image_set_format(tmp);
   } else { /* use png as default */
     if(flags & VERBOSE)
-      fprintf(stderr, "saving image in png format to file %s\n",
-                      filename);
+      fprintf(stderr, "using png format for %s image\n", image_type);
     imlib_image_set_format("png");
   }
   /* write image to disk */
+  if(flags & VERBOSE)
+    fprintf(stderr, "writing %s image to file %s\n", image_type, filename);
   imlib_save_image(filename);
   imlib_context_set_image(current_image);
 }
