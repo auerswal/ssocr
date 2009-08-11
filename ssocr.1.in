@@ -60,6 +60,9 @@ See the web page of
 for a description of the algorithm.
 .SS -o, --output-image FILE
 Write the processed image to FILE.
+Use
+.B -
+to write to standard output.
 Unless this option is used no image is written to disk.
 If a standard filename extension is used it is interpreted as the image
 format to use.
