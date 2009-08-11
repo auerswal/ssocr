@@ -1071,10 +1071,14 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
 {
   const char *tmp;
   Imlib_Image *current_image;
+  const char *const stdout_file = "/proc/self/fd/1";
 
   current_image = imlib_context_get_image();
   imlib_context_set_image(image);
 
+  /* interpret - as STDOUT */
+  if(strcmp("-", filename) == 0)
+    filename = stdout_file;
   /* get file format for image */
   if(fmt) { /* use provided format string */
     tmp = fmt;
