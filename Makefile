@@ -45,4 +45,4 @@ clean:
 	$(RM) debian/changelog
 	$(RM) -r ssocr-$(VERSION) ssocr-?.?.?
 
-.PHONY: debian/changelog
+.PHONY: clean tar deb ssocr-dir install
