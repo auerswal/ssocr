@@ -990,13 +990,13 @@ int main(int argc, char **argv)
           found_pixels++;
         }
         /* pixels in first third count towards upper segment */
-        if(j > digits[d].y1 + d_height/3 && third == 1) {
+        if(j >= digits[d].y1 + d_height/3 && third == 1) {
           if(found_pixels >= need_pixels) {
             digits[d].digit |= HORIZ_UP; /* add upper segment */
           }
           found_pixels = 0;
           third++;
-        } else if(j > digits[d].y1 + 2*d_height/3 && third == 2) {
+        } else if(j >= digits[d].y1 + 2*d_height/3 && third == 2) {
         /* pixels in second third count towards middle segment */
           if(found_pixels >= need_pixels) {
             digits[d].digit |= HORIZ_MID; /* add middle segment */
