@@ -840,35 +840,6 @@ int main(int argc, char **argv)
   }
   dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
 
-  if(flags & DEBUG_OUTPUT) {
-    fprintf(stderr, "found %d digits\n", d);
-    for(d=0; d<number_of_digits; d++) {
-      fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
-                      "height/width (int): %d\n", d,
-                      digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
-                      digits[d].x2 - digits[d].x1,
-                      ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
-                      (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1)
-             );
-    }
-  }
-
-  /* at this point the digit 1 can be identified, because it is smaller than
-   * the other digits */
-  for(i=0; i<number_of_digits; i++) {
-    /* if width of digit is less than 1/one_ratio of its height it is a 1
-     * (the default 1/4 is arbitarily chosen -- normally seven segment
-     * displays use digits that are 2 times as high as wide) */
-    if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > one_ratio) {
-      if(flags & DEBUG_OUTPUT) {
-        fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
-               i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
-               (digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1));
-      }
-      digits[i].digit = D_ONE;
-    }
-  }
-
   /* find upper and lower boundaries of every digit */
   for(d=0; d<number_of_digits; d++) {
     int found_top=0;
@@ -954,6 +925,35 @@ int main(int argc, char **argv)
           digits[d].x2-digits[d].x1, digits[d].y2-digits[d].y1);
     }
     imlib_context_set_image(image);
+  }
+  /* debug: write digit info to stderr */
+  if(flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "found %d digits\n", d);
+    for(d=0; d<number_of_digits; d++) {
+      fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
+                      "height/width (int): %d\n", d,
+                      digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
+                      digits[d].x2 - digits[d].x1,
+                      ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
+                      (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1)
+             );
+    }
+  }
+
+  /* at this point the digit 1 can be identified, because it is smaller than
+   * the other digits */
+  for(i=0; i<number_of_digits; i++) {
+    /* if width of digit is less than 1/one_ratio of its height it is a 1
+     * (the default 1/3 is arbitarily chosen -- normally seven segment
+     * displays use digits that are 2 times as high as wide) */
+    if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > one_ratio) {
+      if(flags & DEBUG_OUTPUT) {
+        fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
+               i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
+               (digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1));
+      }
+      digits[i].digit = D_ONE;
+    }
   }
 
   /* now the digits are located and they have to be identified */
