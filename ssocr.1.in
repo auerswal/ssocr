@@ -314,7 +314,7 @@ blue
 99, if some other error occured
 .SH ENVIRONMENT
 .B TMP
-can be used to specify a different direcotory for temporary files than
+can be used to specify a different directory for temporary files than
 .BR /tmp .
 .SH BUGS
 Imlib2 (and therefore
