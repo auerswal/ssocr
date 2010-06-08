@@ -3,6 +3,7 @@ LDFLAGS := -lImlib2 -lm
 PREFIX := /usr/local
 BINDIR := $(PREFIX)/bin
 MANDIR := $(PREFIX)/share/man/man1
+DOCDIR := $(PREFIX)/share/doc/ssocr
 VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
 
 all: ssocr ssocr.1
@@ -20,14 +21,15 @@ ssocr-manpage.html: ssocr.1
 	rman -f html -r '' $< >$@
 
 install: all
-	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)
+	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR) $(DESTDIR)$(DOCDIR)
 	install -s -m 0755 ssocr $(DESTDIR)$(BINDIR)/ssocr
 	install -m 0644 ssocr.1 $(DESTDIR)$(MANDIR)/ssocr.1
 	gzip -9 $(DESTDIR)$(MANDIR)/ssocr.1
+	install -m 0644 AUTHORS COPYING THANKS $(DESTDIR)$(DOCDIR)
 
 ssocr-dir:
 	install -d ssocr-$(VERSION)
-	install Makefile *.[ch] *.in ssocr-$(VERSION)
+	install Makefile AUTHORS COPYING THANKS *.[ch] *.in ssocr-$(VERSION)
 	install -d ssocr-$(VERSION)/debian
 	install debian/* ssocr-$(VERSION)/debian
 
