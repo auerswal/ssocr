@@ -54,7 +54,7 @@ static char * tmp_imgfile(int flags)
   size_t pattern_len;
   int handle;
   unsigned char buf;
-  ssize_t count;
+  ssize_t count = 0;
 
   /* find a suitable place (directory) for the tmp file and create pattern */
   dir = getenv("TMP");
