@@ -960,14 +960,13 @@ int main(int argc, char **argv)
   /* iterate over digits */
   for(d=0; d<number_of_digits; d++) {
     int middle=0, quarter=0, three_quarters=0; /* scanlines */
-    int d_height=0, d_width=0; /* height and width of digit */
+    int d_height=0; /* height of digit */
     /* if digits[d].digit == D_ONE do nothing */
     if((digits[d].digit == D_UNKNOWN)) {
       int third=1; /* in which third we are */
       int half;
       found_pixels=0; /* how many pixels are already found */
       d_height = digits[d].y2 - digits[d].y1;
-      d_width = digits[d].x2 - digits[d].x1;
       /* check horizontal segments */
       /* vertical scan at x == middle */
       middle = (digits[d].x1 + digits[d].x2) / 2;
