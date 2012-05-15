@@ -1,5 +1,5 @@
 CFLAGS := -Wall -W -Wextra -pedantic -Werror -pedantic-errors $(shell imlib2-config --cflags) -O6
-LDFLAGS := -lImlib2 -lm
+LDLIBS := -lImlib2 -lm
 PREFIX := /usr/local
 BINDIR := $(PREFIX)/bin
 MANDIR := $(PREFIX)/share/man/man1
