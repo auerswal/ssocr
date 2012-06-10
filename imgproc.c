@@ -808,7 +808,7 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   for(y=1; y<height; y++) {
     shift = y * offset / (height-1);
     /* copy pixels */
-    for(x=width-1; x>0+shift; x--) {
+    for(x=width-1; x>=shift; x--) {
       imlib_image_query_pixel(x-shift, y, &color_return);
       imlib_context_set_image(new_image);
       imlib_context_set_color(color_return.red, color_return.green,
