@@ -1,0 +1,34 @@
+Building and Installing
+-----------------------
+To build ssocr, type:
+
+make
+
+You can use ssocr from the directory you build it, no installation required.
+If you want to install it to your system, type:
+
+make install
+
+To change the default install location of /usr/local to /usr, type:
+
+make PREFIX=/usr install
+
+You have to keep track of the installed files yourself, if you want to
+remove them later on. If you prefer to install a .deb package for easier
+removal, you can build a .deb package by typing:
+
+make deb
+
+Prerequisites
+-------------
+- Imlib2 shared library and development headers. On a Debian or Ubuntu system
+  they are provided by the packages libimlib2 and libimlib2-dev.
+- Build tools, e.g. build-essential on a Debian (or Ubuntu) system.
+- To build a .deb package, you probably need the debhelper package.
+- To create an HTML version of the man page, you need rman.
+
+Additional Makefile targets
+---------------------------
+- clean:              remove generated files
+- tar:                create a tar-ball of the sources for distribution
+- ssocr-manpage.html: create HTML version of man page
