@@ -46,6 +46,6 @@ tar: ssocr-dir
 clean:
 	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.deb *.bz2
 	$(RM) debian/changelog
-	$(RM) -r ssocr-$(VERSION) ssocr-?.?.?
+	$(RM) -r ssocr-$(VERSION) ssocr-?.?.? ssocr-?.??.?
 
 .PHONY: clean tar deb ssocr-dir install
