@@ -1075,6 +1075,40 @@ int main(int argc, char **argv)
     }
   }
 
+  /* print found segments as ASCII art if debug output is enabled
+   * example digits known by ssocr:
+   *   _      _  _       _   _  _   _   _   _
+   *  | |  |  _| _| |_| |_  |_   | | | |_| |_|
+   *  |_|  | |_  _|   |  _| |_|  |   | |_|  _|
+  */
+  if(flags & DEBUG_OUTPUT) {
+    fputs("Display as seen by ssocr:\n", stderr);
+    /* top row */
+    for(i=0; i<number_of_digits; i++) {
+      fputc(' ', stderr);
+      fputc(' ', stderr);
+      digits[i].digit & HORIZ_UP ? fputc('_', stderr) : fputc(' ', stderr);
+      fputc(' ', stderr);
+    }
+    fputc('\n', stderr);
+    /* middle row */
+    for(i=0; i<number_of_digits; i++) {
+      fputc(' ', stderr);
+      digits[i].digit & VERT_LEFT_UP ? fputc('|', stderr) : fputc(' ', stderr);
+      digits[i].digit & HORIZ_MID ? fputc('_', stderr) : fputc(' ', stderr);
+      digits[i].digit & VERT_RIGHT_UP ? fputc('|', stderr) : fputc(' ', stderr);
+    }
+    fputc('\n', stderr);
+    /* bottom row */
+    for(i=0; i<number_of_digits; i++) {
+      fputc(' ', stderr);
+      digits[i].digit&VERT_LEFT_DOWN ? fputc('|', stderr) : fputc(' ', stderr);
+      digits[i].digit&HORIZ_DOWN ? fputc('_', stderr) : fputc(' ', stderr);
+      digits[i].digit&VERT_RIGHT_DOWN ? fputc('|', stderr) : fputc(' ', stderr);
+    }
+    fputs("\n\n", stderr);
+  }
+
   /* print digits */
   for(i=0; i<number_of_digits; i++) {
     switch(digits[i].digit) {
