@@ -41,8 +41,8 @@
 #include "help.h"           /* online help */
 
 /* global variables */
-static int ssocr_foreground = SSOCR_BLACK;
-static int ssocr_background = SSOCR_WHITE;
+int ssocr_foreground = SSOCR_BLACK;
+int ssocr_background = SSOCR_WHITE;
 
 /* functions */
 

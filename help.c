@@ -27,8 +27,8 @@
 #include "defines.h"        /* defines */
 
 /* global variables */
-static int ssocr_foreground = SSOCR_BLACK;
-static int ssocr_background = SSOCR_WHITE;
+extern int ssocr_foreground;
+extern int ssocr_background;
 
 /* functions */
 

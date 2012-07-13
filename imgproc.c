@@ -36,8 +36,8 @@
 #include "help.h"           /* online help */
 
 /* global variables */
-static int ssocr_foreground = SSOCR_BLACK;
-static int ssocr_background = SSOCR_WHITE;
+extern int ssocr_foreground;
+extern int ssocr_background;
 
 /* functions */
 
@@ -795,6 +795,7 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   int shift; /* current shift-width */
   Imlib_Color color_return; /* for imlib_query_pixel() */
 
+fprintf(stderr, "ssocr_foreground=%d ssocr_background=%d\n", ssocr_foreground, ssocr_background);
   /* save pointer to current image */
   current_image = imlib_context_get_image();
 
@@ -816,7 +817,7 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
       imlib_image_draw_pixel(x,y,0);
       imlib_context_set_image(*source_image);
     }
-    /* fill with white (background) */
+    /* fill with background */
     for(x=0; x<shift; x++) {
       draw_bg_pixel(new_image, x, y);
     }
