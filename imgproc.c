@@ -795,7 +795,6 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   int shift; /* current shift-width */
   Imlib_Color color_return; /* for imlib_query_pixel() */
 
-fprintf(stderr, "ssocr_foreground=%d ssocr_background=%d\n", ssocr_foreground, ssocr_background);
   /* save pointer to current image */
   current_image = imlib_context_get_image();
 
