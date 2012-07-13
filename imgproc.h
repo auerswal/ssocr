@@ -85,10 +85,6 @@ Imlib_Image dynamic_threshold(Imlib_Image *source_image, double t,
 /* make black and white */
 Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt);
 
-/* set pixel to black (0,0,0) if R<T or G<T or R<T, T=thresh/100*255 */
-Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
-                          channel_t channel);
-
 /* set pixel to black (0,0,0) if R<T, T=thresh/100*255 */
 Imlib_Image r_threshold(Imlib_Image *source_image, double thresh);
 

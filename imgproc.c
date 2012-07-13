@@ -455,60 +455,6 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
   return new_image;
 }
 
-/* set pixel to black (0,0,0) if R<T or G<T or R<T, T=thresh/100*255 */
-Imlib_Image rgb_threshold(Imlib_Image *source_image, double thresh,
-                          channel_t channel)
-{
-  Imlib_Image new_image; /* construct filtered image here */
-  Imlib_Image current_image; /* save image pointer */
-  int height, width; /* image dimensions */
-  int x,y; /* iteration variables */
-  Imlib_Color pixel; /* alpha, red, green, blue */
-  int T = (255 * thresh) / 100;
-  int set_pixel=0; /* decide if pixel shall be set, i.e. black (foreground) */
-
-  /* save pointer to current image */
-  current_image = imlib_context_get_image();
-
-  /* create new image */
-  imlib_context_set_image(*source_image);
-  height = imlib_image_get_height();
-  width = imlib_image_get_width();
-  new_image = imlib_clone_image();
-
-  /* check for every pixel if it should be set in filtered image */
-  for(x=0; x<width; x++) {
-    for(y=0; y<height; y++) {
-      imlib_image_query_pixel(x, y, &pixel);
-      set_pixel=0;
-      switch(channel) {
-        case CHAN_ALL:
-          if((pixel.red<T) || (pixel.blue<T) || (pixel.green<T))
-            set_pixel=1;
-          break;
-        case CHAN_RED:   if(pixel.red<T) set_pixel=1; break;
-        case CHAN_GREEN: if(pixel.green<T) set_pixel=1; break;
-        case CHAN_BLUE:  if(pixel.blue<T) set_pixel=1; break;
-        default:
-          fprintf(stderr, "warning: rgb_threshold(): unknown channel %d\n",
-                  channel);
-          break;
-      }
-      if(set_pixel) {
-        draw_fg_pixel(new_image, x, y);
-      } else {
-        draw_bg_pixel(new_image, x, y);
-      }
-    }
-  }
-
-  /* restore image from before function call */
-  imlib_context_set_image(current_image);
-
-  /* return filtered image */
-  return new_image;
-}
-
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
                        int y, int w, int h, int flags)

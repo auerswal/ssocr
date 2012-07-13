@@ -20,7 +20,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.10.0"
+#define VERSION "2.10.1"
 
 /* states */
 #define FIND_DARK 0
@@ -102,14 +102,6 @@
 
 /* default luminance formula */
 #define DEFAULT_LUM_FORMULA REC709
-
-/* channels of RGB images */
-typedef enum channel_e {
-  CHAN_ALL,
-  CHAN_RED,
-  CHAN_GREEN,
-  CHAN_BLUE
-} channel_t;
 
 /* foreground and background */
 typedef enum fg_bg_e {

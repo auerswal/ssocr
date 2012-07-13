@@ -604,25 +604,25 @@ int main(int argc, char **argv)
         }
       } else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing rgb_threshold\n", stderr);
-        new_image = rgb_threshold(&image, thresh, CHAN_ALL);
+        new_image = make_mono(&image, thresh, MINIMUM);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("r_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing r_threshold\n", stderr);
-        new_image = rgb_threshold(&image, thresh, CHAN_RED);
+        new_image = make_mono(&image, thresh, RED);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("g_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing g_threshold\n", stderr);
-        new_image = rgb_threshold(&image, thresh, CHAN_GREEN);
+        new_image = make_mono(&image, thresh, GREEN);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("b_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing b_threshold\n", stderr);
-        new_image = rgb_threshold(&image, thresh, CHAN_BLUE);
+        new_image = make_mono(&image, thresh, BLUE);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
