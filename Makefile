@@ -1,4 +1,4 @@
-CFLAGS := -Wall -W -Wextra -pedantic -Werror -pedantic-errors $(shell imlib2-config --cflags) -O6
+CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -Werror -pedantic-errors $(shell imlib2-config --cflags) -O6
 LDLIBS := -lImlib2 -lm
 PREFIX := /usr/local
 BINDIR := $(PREFIX)/bin
