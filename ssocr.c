@@ -135,6 +135,7 @@ int main(int argc, char **argv)
   int col=UNKNOWN;  /* is column dark or light? */
   int row=UNKNOWN;  /* is row dark or light? */
   int dig_w;  /* width of digit part of image */
+  int max_dig_h=0, max_dig_w=0; /* maximum height & width of digits found */
   Imlib_Color color; /* Imlib2 RGBA color structure */
   /* state of search */
   int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
@@ -940,6 +941,17 @@ int main(int argc, char **argv)
     }
   }
 
+  /* determine maximum digit dimensions */
+  for(d=0; d<number_of_digits; d++) {
+    if(max_dig_w < digits[d].x2 - digits[d].x1)
+      max_dig_w = digits[d].x2 - digits[d].x1;
+    if(max_dig_h < digits[d].y2 - digits[d].y1)
+      max_dig_h = digits[d].y2 - digits[d].y1;
+  }
+  if(flags & DEBUG_OUTPUT)
+    fprintf(stderr, "digits are at most %d pixels wide and %d pixels high\n",
+                    max_dig_w, max_dig_h);
+
   /* at this point the digit 1 can be identified, because it is smaller than
    * the other digits */
   for(i=0; i<number_of_digits; i++) {
@@ -953,6 +965,20 @@ int main(int argc, char **argv)
                (digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1));
       }
       digits[i].digit = D_ONE;
+    }
+  }
+
+  /* identify a decimal point (or thousands separator) by relative size */
+  for(d=0; d<number_of_digits; d++) {
+    /* if height of a digit is less than 1/7 of the maximum digit height,
+     * and its width is less than 1/2 of the maximum digit width (the widest
+     * digit might be a one), assume it is a decimal point */
+    if((digits[d].digit == D_UNKNOWN) &&
+       (max_dig_h / (digits[d].y2 - digits[d].y1) > 7) &&
+       (max_dig_w / (digits[d].x2 - digits[d].x1) > 2)) {
+      digits[d].digit = D_DECIMAL;
+      if(flags & DEBUG_OUTPUT)
+	fprintf(stderr, "digit %d is a decimal point\n", d);
     }
   }
 
@@ -1103,7 +1129,8 @@ int main(int argc, char **argv)
     for(i=0; i<number_of_digits; i++) {
       fputc(' ', stderr);
       digits[i].digit&VERT_LEFT_DOWN ? fputc('|', stderr) : fputc(' ', stderr);
-      digits[i].digit&HORIZ_DOWN ? fputc('_', stderr) : fputc(' ', stderr);
+      digits[i].digit&HORIZ_DOWN ? fputc('_', stderr) : 
+        digits[i].digit == D_DECIMAL ? fputc('.', stderr) : fputc(' ', stderr);
       digits[i].digit&VERT_RIGHT_DOWN ? fputc('|', stderr) : fputc(' ', stderr);
     }
     fputs("\n\n", stderr);
@@ -1123,6 +1150,7 @@ int main(int argc, char **argv)
       case D_ALTSEVEN: putchar('7'); break;
       case D_EIGHT: putchar('8'); break;
       case D_NINE: putchar('9'); break;
+      case D_DECIMAL: putchar('.'); break;
       case D_UNKNOWN: putchar(' '); unknown_digit++; break;
       default: putchar('_'); unknown_digit++; break;
     }
