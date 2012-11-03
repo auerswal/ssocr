@@ -1124,7 +1124,7 @@ int main(int argc, char **argv)
       case D_EIGHT: putchar('8'); break;
       case D_NINE: putchar('9'); break;
       case D_UNKNOWN: putchar(' '); unknown_digit++; break;
-      default: putchar('.'); unknown_digit++; break;
+      default: putchar('_'); unknown_digit++; break;
     }
   }
   putchar('\n');
