@@ -1146,7 +1146,7 @@ int main(int argc, char **argv)
       case D_FOUR: putchar('4'); break;
       case D_FIVE: putchar('5'); break;
       case D_SIX: putchar('6'); break;
-      case D_SEVEN:
+      case D_SEVEN: /* fallthrough */
       case D_ALTSEVEN: putchar('7'); break;
       case D_EIGHT: putchar('8'); break;
       case D_NINE: putchar('9'); break;
@@ -1158,6 +1158,7 @@ int main(int argc, char **argv)
       case D_HEX_d: putchar('d'); break;
       case D_HEX_E: putchar('e'); break;
       case D_HEX_F: putchar('f'); break;
+      /* finding a digit with no set segments is not supposed to happen */
       case D_UNKNOWN: putchar(' '); unknown_digit++; break;
       default: putchar('_'); unknown_digit++; break;
     }
