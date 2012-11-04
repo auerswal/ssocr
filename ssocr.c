@@ -397,12 +397,6 @@ int main(int argc, char **argv)
     exit(99);
   }
 
-  /* initialize some vars */
-  for(i=0; i<number_of_digits; i++) {
-    digits[i].x1 = digits[i].x2 = digits[i].y1 = digits[i].y2 = 0;
-    digits[i].digit=D_UNKNOWN;
-  }
-
   /* set the image we loaded as the current context image to work on */
   imlib_context_set_image(image);
 
