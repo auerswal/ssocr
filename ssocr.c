@@ -392,11 +392,6 @@ int main(int argc, char **argv)
     exit(99);
   }
 
-  if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
-    perror("digits = calloc()");
-    exit(99);
-  }
-
   /* set the image we loaded as the current context image to work on */
   imlib_context_set_image(image);
 
@@ -751,6 +746,12 @@ int main(int argc, char **argv)
   if(flags & USE_DEBUG_IMAGE) {
     /* copy processed image to debug image */
     debug_image = imlib_clone_image();
+  }
+
+  /* allocate memory for seven segment digits */
+  if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
+    perror("digits = calloc()");
+    exit(99);
   }
 
   /* horizontal partition */
