@@ -235,7 +235,7 @@ int main(int argc, char **argv)
       case 'd':
         if(optarg) {
           number_of_digits = atoi(optarg);
-          if(number_of_digits < 0) {
+          if(number_of_digits < 1) {
             fprintf(stderr, "warning: ignoring --number-digits=%s\n", optarg);
             number_of_digits = NUMBER_OF_DIGITS;
           }
