@@ -88,7 +88,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -n, --number-pixels=#    number of pixels needed to recognize a segment\n");
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
-  fprintf(f, "         -d, --number-digits=#    number of digits in image\n");
+  fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
   fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
   fprintf(f, "         -o, --output-image=FILE  write processed image to FILE\n");
   fprintf(f, "         -O, --output-format=FMT  use output format FMT (Imlib2 formats)\n");

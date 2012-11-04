@@ -235,7 +235,7 @@ int main(int argc, char **argv)
       case 'd':
         if(optarg) {
           number_of_digits = atoi(optarg);
-          if(number_of_digits < 1) {
+          if((number_of_digits < 1) && (number_of_digits != -1)) {
             fprintf(stderr, "warning: ignoring --number-digits=%s\n", optarg);
             number_of_digits = NUMBER_OF_DIGITS;
           }
@@ -749,9 +749,16 @@ int main(int argc, char **argv)
   }
 
   /* allocate memory for seven segment digits */
-  if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
-    perror("digits = calloc()");
-    exit(99);
+  if(number_of_digits > -1) {
+    if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
+      perror("digits = calloc()");
+      exit(99);
+    }
+  } else {
+    if(!(digits = calloc(1, sizeof(digit_struct)))) {
+      perror("digits = calloc()");
+      exit(99);
+    }
   }
 
   /* horizontal partition */
@@ -778,7 +785,7 @@ int main(int argc, char **argv)
     if((state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT))
         && (col == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT))) {
       /* beginning of digit */
-      if(d>=number_of_digits) {
+      if((number_of_digits > -1) && (d >= number_of_digits)) {
         fprintf(stderr, "found too many digits (%d)\n", d+1);
         imlib_free_image_and_decache();
         if(flags & USE_DEBUG_IMAGE) {
@@ -810,6 +817,13 @@ int main(int argc, char **argv)
         imlib_image_draw_line(i,0,i,h-1,0);
         imlib_context_set_image(image);
       }
+      /* if number of digits is not known, add memory for another digit */
+      if(!(digits = realloc(digits, (d+1) * sizeof(digit_struct)))) {
+        perror("digits = realloc()");
+        exit(99);
+      }
+      /* initialize additional memory */
+      memset(&digits[d], 0, sizeof(digit_struct));
       state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
     }
   }
@@ -824,7 +838,7 @@ int main(int argc, char **argv)
     d++;
     state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
   }
-  if(d != number_of_digits) {
+  if((number_of_digits > -1) && (d != number_of_digits)) {
     fprintf(stderr, "found only %d of %d digits\n", d, number_of_digits);
     imlib_free_image_and_decache();
     if(flags & USE_DEBUG_IMAGE) {
@@ -833,6 +847,11 @@ int main(int argc, char **argv)
       imlib_free_image_and_decache();
     }
     exit(1);
+  } else if(number_of_digits == -1) {
+    number_of_digits = d;
+    if(flags & DEBUG_OUTPUT) {
+      fprintf(stderr, "auto detecting number of digits: %d\n", d);
+    }
   }
   dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
 

@@ -52,6 +52,9 @@ for a description of the algorithm.
 .SS -d, --number-digits NUMBER
 Specifies the number of digits shown in the image. Default value is
 .IR 6 .
+Use
+.I -1
+to automatically detect the number of digits.
 .SS -r, --one-ratio RATIO
 Set the height/width ratio threshold to recognize a digit as a one.
 RATIO takes integers only.
