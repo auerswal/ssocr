@@ -30,9 +30,9 @@ install: all
 
 ssocr-dir:
 	install -d ssocr-$(VERSION)
-	install Makefile $(DOCS) *.[ch] *.in ssocr-$(VERSION)
+	install -m 0644 Makefile $(DOCS) *.[ch] *.in ssocr-$(VERSION)
 	install -d ssocr-$(VERSION)/debian
-	install debian/* ssocr-$(VERSION)/debian
+	install -m 0644 debian/* ssocr-$(VERSION)/debian
 
 debian/changelog:
 	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * Debian package of current ssocr version\n\n -- $(USER)  $(shell date -R)\n" >$@
