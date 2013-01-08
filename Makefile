@@ -11,11 +11,11 @@ all: ssocr ssocr.1
 
 ssocr: ssocr.o imgproc.o help.o
 
-ssocr.o: ssocr.c ssocr.h defines.h imgproc.h help.h
-imgproc.o: imgproc.c defines.h imgproc.h help.h
-help.o: help.c defines.h imgproc.h help.h
+ssocr.o: ssocr.c ssocr.h defines.h imgproc.h help.h Makefile
+imgproc.o: imgproc.c defines.h imgproc.h help.h Makefile
+help.o: help.c defines.h imgproc.h help.h Makefile
 
-ssocr.1: ssocr.1.in
+ssocr.1: ssocr.1.in Makefile
 	sed -e "s/@VERSION@/$(VERSION)/" -e "s/@DATE@/$(shell date -I)/" <$< >$@
 
 ssocr-manpage.html: ssocr.1
