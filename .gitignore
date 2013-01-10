@@ -3,5 +3,7 @@
 /testbild.png
 /ssocr.1
 /ssocr-?.?.?
+/ssocr-?.??.?
 /*.tar.bz2
 /*.deb
+/*.tmp
