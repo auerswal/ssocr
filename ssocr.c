@@ -1004,7 +1004,7 @@ int main(int argc, char **argv)
     int middle=0, quarter=0, three_quarters=0; /* scanlines */
     int d_height=0; /* height of digit */
     /* if digits[d].digit == D_ONE do nothing */
-    if((digits[d].digit == D_UNKNOWN)) {
+    if(digits[d].digit == D_UNKNOWN) {
       int third=1; /* in which third we are */
       int half;
       found_pixels=0; /* how many pixels are already found */
