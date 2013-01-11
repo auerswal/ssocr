@@ -136,6 +136,7 @@ int main(int argc, char **argv)
   int col=UNKNOWN;  /* is column dark or light? */
   int row=UNKNOWN;  /* is row dark or light? */
   int dig_w;  /* width of digit part of image */
+  int dig_h;  /* height of digit part of image */
   int max_dig_h=0, max_dig_w=0; /* maximum height & width of digits found */
   Imlib_Color color; /* Imlib2 RGBA color structure */
   /* state of search */
@@ -856,6 +857,7 @@ int main(int argc, char **argv)
     }
   }
   dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
+  dig_h = digits[number_of_digits-1].y2 - digits[0].y1;
 
   /* find upper and lower boundaries of every digit */
   for(d=0; d<number_of_digits; d++) {
@@ -943,19 +945,6 @@ int main(int argc, char **argv)
     }
     imlib_context_set_image(image);
   }
-  /* debug: write digit info to stderr */
-  if(flags & DEBUG_OUTPUT) {
-    fprintf(stderr, "found %d digits\n", d);
-    for(d=0; d<number_of_digits; d++) {
-      fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
-                      "height/width (int): %d\n", d,
-                      digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
-                      digits[d].x2 - digits[d].x1,
-                      ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
-                      (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1)
-             );
-    }
-  }
 
   /* determine maximum digit dimensions */
   for(d=0; d<number_of_digits; d++) {
@@ -967,6 +956,26 @@ int main(int argc, char **argv)
   if(flags & DEBUG_OUTPUT)
     fprintf(stderr, "digits are at most %d pixels wide and %d pixels high\n",
                     max_dig_w, max_dig_h);
+
+  /* debug: write digit info to stderr */
+  if(flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "found %d digits\n", d);
+    for(d=0; d<number_of_digits; d++) {
+      fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
+                      "height: %d (%5.2f%%)\n  height/width (int): %d, "
+                      "max_dig_w/width (int): %d, max_dig_h/height (int): %d\n",
+                      d,
+                      digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
+                      digits[d].x2 - digits[d].x1,
+                      ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
+		      digits[d].y2 - digits[d].y1,
+		      ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h,
+                      (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1),
+                      max_dig_w / (digits[d].x2 - digits[d].x1),
+                      max_dig_h / (digits[d].y2 - digits[d].y1)
+             );
+    }
+  }
 
   /* at this point the digit 1 can be identified, because it is smaller than
    * the other digits */
@@ -986,11 +995,11 @@ int main(int argc, char **argv)
 
   /* identify a decimal point (or thousands separator) by relative size */
   for(d=0; d<number_of_digits; d++) {
-    /* if height of a digit is less than 1/7 of the maximum digit height,
+    /* if height of a digit is less than 1/5 of the maximum digit height,
      * and its width is less than 1/2 of the maximum digit width (the widest
      * digit might be a one), assume it is a decimal point */
     if((digits[d].digit == D_UNKNOWN) &&
-       (max_dig_h / (digits[d].y2 - digits[d].y1) > 7) &&
+       (max_dig_h / (digits[d].y2 - digits[d].y1) > 5) &&
        (max_dig_w / (digits[d].x2 - digits[d].x1) > 2)) {
       digits[d].digit = D_DECIMAL;
       if(flags & DEBUG_OUTPUT)
