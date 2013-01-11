@@ -34,3 +34,8 @@ Additional Makefile targets
 - clean:              remove generated files
 - tar:                create a tar-ball of the sources for distribution
 - ssocr-manpage.html: create HTML version of man page
+
+Website
+-------
+You can get the current ssocr version from the official ssocr website:
+http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
