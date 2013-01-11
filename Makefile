@@ -16,7 +16,8 @@ imgproc.o: imgproc.c defines.h imgproc.h help.h Makefile
 help.o: help.c defines.h imgproc.h help.h Makefile
 
 ssocr.1: ssocr.1.in Makefile
-	sed -e "s/@VERSION@/$(VERSION)/" -e "s/@DATE@/$(shell date -I)/" <$< >$@
+	sed -e "s/@VERSION@/$(VERSION)/" \
+	    -e "s/@DATE@/$(shell date +%Y-%m-%d)/" <$< >$@
 
 ssocr-manpage.html: ssocr.1
 	rman -f html -r '' $< >$@
