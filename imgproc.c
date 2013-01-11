@@ -1036,7 +1036,7 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
   }
   if(tmp) {
     if(flags & VERBOSE)
-      fprintf(stderr, "using %s format for %s image\n", image_type, tmp);
+      fprintf(stderr, "using %s format for %s image\n", tmp, image_type);
     imlib_image_set_format(tmp);
   } else { /* use png as default */
     if(flags & VERBOSE)
