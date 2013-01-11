@@ -171,4 +171,7 @@ int clip(int value, int min, int max);
 void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
                 const char *filename, int flags);
 
+/* report Imlib2 load/save error to stderr */
+void report_imlib_error(Imlib_Load_Error error);
+
 #endif /* SSOCR2_IMGPROC_H */

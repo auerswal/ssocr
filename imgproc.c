@@ -1017,6 +1017,7 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
 {
   const char *tmp;
   Imlib_Image *current_image;
+  Imlib_Load_Error save_error=0;
   const char *const stdout_file = "/proc/self/fd/1";
 
   current_image = imlib_context_get_image();
@@ -1045,7 +1046,11 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
   /* write image to disk */
   if(flags & VERBOSE)
     fprintf(stderr, "writing %s image to file %s\n", image_type, filename);
-  imlib_save_image(filename);
+  imlib_save_image_with_error_return(filename, &save_error);
+  if(save_error && save_error != IMLIB_LOAD_ERROR_NONE) {
+    fprintf(stderr, "error saving image file %s\n", filename);
+    report_imlib_error(save_error);
+  }
   imlib_context_set_image(current_image);
 }
 
@@ -1073,5 +1078,61 @@ luminance_t parse_lum(char *keyword)
     return BLUE;
   } else {
     return DEFAULT_LUM_FORMULA;
+  }
+}
+
+/* report Imlib2 load/save error to stderr */
+void report_imlib_error(Imlib_Load_Error error)
+{
+  fputs("  Imlib2 error code: ",stderr);
+  switch (error) {
+    case IMLIB_LOAD_ERROR_NONE:
+      fputs("IMLIB_LOAD_ERROR_NONE\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST:
+      fputs("IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY:
+      fputs("IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ:
+      fputs("IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT:
+      fputs("IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PATH_TOO_LONG:
+      fputs("IMLIB_LOAD_ERROR_PATH_TOO_LONG\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT:
+      fputs("IMLIB_LOAD_ERROR_PATH_COMPONENT_NON_EXISTANT\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PATH_COMPONENT_NOT_DIRECTORY:
+      fputs("IMLIB_LOAD_ERROR_PATH_COMPONENT_NOT_DIRECTORY\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PATH_POINTS_OUTSIDE_ADDRESS_SPACE:
+      fputs("IMLIB_LOAD_ERROR_PATH_POINTS_OUTSIDE_ADDRESS_SPACE\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_TOO_MANY_SYMBOLIC_LINKS:
+      fputs("IMLIB_LOAD_ERROR_TOO_MANY_SYMBOLIC_LINKS\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_OUT_OF_MEMORY:
+      fputs("IMLIB_LOAD_ERROR_OUT_OF_MEMORY\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_OUT_OF_FILE_DESCRIPTORS:
+      fputs("IMLIB_LOAD_ERROR_OUT_OF_FILE_DESCRIPTORS\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_WRITE:
+      fputs("IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_WRITE\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_OUT_OF_DISK_SPACE:
+      fputs("IMLIB_LOAD_ERROR_OUT_OF_DISK_SPACE\n", stderr);
+      break;
+    case IMLIB_LOAD_ERROR_UNKNOWN:
+      fputs("IMLIB_LOAD_ERROR_UNKNOWN\n", stderr);
+      break;
+    default:
+      fprintf(stderr, "unknown error code %d, please report\n", error);
+      break;
   }
 }

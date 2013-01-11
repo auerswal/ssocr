@@ -113,6 +113,7 @@ int main(int argc, char **argv)
   Imlib_Image image=NULL; /* an image handle */
   Imlib_Image new_image=NULL; /* a temporary image handle */
   Imlib_Image debug_image=NULL; /* DEBUG */
+  Imlib_Load_Error load_error=0; /* save Imlib2 error code on image I/O*/
   char *imgfile=NULL; /* filename of image file */
   int use_tmpfile=0; /* flag to know if temporary image file is used */
 
@@ -379,7 +380,7 @@ int main(int argc, char **argv)
   if(flags & VERBOSE) {
     fprintf(stderr, "loading image %s\n", imgfile);
   }
-  image = imlib_load_image_immediately_without_cache(imgfile);
+  image = imlib_load_image_with_error_return(imgfile, &load_error);
   if(use_tmpfile) {
     if(flags & VERBOSE)
       fprintf(stderr, "removing temporary image file %s\n", imgfile);
@@ -389,6 +390,7 @@ int main(int argc, char **argv)
   }
   if(!image) {
     fprintf(stderr, "could not load image %s\n", imgfile);
+    report_imlib_error(load_error);
     exit(99);
   }
 
