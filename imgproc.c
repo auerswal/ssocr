@@ -513,7 +513,7 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
   /* find the threshold value to differentiate between dark and light */
   for(xi=0; (xi<w) && (xi<width); xi++) {
     for(yi=0; (yi<h) && (yi<height); yi++) {
-      imlib_image_query_pixel(xi, yi, &color);
+      imlib_image_query_pixel(x+xi, y+yi, &color);
       lum = get_lum(&color, lt);
       if(lum < minval) minval = lum;
       if(lum > maxval) maxval = lum;
