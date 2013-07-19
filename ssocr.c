@@ -962,14 +962,16 @@ int main(int argc, char **argv)
     fprintf(stderr, "found %d digits\n", d);
     for(d=0; d<number_of_digits; d++) {
       fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
-                      "height: %d (%5.2f%%)\n  height/width (int): %d, "
-                      "max_dig_w/width (int): %d, max_dig_h/height (int): %d\n",
+                      "height: %d (%5.2f%%)\n",
                       d,
                       digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
                       digits[d].x2 - digits[d].x1,
                       ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
 		      digits[d].y2 - digits[d].y1,
-		      ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h,
+		      ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h
+             );
+      fprintf(stderr, "  height/width (int): %d, "
+                      "max_dig_w/width (int): %d, max_dig_h/height (int): %d\n",
                       (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1),
                       max_dig_w / (digits[d].x2 - digits[d].x1),
                       max_dig_h / (digits[d].y2 - digits[d].y1)
