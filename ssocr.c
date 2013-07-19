@@ -967,8 +967,8 @@ int main(int argc, char **argv)
                       digits[d].x1, digits[d].y1, digits[d].x2, digits[d].y2,
                       digits[d].x2 - digits[d].x1,
                       ((digits[d].x2 - digits[d].x1) * 100.0) / dig_w,
-		      digits[d].y2 - digits[d].y1,
-		      ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h
+                      digits[d].y2 - digits[d].y1,
+                      ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h
              );
       fprintf(stderr, "  height/width (int): %d, "
                       "max_dig_w/width (int): %d, max_dig_h/height (int): %d\n",
@@ -1005,7 +1005,7 @@ int main(int argc, char **argv)
        (max_dig_w / (digits[d].x2 - digits[d].x1) > 2)) {
       digits[d].digit = D_DECIMAL;
       if(flags & DEBUG_OUTPUT)
-	fprintf(stderr, "digit %d is a decimal point\n", d);
+        fprintf(stderr, "digit %d is a decimal point\n", d);
     }
   }
 
