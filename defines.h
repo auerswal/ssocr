@@ -20,7 +20,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.13.4"
+#define VERSION "2.14.0"
 
 /* states */
 #define FIND_DARK 0
@@ -63,6 +63,7 @@
 #define D_ALTSEVEN (VERT_LEFT_UP | D_SEVEN)
 #define D_EIGHT ALL_SEGS
 #define D_NINE (ALL_SEGS & ~VERT_LEFT_DOWN)
+#define D_ALTNINE (ALL_SEGS & ~(VERT_LEFT_DOWN | HORIZ_DOWN))
 #define D_DECIMAL DECIMAL
 #define D_HEX_A (ALL_SEGS & ~HORIZ_DOWN)
 #define D_HEX_b (ALL_SEGS & ~(HORIZ_UP | VERT_RIGHT_UP))

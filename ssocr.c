@@ -1176,7 +1176,8 @@ int main(int argc, char **argv)
       case D_SEVEN: /* fallthrough */
       case D_ALTSEVEN: putchar('7'); break;
       case D_EIGHT: putchar('8'); break;
-      case D_NINE: putchar('9'); break;
+      case D_NINE: /* fallthrough */
+      case D_ALTNINE: putchar('9'); break;
       case D_DECIMAL: putchar('.'); break;
       case D_HEX_A: putchar('a'); break;
       case D_HEX_b: putchar('b'); break;
