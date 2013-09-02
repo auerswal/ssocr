@@ -993,6 +993,8 @@ int main(int argc, char **argv)
   /* at this point the digit 1 can be identified, because it is smaller than
    * the other digits */
   for(i=0; i<number_of_digits; i++) {
+    /* skip digits with zero width */
+    if(digits[i].x1 == digits[i].x2) continue;
     /* if width of digit is less than 1/one_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
@@ -1008,6 +1010,9 @@ int main(int argc, char **argv)
 
   /* identify a decimal point (or thousands separator) by relative size */
   for(d=0; d<number_of_digits; d++) {
+    /* skip digits with zero width */
+    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2))
+      continue;
     /* if height of a digit is less than 1/5 of the maximum digit height,
      * and its width is less than 1/2 of the maximum digit width (the widest
      * digit might be a one), assume it is a decimal point */
