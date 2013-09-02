@@ -970,12 +970,23 @@ int main(int argc, char **argv)
                       digits[d].y2 - digits[d].y1,
                       ((digits[d].y2 - digits[d].y1) * 100.0) / dig_h
              );
-      fprintf(stderr, "  height/width (int): %d, "
-                      "max_dig_w/width (int): %d, max_dig_h/height (int): %d\n",
-                      (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1),
-                      max_dig_w / (digits[d].x2 - digits[d].x1),
-                      max_dig_h / (digits[d].y2 - digits[d].y1)
-             );
+      fprintf(stderr, "  height/width (int): ");
+      if(digits[d].x1 == digits[d].x2) {
+	fprintf(stderr, "NaN, max_dig_w/width (int): NaN, ");
+      } else {
+	fprintf(stderr, "%d, max_dig_w/width (int): %d, ",
+                       (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1),
+                       max_dig_w / (digits[d].x2 - digits[d].x1)
+              );
+      }
+      fprintf(stderr, "max_dig_h/height (int): ");
+      if(digits[d].y1 == digits[d].y2) {
+	fprintf(stderr, "NaN\n");
+      } else {
+        fprintf(stderr, "%d\n",
+                        max_dig_h / (digits[d].y2 - digits[d].y1)
+               );
+      }
     }
   }
 
