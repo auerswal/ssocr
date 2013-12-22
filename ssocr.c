@@ -126,7 +126,7 @@ int main(int argc, char **argv)
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
-  char *output_file=NULL; /* wrie processed image to file */
+  char *output_file=NULL; /* write processed image to file */
   char *output_fmt=NULL; /* use this format */
   char *debug_image_file=NULL; /* ...to this file */
   int flags=0; /* set by options, see #defines on .h file */
