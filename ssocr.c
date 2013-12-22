@@ -1005,19 +1005,19 @@ int main(int argc, char **argv)
 
   /* at this point the digit 1 can be identified, because it is smaller than
    * the other digits */
-  for(i=0; i<number_of_digits; i++) {
+  for(d=0; d<number_of_digits; d++) {
     /* skip digits with zero width */
-    if(digits[i].x1 == digits[i].x2) continue;
+    if(digits[d].x1 == digits[d].x2) continue;
     /* if width of digit is less than 1/one_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
-    if((digits[i].y2-digits[i].y1)/(digits[i].x2-digits[i].x1) > one_ratio) {
+    if((digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1) > one_ratio) {
       if(flags & DEBUG_OUTPUT) {
         fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
-               i, digits[i].y2 - digits[i].y1, digits[i].x2 - digits[i].x1,
-               (digits[i].y2 - digits[i].y1) / (digits[i].x2 - digits[i].x1));
+               d, digits[d].y2 - digits[d].y1, digits[d].x2 - digits[d].x1,
+               (digits[d].y2 - digits[d].y1) / (digits[d].x2 - digits[d].x1));
       }
-      digits[i].digit = D_ONE;
+      digits[d].digit = D_ONE;
     }
   }
 
@@ -1039,20 +1039,20 @@ int main(int argc, char **argv)
   }
 
   /* identify a minus sign */
-  for(i=0; i<number_of_digits; i++) {
+  for(d=0; d<number_of_digits; d++) {
     /* skip digits with zero height */
-    if(digits[i].y1 == digits[i].y2) continue;
+    if(digits[d].y1 == digits[d].y2) continue;
     /* if height of digit is less than 1/minus_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
-    if( (digits[i].digit == D_UNKNOWN) &&
-        ((digits[i].x2-digits[i].x1)/(digits[i].y2-digits[i].y1) >= minus_ratio)) {
+    if( (digits[d].digit == D_UNKNOWN) &&
+        ((digits[d].x2-digits[d].x1)/(digits[d].y2-digits[d].y1) >= minus_ratio)) {
       if(flags & DEBUG_OUTPUT) {
         fprintf(stderr, "digit %d is a minus (width/height = %d/%d = (int) %d)\n",
-               i, digits[i].x2 - digits[i].x1, digits[i].y2 - digits[i].y1,
-               (digits[i].x2 - digits[i].x1) / (digits[i].y2 - digits[i].y1));
+               d, digits[d].x2 - digits[d].x1, digits[d].y2 - digits[d].y1,
+               (digits[d].x2 - digits[d].x1) / (digits[d].y2 - digits[d].y1));
       }
-      digits[i].digit = D_MINUS;
+      digits[d].digit = D_MINUS;
     }
   }
 
