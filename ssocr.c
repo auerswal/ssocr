@@ -985,16 +985,16 @@ int main(int argc, char **argv)
              );
       fprintf(stderr, "  height/width (int): ");
       if(digits[d].x1 == digits[d].x2) {
-	fprintf(stderr, "NaN, max_dig_w/width (int): NaN, ");
+        fprintf(stderr, "NaN, max_dig_w/width (int): NaN, ");
       } else {
-	fprintf(stderr, "%d, max_dig_w/width (int): %d, ",
+        fprintf(stderr, "%d, max_dig_w/width (int): %d, ",
                        (digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1),
                        max_dig_w / (digits[d].x2 - digits[d].x1)
               );
       }
       fprintf(stderr, "max_dig_h/height (int): ");
       if(digits[d].y1 == digits[d].y2) {
-	fprintf(stderr, "NaN\n");
+        fprintf(stderr, "NaN\n");
       } else {
         fprintf(stderr, "%d\n",
                         max_dig_h / (digits[d].y2 - digits[d].y1)
@@ -1045,10 +1045,11 @@ int main(int argc, char **argv)
     /* if height of digit is less than 1/minus_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
-    if( (digits[d].digit == D_UNKNOWN) &&
-        ((digits[d].x2-digits[d].x1)/(digits[d].y2-digits[d].y1) >= minus_ratio)) {
+    if((digits[d].digit == D_UNKNOWN) &&
+       ((digits[d].x2-digits[d].x1)/(digits[d].y2-digits[d].y1)>=minus_ratio)) {
       if(flags & DEBUG_OUTPUT) {
-        fprintf(stderr, "digit %d is a minus (width/height = %d/%d = (int) %d)\n",
+        fprintf(stderr,
+               "digit %d is a minus (width/height = %d/%d = (int) %d)\n",
                d, digits[d].x2 - digits[d].x1, digits[d].y2 - digits[d].y1,
                (digits[d].x2 - digits[d].x1) / (digits[d].y2 - digits[d].y1));
       }
