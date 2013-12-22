@@ -1040,8 +1040,8 @@ int main(int argc, char **argv)
 
   /* identify a minus sign */
   for(i=0; i<number_of_digits; i++) {
-    /* skip digits with zero width */
-    if(digits[i].x1 == digits[i].x2) continue;
+    /* skip digits with zero height */
+    if(digits[i].y1 == digits[i].y2) continue;
     /* if height of digit is less than 1/minus_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */

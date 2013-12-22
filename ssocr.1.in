@@ -61,6 +61,9 @@ RATIO takes integers only.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
+.SS -m, --minus-ratio RATIO
+Set the width/height ratio to recognize a minus sign.
+This uses the same idea as recognizing the digit one.
 .SS -o, --output-image FILE
 Write the processed image to FILE.
 Use
