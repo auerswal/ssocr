@@ -1005,15 +1005,21 @@ int main(int argc, char **argv)
 
   /* at this point the digit 1 can be identified, because it is smaller than
    * the other digits */
+  if(flags & DEBUG_OUTPUT)
+    fputs("looking for digit 1\n",stderr);
   for(d=0; d<number_of_digits; d++) {
     /* skip digits with zero width */
-    if(digits[d].x1 == digits[d].x2) continue;
+    if(digits[d].x1 == digits[d].x2) {
+      if(flags & DEBUG_OUTPUT)
+        fprintf(stderr, " skipping digit %d with zero width\n", d);
+      continue;
+    }
     /* if width of digit is less than 1/one_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
     if((digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1) > one_ratio) {
       if(flags & DEBUG_OUTPUT) {
-        fprintf(stderr, "digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
+        fprintf(stderr, " digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                d, digits[d].y2 - digits[d].y1, digits[d].x2 - digits[d].x1,
                (digits[d].y2 - digits[d].y1) / (digits[d].x2 - digits[d].x1));
       }
@@ -1022,10 +1028,15 @@ int main(int argc, char **argv)
   }
 
   /* identify a decimal point (or thousands separator) by relative size */
+  if(flags & DEBUG_OUTPUT)
+    fputs("looking for decimal points\n",stderr);
   for(d=0; d<number_of_digits; d++) {
     /* skip digits with zero width or height */
-    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2))
+    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2)) {
+      if(flags & DEBUG_OUTPUT)
+        fprintf(stderr, " skipping digit %d with zero width or height\n", d);
       continue;
+    }
     /* if height of a digit is less than 1/5 of the maximum digit height,
      * and its width is less than 1/2 of the maximum digit width (the widest
      * digit might be a one), assume it is a decimal point */
@@ -1034,14 +1045,20 @@ int main(int argc, char **argv)
        (max_dig_w / (digits[d].x2 - digits[d].x1) > 2)) {
       digits[d].digit = D_DECIMAL;
       if(flags & DEBUG_OUTPUT)
-        fprintf(stderr, "digit %d is a decimal point\n", d);
+        fprintf(stderr, " digit %d is a decimal point\n", d);
     }
   }
 
   /* identify a minus sign */
+  if(flags & DEBUG_OUTPUT)
+    fputs("looking for minus signs\n",stderr);
   for(d=0; d<number_of_digits; d++) {
     /* skip digits with zero height */
-    if(digits[d].y1 == digits[d].y2) continue;
+    if(digits[d].y1 == digits[d].y2) {
+      if(flags & DEBUG_OUTPUT)
+        fprintf(stderr, " skipping digit %d with zero height\n", d);
+      continue;
+    }
     /* if height of digit is less than 1/minus_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
@@ -1049,7 +1066,7 @@ int main(int argc, char **argv)
        ((digits[d].x2-digits[d].x1)/(digits[d].y2-digits[d].y1)>=minus_ratio)) {
       if(flags & DEBUG_OUTPUT) {
         fprintf(stderr,
-               "digit %d is a minus (width/height = %d/%d = (int) %d)\n",
+               " digit %d is a minus (width/height = %d/%d = (int) %d)\n",
                d, digits[d].x2 - digits[d].x1, digits[d].y2 - digits[d].y1,
                (digits[d].x2 - digits[d].x1) / (digits[d].y2 - digits[d].y1));
       }
