@@ -15,6 +15,7 @@
 */
 
 /* Copyright (C) 2004-2013 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* ImLib2 Header */
 #include <X11/Xlib.h>       /* needed by Imlib2.h */
@@ -123,6 +124,7 @@ int main(int argc, char **argv)
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
+  int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus' */
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
@@ -164,7 +166,8 @@ int main(int argc, char **argv)
       {"number-pixels", 1, 0, 'n'}, /* pixels needed to regard segment as set */
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
-      {"one-ratio", 1, 0, 'r'}, /* wheight/width threshold to recognize a one */
+      {"one-ratio", 1, 0, 'r'}, /* height/width threshold to recognize a one */
+      {"minus-ratio", 1, 0, 'm'}, /* width/height threshold to recognize a minus sign */
       {"output-image", 1, 0, 'o'}, /* write processed image to given file */
       {"output-format", 1, 0, 'O'}, /* format of output image */
       {"debug-image", 2, 0, 'D'}, /* write a debug image */
@@ -177,7 +180,7 @@ int main(int argc, char **argv)
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:o:O:D::pPf:b:Igl:",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -249,6 +252,15 @@ int main(int argc, char **argv)
           if(one_ratio < 2) {
             fprintf(stderr, "warning: ignoring --one-ratio=%s\n", optarg);
             one_ratio = ONE_RATIO;
+          }
+        }
+        break;
+      case 'm':
+        if(optarg) {
+          minus_ratio = atoi(optarg);
+          if(one_ratio < 2) {
+            fprintf(stderr, "warning: ignoring --minus-ratio=%s\n", optarg);
+            minus_ratio = MINUS_RATIO;
           }
         }
         break;
@@ -356,6 +368,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "luminance  = ");
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
     fprintf(stderr, "height/width threshold = %d\n", one_ratio);
+    fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
   }
@@ -1025,6 +1038,24 @@ int main(int argc, char **argv)
     }
   }
 
+  /* identify a minus sign */
+  for(i=0; i<number_of_digits; i++) {
+    /* skip digits with zero width */
+    if(digits[i].x1 == digits[i].x2) continue;
+    /* if height of digit is less than 1/minus_ratio of its height it is a 1
+     * (the default 1/3 is arbitarily chosen -- normally seven segment
+     * displays use digits that are 2 times as high as wide) */
+    if( (digits[i].digit == D_UNKNOWN) &&
+        ((digits[i].x2-digits[i].x1)/(digits[i].y2-digits[i].y1) >= minus_ratio)) {
+      if(flags & DEBUG_OUTPUT) {
+        fprintf(stderr, "digit %d is a minus (width/height = %d/%d = (int) %d)\n",
+               i, digits[i].x2 - digits[i].x1, digits[i].y2 - digits[i].y1,
+               (digits[i].x2 - digits[i].x1) / (digits[i].y2 - digits[i].y1));
+      }
+      digits[i].digit = D_MINUS;
+    }
+  }
+
   /* now the digits are located and they have to be identified */
   /* iterate over digits */
   for(d=0; d<number_of_digits; d++) {
@@ -1164,7 +1195,8 @@ int main(int argc, char **argv)
     for(i=0; i<number_of_digits; i++) {
       fputc(' ', stderr);
       digits[i].digit & VERT_LEFT_UP ? fputc('|', stderr) : fputc(' ', stderr);
-      digits[i].digit & HORIZ_MID ? fputc('_', stderr) : fputc(' ', stderr);
+      digits[i].digit & HORIZ_MID ? fputc('_', stderr) :
+        digits[i].digit == D_MINUS ? fputc('_', stderr) : fputc(' ', stderr);
       digits[i].digit & VERT_RIGHT_UP ? fputc('|', stderr) : fputc(' ', stderr);
     }
     fputc('\n', stderr);
@@ -1195,6 +1227,7 @@ int main(int argc, char **argv)
       case D_NINE: /* fallthrough */
       case D_ALTNINE: putchar('9'); break;
       case D_DECIMAL: putchar('.'); break;
+      case D_MINUS: putchar('-'); break;
       case D_HEX_A: putchar('a'); break;
       case D_HEX_b: putchar('b'); break;
       case D_HEX_C: /* fallthrough */

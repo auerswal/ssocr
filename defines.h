@@ -15,6 +15,7 @@
 */
 
 /* Copyright (C) 2004-2013 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 #ifndef SSOCR2_DEFINES_H
 #define SSOCR2_DEFINES_H
@@ -50,6 +51,7 @@
 #define HORIZ_DOWN 64
 #define ALL_SEGS 127
 #define DECIMAL 128
+#define MINUS 256
 
 /* digits */
 #define D_ZERO (ALL_SEGS & ~HORIZ_MID)
@@ -65,6 +67,7 @@
 #define D_NINE (ALL_SEGS & ~VERT_LEFT_DOWN)
 #define D_ALTNINE (ALL_SEGS & ~(VERT_LEFT_DOWN | HORIZ_DOWN))
 #define D_DECIMAL DECIMAL
+#define D_MINUS MINUS
 #define D_HEX_A (ALL_SEGS & ~HORIZ_DOWN)
 #define D_HEX_b (ALL_SEGS & ~(HORIZ_UP | VERT_RIGHT_UP))
 #define D_HEX_C (ALL_SEGS & ~(VERT_RIGHT_UP | HORIZ_MID | VERT_RIGHT_DOWN))
@@ -84,6 +87,9 @@
 
 /* a one is recognized by a height/width ratio > ONE_RATIO (as ints) */
 #define ONE_RATIO 2
+
+/* a minus sign is recognized by a width/height ratio > MINUS_RATIO (as ints) */
+#define MINUS_RATIO 2
 
 /* to find segment need # of pixels */
 #define NEED_PIXELS 1

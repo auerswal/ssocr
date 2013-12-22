@@ -15,6 +15,7 @@
 */
 
 /* Copyright (C) 2004-2013 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* standard things */
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
@@ -90,6 +91,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  boundaries\n");
   fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
   fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
+  fprintf(f, "         -m, --minus-ratio=#      width/height ratio to recognize a minus sign\n");
   fprintf(f, "         -o, --output-image=FILE  write processed image to FILE\n");
   fprintf(f, "         -O, --output-format=FMT  use output format FMT (Imlib2 formats)\n");
   fprintf(f, "         -p, --process-only       do image processing only, no OCR\n");
@@ -143,6 +145,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "          luminance              = ");
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
   fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);
+  fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");
   fprintf(f, "           they are given, in the resulting image the given number of digits\n");
   fprintf(f, "           are searched and recognized, after which the recognized number is\n");
