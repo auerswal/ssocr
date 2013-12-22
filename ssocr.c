@@ -1010,7 +1010,7 @@ int main(int argc, char **argv)
 
   /* identify a decimal point (or thousands separator) by relative size */
   for(d=0; d<number_of_digits; d++) {
-    /* skip digits with zero width */
+    /* skip digits with zero width or height */
     if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2))
       continue;
     /* if height of a digit is less than 1/5 of the maximum digit height,
