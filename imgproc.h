@@ -110,6 +110,9 @@ Imlib_Image shear(Imlib_Image *source_image, int offset);
 /* rotate the image */
 Imlib_Image rotate(Imlib_Image *source_image, double theta);
 
+/* mirror image horizontally or vertically */
+Imlib_Image mirror(Imlib_Image *source_image, mirror_t direction);
+
 /* turn image to grayscale */
 Imlib_Image grayscale(Imlib_Image *source_image, luminance_t lt);
 

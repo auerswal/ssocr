@@ -128,6 +128,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "          shear OFFSET            shear image OFFSET pixels (at bottom) to the\n");
   fprintf(f, "                                  right\n");
   fprintf(f, "          rotate THETA            rotate image by THETA degrees\n");
+  fprintf(f, "          mirror {horiz|vert}     mirror image horizontally or vertically\n");
   fprintf(f, "          crop X Y W H            crop image with upper left corner (X,Y) with\n");
   fprintf(f, "                                  width W and height H\n");
   fprintf(f, "          set_pixels_filter MASK  set pixels that have at least MASK neighbor\n");

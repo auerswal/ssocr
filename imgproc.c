@@ -823,6 +823,54 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
   return new_image;
 }
 
+/* mirror image horizontally or vertically */
+Imlib_Image mirror(Imlib_Image *source_image, mirror_t direction)
+{
+  Imlib_Image new_image; /* construct filtered image here */
+  Imlib_Image current_image; /* save image pointer */
+  int height, width; /* image dimensions */
+  int x,y; /* iteration variables / target coordinates */
+  Imlib_Color color_return; /* for imlib_query_pixel() */
+
+  /* save pointer to current image */
+  current_image = imlib_context_get_image();
+
+  /* create a new image */
+  imlib_context_set_image(*source_image);
+  height = imlib_image_get_height();
+  width = imlib_image_get_width();
+  new_image = imlib_clone_image();
+
+  /* create mirrored image */
+  if(direction == HORIZONTAL) {
+    for(x = width-1; x>=0; x--) {
+      for(y = 0; y < height; y++) {
+	imlib_image_query_pixel(width - 1 - x, y, &color_return);
+	imlib_context_set_image(new_image);
+	imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+	imlib_image_draw_pixel(x,y,0);
+	imlib_context_set_image(*source_image);
+      }
+    }
+  } else if(direction == VERTICAL) {
+    for(x = 0; x < width; x++) {
+      for(y = height-1; y >= 0; y--) {
+	imlib_image_query_pixel(x, height - 1 - y, &color_return);
+	imlib_context_set_image(new_image);
+	imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+	imlib_image_draw_pixel(x,y,0);
+	imlib_context_set_image(*source_image);
+      }
+    }
+  }
+
+  /* restore image from before function call */
+  imlib_context_set_image(current_image);
+
+  /* return filtered image */
+  return new_image;
+}
+
 /* turn image to grayscale */
 Imlib_Image grayscale(Imlib_Image *source_image, luminance_t lt)
 {

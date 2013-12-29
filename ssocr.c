@@ -742,6 +742,29 @@ int main(int argc, char **argv)
           fprintf(stderr, "error: rotate command needs an argument\n");
           exit(99);
         }
+      } else if(strcasecmp("mirror",argv[i]) == 0) {
+        if(i+1<argc-1) {
+          if(flags & VERBOSE) {
+            fprintf(stderr, " processing mirror %s\n", argv[i+1]);
+          }
+          if(strncasecmp("horiz",argv[i+1],5) == 0) {
+            new_image = mirror(&image, HORIZONTAL);
+          } else if(strncasecmp("vert",argv[i+1],4) == 0) {
+            new_image = mirror(&image, VERTICAL);
+          } else {
+            fprintf(stderr,
+                    "error: argument to 'mirror' must be 'horiz' or 'vert'\n");
+            exit(99);
+          }
+	  i++;
+          imlib_context_set_image(image);
+          imlib_free_image();
+          image = new_image;
+        } else {
+          fprintf(stderr,
+                  "error: mirror command needs argument 'horiz' or 'vert'\n");
+          exit(99);
+        }
       } else {
         fprintf(stderr, " unknown command \"%s\"\n", argv[i]);
       }

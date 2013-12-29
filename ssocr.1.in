@@ -279,6 +279,8 @@ Image dimensions do not change,
 pixels rotated out of the image area are dropped,
 pixels from outside the image rotated into the new image are set to the
 background color.
+.SS mirror { horiz | vert }
+Mirror the image horizontally or vertically.
 .SS crop X Y W H
 Use only the subpicture with upper left corner (
 .BR X , Y

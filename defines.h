@@ -21,7 +21,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.15.0"
+#define VERSION "2.16.0"
 
 /* states */
 #define FIND_DARK 0
@@ -142,5 +142,11 @@ typedef enum luminance_e {
   GREEN,
   BLUE
 } luminance_t;
+
+/* mirror horizontally or vertically */
+typedef enum mirror_e {
+  HORIZONTAL,
+  VERTICAL
+} mirror_t;
 
 #endif /* SSOCR2_DEFINES_H */
