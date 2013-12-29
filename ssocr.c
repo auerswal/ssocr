@@ -725,14 +725,14 @@ int main(int argc, char **argv)
           exit(99);
         }
       } else if(strcasecmp("rotate",argv[i]) == 0) {
-        if(flags & VERBOSE) {
-          fprintf(stderr, " processing rotate %f", atof(argv[i+1]));
-          if(flags & DEBUG_OUTPUT) {
-            fprintf(stderr, " (from string %s)", argv[i+1]);
-          }
-          fprintf(stderr, "\n");
-        }
         if(i+1<argc-1) {
+          if(flags & VERBOSE) {
+            fprintf(stderr, " processing rotate %f", atof(argv[i+1]));
+            if(flags & DEBUG_OUTPUT) {
+              fprintf(stderr, " (from string %s)", argv[i+1]);
+            }
+            fprintf(stderr, "\n");
+          }
           theta = atof(argv[++i]); /* sideeffect: increment i */
           new_image = rotate(&image, theta);
           imlib_context_set_image(image);
