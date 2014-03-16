@@ -1,5 +1,5 @@
 CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -Werror -pedantic-errors $(shell imlib2-config --cflags) -O3
-LDLIBS := $(shell imlib2-config --libs)
+LDLIBS := -lm $(shell imlib2-config --libs)
 PREFIX := /usr/local
 BINDIR := $(PREFIX)/bin
 MANDIR := $(PREFIX)/share/man/man1
