@@ -25,6 +25,7 @@ Prerequisites
   they are provided by the packages libimlib2 and libimlib2-dev.
   On Mac OS X you can use 'brew' to install Imlib2: brew install imlib2
   (see http://mxcl.github.com/homebrew/)
+- imlib2-config (part of libimlib2-dev on Debian or Ubuntu)
 - Build tools, e.g. build-essential on a Debian (or Ubuntu) system.
 - To build a .deb package, you probably need the debhelper package.
 - To create an HTML version of the man page, you need rman.
