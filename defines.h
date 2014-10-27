@@ -14,14 +14,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2013 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2014 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 #ifndef SSOCR2_DEFINES_H
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.16.0"
+#define VERSION "2.16.1"
 
 /* states */
 #define FIND_DARK 0
