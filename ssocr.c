@@ -258,7 +258,7 @@ int main(int argc, char **argv)
       case 'm':
         if(optarg) {
           minus_ratio = atoi(optarg);
-          if(one_ratio < 2) {
+          if(minus_ratio < 2) {
             fprintf(stderr, "warning: ignoring --minus-ratio=%s\n", optarg);
             minus_ratio = MINUS_RATIO;
           }
