@@ -67,7 +67,7 @@ void print_version(FILE *f)
 {
   fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
              VERSION);
-  fprintf(f, "Copyright (C) 2004-2013 by Erik Auerswald"
+  fprintf(f, "Copyright (C) 2004-2014 by Erik Auerswald"
              " <auerswal@unix-ag.uni-kl.de>\n");
   fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
   fprintf(f, "This is free software, and you are welcome to redistribute it"
