@@ -367,7 +367,7 @@ int main(int argc, char **argv)
                     (ssocr_background == SSOCR_BLACK) ? "black" : "white");
     fprintf(stderr, "luminance  = ");
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
-    fprintf(stderr, "height/width threshold = %d\n", one_ratio);
+    fprintf(stderr, "height/width threshold for one   = %d\n", one_ratio);
     fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
