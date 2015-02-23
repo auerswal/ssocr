@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2014 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2015 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* ImLib2 Header */
@@ -1040,7 +1040,7 @@ int main(int argc, char **argv)
     /* if width of digit is less than 1/one_ratio of its height it is a 1
      * (the default 1/3 is arbitarily chosen -- normally seven segment
      * displays use digits that are 2 times as high as wide) */
-    if((digits[d].y2-digits[d].y1)/(digits[d].x2-digits[d].x1) > one_ratio) {
+    if((digits[d].y2-digits[d].y1+0.5)/(digits[d].x2-digits[d].x1) > one_ratio) {
       if(flags & DEBUG_OUTPUT) {
         fprintf(stderr, " digit %d is a 1 (height/width = %d/%d = (int) %d)\n",
                d, digits[d].y2 - digits[d].y1, digits[d].x2 - digits[d].x1,
