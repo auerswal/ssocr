@@ -86,7 +86,7 @@
 #define DEC_W_RATIO 2 /* needs to work with just ones in the display, too */
 
 /* a one is recognized by a height/width ratio > ONE_RATIO (as ints) */
-#define ONE_RATIO 2
+#define ONE_RATIO 3
 
 /* a minus sign is recognized by a width/height ratio > MINUS_RATIO (as ints) */
 #define MINUS_RATIO 2
