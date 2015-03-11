@@ -30,11 +30,15 @@ Prerequisites
 - To build a .deb package, you probably need the debhelper package.
 - To create an HTML version of the man page, you need rman.
 
-Additional Makefile targets
+Additional Makefile Targets
 ---------------------------
 - clean:              remove generated files
 - tar:                create a tar-ball of the sources for distribution
 - ssocr-manpage.html: create HTML version of man page
+
+Platform Specifics
+------------------
+- You may need to rename the binary from ssocr to ssocr.exe to use it on Windows
 
 Website
 -------
