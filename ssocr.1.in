@@ -204,8 +204,11 @@ set to
 .SS dynamic_threshold W H
 Convert the image to monochrome using dynamic thresholding a.k.a local
 adaptive thresholding.
-A window of width W  and height H around the current pixel is used to determine
-the (local) thresholding value.
+A window of width
+.B W
+and height
+.B H
+around the current pixel is used to determine the (local) thresholding value.
 Consider using the
 .B --absolute-threshold
 option together with a manually adjusted
