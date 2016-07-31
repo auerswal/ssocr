@@ -30,6 +30,9 @@ is used. The default threshold is
 .IR 50 .
 .SS -a, --absolute-threshold
 Do not adjust the threshold to the luminance values occuring in the image.
+Consider this option when using the
+.B dynamic_threshold
+command.
 .SS -T, --iter-threshold
 Use an iterative method (one-dimensional k-means clustering) to determine the
 threshold. The starting value can be specified with the
@@ -203,6 +206,11 @@ Convert the image to monochrome using dynamic thresholding a.k.a local
 adaptive thresholding.
 A window of width W  and height H around the current pixel is used to determine
 the (local) thresholding value.
+Consider using the
+.B --absolute-threshold
+option together with a manually adjusted
+.B --threshold
+for predictable results.
 .SS rgb_threshold
 Convert the image to monochrome using simple thresholding for every color
 channel.
