@@ -784,7 +784,7 @@ int main(int argc, char **argv)
 
   if(flags & USE_DEBUG_IMAGE) {
     /* copy processed image to debug image */
-    debug_image = imlib_clone_image();
+    debug_image = make_mono(&image, thresh, lt);
   }
 
   /* allocate memory for seven segment digits */
