@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2015 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2016 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* standard things */
@@ -67,7 +67,7 @@ void print_version(FILE *f)
 {
   fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
              VERSION);
-  fprintf(f, "Copyright (C) 2004-2015 by Erik Auerswald"
+  fprintf(f, "Copyright (C) 2004-2016 by Erik Auerswald"
              " <auerswal@unix-ag.uni-kl.de>\n");
   fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
   fprintf(f, "This is free software, and you are welcome to redistribute it"
