@@ -140,9 +140,9 @@ void usage(char *name, FILE *f)
   fprintf(f, "          no. of digits          = %2d\n", NUMBER_OF_DIGITS);
   fprintf(f, "          threshold              = %5.2f\n", THRESHOLD);
   fprintf(f, "          foreground             = %s\n",
-      (ssocr_foreground == SSOCR_BLACK) ? "black" : "white");
+      (SSOCR_DEFAULT_FOREGROUND == SSOCR_BLACK) ? "black" : "white");
   fprintf(f, "          background             = %s\n",
-      (ssocr_background == SSOCR_BLACK) ? "black" : "white");
+      (SSOCR_DEFAULT_BACKGROUND == SSOCR_BLACK) ? "black" : "white");
   fprintf(f, "          luminance              = ");
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
   fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);

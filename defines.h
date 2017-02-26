@@ -115,6 +115,8 @@
 /* colors used by ssocr */
 #define SSOCR_BLACK 0
 #define SSOCR_WHITE 255
+#define SSOCR_DEFAULT_FOREGROUND SSOCR_BLACK
+#define SSOCR_DEFAULT_BACKGROUND SSOCR_WHITE
 
 /* maximum RGB component value */
 #define MAXRGB 255

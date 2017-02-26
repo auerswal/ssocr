@@ -42,8 +42,8 @@
 #include "help.h"           /* online help */
 
 /* global variables */
-int ssocr_foreground = SSOCR_BLACK;
-int ssocr_background = SSOCR_WHITE;
+int ssocr_foreground = SSOCR_DEFAULT_FOREGROUND;
+int ssocr_background = SSOCR_DEFAULT_BACKGROUND;
 
 /* functions */
 
