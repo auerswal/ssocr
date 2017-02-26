@@ -98,7 +98,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -D, --debug-image[=FILE] write a debug image to FILE or %s\n",DEBUG_IMAGE_NAME);
   fprintf(f, "         -P, --debug-output       print debug information\n");
   fprintf(f, "         -f, --foreground=COLOR   set foreground color (black or white)\n");
-  fprintf(f, "         -b, --background=COLOR   set foreground color (black or white)\n");
+  fprintf(f, "         -b, --background=COLOR   set background color (black or white)\n");
   fprintf(f, "         -I, --print-info         print image dimensions and used lum values\n");
   fprintf(f, "         -g, --adjust-gray        use T1 and T2 as percentages of used values\n");
   fprintf(f, "         -l, --luminance=KEYWORD  compute luminance using formula KEYWORD\n");
