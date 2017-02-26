@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2016 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2017 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 #ifndef SSOCR2_DEFINES_H
