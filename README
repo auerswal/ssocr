@@ -8,5 +8,9 @@ operating system.
 
 See the INSTALL file for instructions on how to build ssocr.
 
+A manual for ssocr is available in the form of a man page named ssocr.1,
+you can read it using "make ssocr.1 && man ./ssocr.1" (without the
+quotes).
+
 You can get the current ssocr version from the official ssocr website:
 http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
