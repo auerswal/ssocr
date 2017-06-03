@@ -4,7 +4,7 @@ PREFIX := /usr/local
 BINDIR := $(PREFIX)/bin
 MANDIR := $(PREFIX)/share/man/man1
 DOCDIR := $(PREFIX)/share/doc/ssocr
-DOCS   := AUTHORS COPYING INSTALL THANKS
+DOCS   := AUTHORS COPYING INSTALL README THANKS
 VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
 
 all: ssocr ssocr.1
