@@ -121,7 +121,7 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int flags);
+                       int y, int w, int h, unsigned int flags);
 
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
@@ -172,7 +172,7 @@ int clip(int value, int min, int max);
 
 /* save image to file */
 void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
-                const char *filename, int flags);
+                const char *filename, unsigned int flags);
 
 /* report Imlib2 load/save error to stderr */
 void report_imlib_error(Imlib_Load_Error error);

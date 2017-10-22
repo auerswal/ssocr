@@ -457,7 +457,7 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, int flags)
+                       int y, int w, int h, unsigned int flags)
 {
   double t = thresh;
   if(!(flags & ABSOLUTE_THRESHOLD)) {
@@ -1061,7 +1061,7 @@ int clip(int value, int min, int max)
 
 /* save image to file */
 void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
-                const char *filename, int flags)
+                const char *filename, unsigned int flags)
 {
   const char *tmp;
   Imlib_Image *current_image;

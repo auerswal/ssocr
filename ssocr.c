@@ -48,7 +48,7 @@ int ssocr_background = SSOCR_DEFAULT_BACKGROUND;
 /* functions */
 
 /* copy image from stdin to a temporary file and return the filename */
-static char * tmp_imgfile(int flags)
+static char * tmp_imgfile(unsigned int flags)
 {
   char *dir;
   char *name;
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
   char *output_file=NULL; /* write processed image to file */
   char *output_fmt=NULL; /* use this format */
   char *debug_image_file=NULL; /* ...to this file */
-  int flags=0; /* set by options, see #defines on .h file */
+  unsigned int flags=0; /* set by options, see #defines in .h file */
   luminance_t lt=DEFAULT_LUM_FORMULA; /* luminance function */
 
   int w, h, lum;  /* width, height, pixel luminance */
