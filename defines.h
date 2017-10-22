@@ -75,6 +75,13 @@
 #define D_HEX_d (ALL_SEGS & ~(HORIZ_UP | VERT_LEFT_UP))
 #define D_HEX_E (ALL_SEGS & ~(VERT_RIGHT_UP | VERT_RIGHT_DOWN))
 #define D_HEX_F (ALL_SEGS & ~(VERT_RIGHT_UP | VERT_RIGHT_DOWN | HORIZ_DOWN))
+#define D_U (D_ZERO & ~HORIZ_UP)
+#define D_T (ALL_SEGS & ~(HORIZ_UP | VERT_RIGHT_UP | VERT_RIGHT_DOWN))
+#define D_L (D_T & ~HORIZ_MID)
+#define D_H (ALL_SEGS & ~(HORIZ_UP | HORIZ_DOWN))
+#define D_R (D_ZERO & ~(VERT_RIGHT_DOWN | HORIZ_DOWN))
+#define D_P (D_HEX_F | VERT_RIGHT_UP)
+#define D_N (D_ZERO & ~HORIZ_DOWN)
 #define D_UNKNOWN 0
 
 #define NUMBER_OF_DIGITS 6 /* in this special case */
