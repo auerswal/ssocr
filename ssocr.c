@@ -178,9 +178,10 @@ int main(int argc, char **argv)
       {"print-info", 0, 0, 'I'}, /* print image info */
       {"adjust-gray", 0, 0, 'g'}, /* use T1 and T2 as perecntages of used vals*/
       {"luminance", 1, 0, 'l'}, /* luminance formula */
+      {"ascii-art-segments", 0, 0, 'S'}, /* print found segments in ASCII art */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:S",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -331,6 +332,13 @@ int main(int argc, char **argv)
       case 'l':
         if(optarg) {
           lt = parse_lum(optarg);
+        }
+        break;
+      case 'S':
+        flags |= ASCII_ART_SEGMENTS;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & ASCII_ART_SEGMENTS=%d\n",
+                  flags & ASCII_ART_SEGMENTS);
         }
         break;
       case '?':  /* missing argument or character not in optstring */
@@ -1222,7 +1230,7 @@ int main(int argc, char **argv)
    *  | |  |  _| _| |_| |_  |_   | | | |_| |_|
    *  |_|  | |_  _|   |  _| |_|  |   | |_|  _|
   */
-  if(flags & DEBUG_OUTPUT) {
+  if(flags & (DEBUG_OUTPUT | ASCII_ART_SEGMENTS)) {
     fputs("Display as seen by ssocr:\n", stderr);
     /* top row */
     for(i=0; i<number_of_digits; i++) {

@@ -142,6 +142,10 @@ the used formula.
 The default of
 .I Rec709
 should work well in most cases.
+.SS -S, --ascii-art-segments
+Prints the recognized segments, i.e. the display as seen by
+.BR ssocr ,
+as ASCII art to standard error.
 .SH COMMANDS
 .SS dilation
 Filter image using dilation algorithm.

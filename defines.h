@@ -111,6 +111,7 @@
 #define PRINT_INFO (1<<5)
 #define ADJUST_GRAY (1<<6)
 #define DEBUG_OUTPUT (1<<7)
+#define ASCII_ART_SEGMENTS (1<<8)
 
 /* colors used by ssocr */
 #define SSOCR_BLACK 0
