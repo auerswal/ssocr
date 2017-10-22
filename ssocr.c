@@ -1225,6 +1225,7 @@ int main(int argc, char **argv)
   }
 
   /* print found segments as ASCII art if debug output is enabled
+   * or ASCII art output is requested explicitely
    * example digits known by ssocr:
    *   _      _  _       _   _  _   _   _   _
    *  | |  |  _| _| |_| |_  |_   | | | |_| |_|
