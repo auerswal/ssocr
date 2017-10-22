@@ -146,6 +146,29 @@ should work well in most cases.
 Prints the recognized segments, i.e. the display as seen by
 .BR ssocr ,
 as ASCII art to standard error.
+.SS -X, --print-as-hex
+Prints the recognized segments as a string of hexadecimal numbers separated
+by a colon instead of digits and characters.
+Each number comprises two hexadecimal digits (one byte).
+.I 0x01
+represents the upper horizontal segment,
+.I 0x02
+represents the upper left vertical segment,
+.I 0x04
+represents the upper right vertical segment,
+.I 0x08
+represents the middle horizontal segment,
+.I 0x10
+represents the lower left vertical segment,
+.I 0x20
+represents the lower right vertical segment,
+.I 0x40
+represents the lower horizontal segment,
+.I 0x80
+represents a decimal point (or comma or thousands separator).
+Each hexadecimal number printed is the logical
+.I or
+of the set segments.
 .SH COMMANDS
 .SS dilation
 Filter image using dilation algorithm.

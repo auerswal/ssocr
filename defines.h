@@ -51,7 +51,7 @@
 #define HORIZ_DOWN 64
 #define ALL_SEGS 127
 #define DECIMAL 128
-#define MINUS 256
+#define MINUS HORIZ_MID
 
 /* digits */
 #define D_ZERO (ALL_SEGS & ~HORIZ_MID)
@@ -112,6 +112,7 @@
 #define ADJUST_GRAY (1<<6)
 #define DEBUG_OUTPUT (1<<7)
 #define ASCII_ART_SEGMENTS (1<<8)
+#define PRINT_AS_HEX (1<<9)
 
 /* colors used by ssocr */
 #define SSOCR_BLACK 0

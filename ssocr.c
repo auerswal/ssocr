@@ -179,9 +179,10 @@ int main(int argc, char **argv)
       {"adjust-gray", 0, 0, 'g'}, /* use T1 and T2 as perecntages of used vals*/
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {"ascii-art-segments", 0, 0, 'S'}, /* print found segments in ASCII art */
+      {"print-as-hex", 0, 0, 'X'}, /* change output format to hex */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:S",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SX",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -339,6 +340,13 @@ int main(int argc, char **argv)
         if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "flags & ASCII_ART_SEGMENTS=%d\n",
                   flags & ASCII_ART_SEGMENTS);
+        }
+        break;
+      case 'X':
+        flags |= PRINT_AS_HEX;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & PRINT_AS_HEX=%d\n",
+                  flags & PRINT_AS_HEX);
         }
         break;
       case '?':  /* missing argument or character not in optstring */
@@ -1262,32 +1270,39 @@ int main(int argc, char **argv)
   }
 
   /* print digits */
-  for(i=0; i<number_of_digits; i++) {
-    switch(digits[i].digit) {
-      case D_ZERO: putchar('0'); break;
-      case D_ONE: putchar('1'); break;
-      case D_TWO: putchar('2'); break;
-      case D_THREE: putchar('3'); break;
-      case D_FOUR: putchar('4'); break;
-      case D_FIVE: putchar('5'); break;
-      case D_SIX: putchar('6'); break;
-      case D_SEVEN: /* fallthrough */
-      case D_ALTSEVEN: putchar('7'); break;
-      case D_EIGHT: putchar('8'); break;
-      case D_NINE: /* fallthrough */
-      case D_ALTNINE: putchar('9'); break;
-      case D_DECIMAL: putchar('.'); break;
-      case D_MINUS: putchar('-'); break;
-      case D_HEX_A: putchar('a'); break;
-      case D_HEX_b: putchar('b'); break;
-      case D_HEX_C: /* fallthrough */
-      case D_HEX_c: putchar('c'); break;
-      case D_HEX_d: putchar('d'); break;
-      case D_HEX_E: putchar('e'); break;
-      case D_HEX_F: putchar('f'); break;
-      /* finding a digit with no set segments is not supposed to happen */
-      case D_UNKNOWN: putchar(' '); unknown_digit++; break;
-      default: putchar('_'); unknown_digit++; break;
+  if(flags & PRINT_AS_HEX) {
+    for(i=0; i<number_of_digits; i++) {
+      if(i > 0) putchar(':');
+      printf("%02x", digits[i].digit);
+    }
+  } else {
+    for(i=0; i<number_of_digits; i++) {
+      switch(digits[i].digit) {
+        case D_ZERO: putchar('0'); break;
+        case D_ONE: putchar('1'); break;
+        case D_TWO: putchar('2'); break;
+        case D_THREE: putchar('3'); break;
+        case D_FOUR: putchar('4'); break;
+        case D_FIVE: putchar('5'); break;
+        case D_SIX: putchar('6'); break;
+        case D_SEVEN: /* fallthrough */
+        case D_ALTSEVEN: putchar('7'); break;
+        case D_EIGHT: putchar('8'); break;
+        case D_NINE: /* fallthrough */
+        case D_ALTNINE: putchar('9'); break;
+        case D_DECIMAL: putchar('.'); break;
+        case D_MINUS: putchar('-'); break;
+        case D_HEX_A: putchar('a'); break;
+        case D_HEX_b: putchar('b'); break;
+        case D_HEX_C: /* fallthrough */
+        case D_HEX_c: putchar('c'); break;
+        case D_HEX_d: putchar('d'); break;
+        case D_HEX_E: putchar('e'); break;
+        case D_HEX_F: putchar('f'); break;
+        /* finding a digit with no set segments is not supposed to happen */
+        case D_UNKNOWN: putchar(' '); unknown_digit++; break;
+        default: putchar('_'); unknown_digit++; break;
+      }
     }
   }
   putchar('\n');

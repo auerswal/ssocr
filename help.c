@@ -104,6 +104,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -l, --luminance=KEYWORD  compute luminance using formula KEYWORD\n");
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
+  fprintf(f, "         -X, --print-as-hex       change output format to hexadecimal\n");
   fprintf(f, "\nCommands: dilation                dilation algorithm (with mask of 1 pixel)\n");
   fprintf(f, "          erosion                 erosion algorithm (with mask of 9 pixels)\n");
   fprintf(f, "          closing [N]             closing algorithm\n");
