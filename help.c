@@ -105,8 +105,12 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
   fprintf(f, "         -X, --print-as-hex       change output format to hexadecimal\n");
-  fprintf(f, "\nCommands: dilation                dilation algorithm (with mask of 1 pixel)\n");
-  fprintf(f, "          erosion                 erosion algorithm (with mask of 9 pixels)\n");
+  fprintf(f, "\nCommands: dilation [N]            [N times] dilation algorithm"
+             "\n                                  (set_pixels_filter with mask"
+	     " of 1 pixel)\n");
+  fprintf(f, "          erosion [N]             [N times] erosion algorithm\n"
+             "                                  (set_pixels_filter with mask"
+	     " of 9 pixels)\n");
   fprintf(f, "          closing [N]             closing algorithm\n");
   fprintf(f, "                                  ([N times] dilation then [N times] erosion)\n");
   fprintf(f, "          opening [N]             opening algorithm\n");

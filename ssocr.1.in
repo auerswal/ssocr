@@ -170,14 +170,28 @@ Each hexadecimal number printed is the logical
 .I or
 of the set segments.
 .SH COMMANDS
-.SS dilation
+.SS dilation [N]
 Filter image using dilation algorithm.
 Any pixel with at least one neighbour pixel set in the source image will be
 set in the filtered image.
-.SS erosion
+If a number
+.B N
+>
+.I 1
+is specified, the dilation algorithm is executed
+.B N
+times.
+.SS erosion [N]
 Filter image using erosion algorithm.
 Any pixel with every neighbour pixel set in the source image will be set
 in the filtered image.
+If a number
+.B N
+>
+.I 1
+is specified, the erosion algorithm is executed
+.B N
+times.
 .SS closing [N]
 Filter image using closing algorithm, i.e. erosion and then dilation.
 If a number

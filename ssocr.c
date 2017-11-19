@@ -463,14 +463,40 @@ int main(int argc, char **argv)
   if(optind < argc-1) /* then process commands */ {
     for(i=optind; i<argc-1; i++) {
       if(strcasecmp("dilation",argv[i]) == 0) {
-        if(flags & VERBOSE) fputs(" processing dilation\n", stderr);
-        new_image = dilation(&image, thresh, lt);
+        int n=atoi(argv[i+1]);
+        if((n>0) && (i+1<argc-1)) {
+          if(flags & VERBOSE) {
+            fprintf(stderr, " processing dilation %d", n);
+            if(flags & DEBUG_OUTPUT) {
+              fprintf(stderr, " (from string %s)", argv[i+1]);
+            }
+            fprintf(stderr, "\n");
+          }
+          i++;
+          new_image = dilation(&image, thresh, lt, n);
+        } else {
+          if(flags & VERBOSE) fputs(" processing dilation (1)\n", stderr);
+	  new_image = dilation(&image, thresh, lt, 1);
+	}
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("erosion",argv[i]) == 0) {
-        if(flags & VERBOSE) fputs(" processing erosion\n", stderr);
-        new_image = erosion(&image, thresh, lt);
+        int n=atoi(argv[i+1]);
+        if((n>0) && (i+1<argc-1)) {
+          if(flags & VERBOSE) {
+            fprintf(stderr, " processing erosion %d", n);
+            if(flags & DEBUG_OUTPUT) {
+              fprintf(stderr, " (from string %s)", argv[i+1]);
+            }
+            fprintf(stderr, "\n");
+          }
+          i++;
+          new_image = erosion(&image, thresh, lt, n);
+        } else {
+          if(flags & VERBOSE) fputs(" processing erosion (1)\n", stderr);
+	  new_image = erosion(&image, thresh, lt, 1);
+        }
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;

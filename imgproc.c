@@ -179,32 +179,15 @@ Imlib_Image set_pixels_filter(Imlib_Image *source_image, double thresh,
   return new_image;
 }
 
-Imlib_Image dilation(Imlib_Image *source_image, double thresh, luminance_t lt)
-{
-  return set_pixels_filter(source_image, thresh, lt, 1);
-}
-
-Imlib_Image erosion(Imlib_Image *source_image, double thresh, luminance_t lt)
-{
-  return set_pixels_filter(source_image, thresh, lt, 9);
-}
-
-Imlib_Image closing(Imlib_Image *source_image,double thresh,luminance_t lt,int n)
+Imlib_Image set_pixels_filter_iter(Imlib_Image *source_image, double thresh,
+                                   luminance_t lt, int mask, int iter)
 {
   int i;
   Imlib_Image temp_image1, temp_image2;
-  /* dilation n times */
   imlib_context_set_image(*source_image);
   temp_image1 = temp_image2 = imlib_clone_image();
-  for(i=0; i<n; i++) {
-    temp_image2 = dilation(&temp_image1, thresh, lt);
-    imlib_context_set_image(temp_image1);
-    imlib_free_image();
-    temp_image1 = temp_image2;
-  }
-  /* erosion n times */
-  for(i=0; i<n; i++) {
-    temp_image2 = erosion(&temp_image1, thresh, lt);
+  for(i=0; i<iter; i++) {
+    temp_image2 = set_pixels_filter(&temp_image1, thresh, lt, mask);
     imlib_context_set_image(temp_image1);
     imlib_free_image();
     temp_image1 = temp_image2;
@@ -212,27 +195,42 @@ Imlib_Image closing(Imlib_Image *source_image,double thresh,luminance_t lt,int n
   return temp_image2;
 }
 
-Imlib_Image opening(Imlib_Image *source_image,double thresh,luminance_t lt,int n)
+Imlib_Image dilation(Imlib_Image *source_image, double thresh, luminance_t lt,
+                     int n)
 {
-  int i;
-  Imlib_Image temp_image1, temp_image2;
-  /* erosion n times */
-  imlib_context_set_image(*source_image);
-  temp_image1 = temp_image2 = imlib_clone_image();
-  for(i=0; i<n; i++) {
-    temp_image2 = erosion(&temp_image1, thresh, lt);
-    imlib_context_set_image(temp_image1);
-    imlib_free_image();
-    temp_image1 = temp_image2;
-  }
+  return set_pixels_filter_iter(source_image, thresh, lt, 1, n);
+}
+
+Imlib_Image erosion(Imlib_Image *source_image, double thresh, luminance_t lt,
+                    int n)
+{
+  return set_pixels_filter_iter(source_image, thresh, lt, 9, n);
+}
+
+Imlib_Image closing(Imlib_Image *source_image, double thresh, luminance_t lt,
+                    int n)
+{
+  Imlib_Image temp_image, return_image;
   /* dilation n times */
-  for(i=0; i<n; i++) {
-    temp_image2 = dilation(&temp_image1, thresh, lt);
-    imlib_context_set_image(temp_image1);
-    imlib_free_image();
-    temp_image1 = temp_image2;
-  }
-  return temp_image2;
+  temp_image = dilation(source_image, thresh, lt, n);
+  /* erosion n times */
+  return_image = erosion(&temp_image, thresh, lt, n);
+  imlib_context_set_image(temp_image);
+  imlib_free_image();
+  return return_image;
+}
+
+Imlib_Image opening(Imlib_Image *source_image, double thresh, luminance_t lt,
+                    int n)
+{
+  Imlib_Image temp_image, return_image;
+  /* erosion n times */
+  temp_image = erosion(source_image, thresh, lt, n);
+  /* dilation n times */
+  return_image = dilation(&temp_image, thresh, lt, n);
+  imlib_context_set_image(temp_image);
+  imlib_free_image();
+  return return_image;
 }
 
 /* set pixels with (brightness) value lower than threshold that have more than

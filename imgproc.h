@@ -51,11 +51,17 @@ int is_pixel_set(int value, double threshold);
 Imlib_Image set_pixels_filter(Imlib_Image *source_image, double thresh,
                               luminance_t lt, int mask);
 
+/* perform set pixel filter operation iter times */
+Imlib_Image set_pixels_filter_iter(Imlib_Image *source_image, double thresh,
+                                   luminance_t lt, int mask, int iter);
+
 /* shortcut for dilation */
-Imlib_Image dilation(Imlib_Image *source_image, double thresh, luminance_t lt);
+Imlib_Image dilation(Imlib_Image *source_image, double thresh, luminance_t lt,
+                     int n);
 
 /* shortcut for erosion */
-Imlib_Image erosion(Imlib_Image *source_image, double thresh, luminance_t lt);
+Imlib_Image erosion(Imlib_Image *source_image, double thresh, luminance_t lt,
+                    int n);
 
 /* shortcut for closing */
 Imlib_Image closing(Imlib_Image *source_image, double thresh, luminance_t lt,
