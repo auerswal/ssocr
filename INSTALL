@@ -39,6 +39,8 @@ Additional Makefile Targets
 Platform Specifics
 ------------------
 - You may need to rename the binary from ssocr to ssocr.exe to use it on Windows
+- You may need to specify the X11 include path manually on macOS, using e.g.
+  make CPPFLAGS=-I/opt/X11/include
 
 Website
 -------
