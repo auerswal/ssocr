@@ -169,6 +169,11 @@ represents a decimal point (or comma or thousands separator).
 Each hexadecimal number printed is the logical
 .I or
 of the set segments.
+.SS -G, --ignore-decimal
+Omit decimal points from output.
+Decimal points are still recognized and counted against the number of digits.
+This can be used together with automatically detecting the number of digits to
+ignore isolated groups of pixels in an image.
 .SH COMMANDS
 .SS dilation [N]
 Filter image using dilation algorithm.

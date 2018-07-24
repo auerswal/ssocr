@@ -180,9 +180,10 @@ int main(int argc, char **argv)
       {"luminance", 1, 0, 'l'}, /* luminance formula */
       {"ascii-art-segments", 0, 0, 'S'}, /* print found segments in ASCII art */
       {"print-as-hex", 0, 0, 'X'}, /* change output format to hex */
+      {"ignore-decimal", 0, 0, 'G'}, /* ignore decimal points */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SX",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXG",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -347,6 +348,13 @@ int main(int argc, char **argv)
         if(flags & DEBUG_OUTPUT) {
           fprintf(stderr, "flags & PRINT_AS_HEX=%d\n",
                   flags & PRINT_AS_HEX);
+        }
+        break;
+      case 'G':
+        flags |= IGNORE_DECIMAL;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & IGNORE_DECIMAL=%d\n",
+                  flags & IGNORE_DECIMAL);
         }
         break;
       case '?':  /* missing argument or character not in optstring */
@@ -1316,7 +1324,7 @@ int main(int argc, char **argv)
         case D_EIGHT: putchar('8'); break;
         case D_NINE: /* fallthrough */
         case D_ALTNINE: putchar('9'); break;
-        case D_DECIMAL: putchar('.'); break;
+        case D_DECIMAL: if(!(flags & IGNORE_DECIMAL)) putchar('.'); break;
         case D_MINUS: putchar('-'); break;
         case D_HEX_A: putchar('a'); break;
         case D_HEX_b: putchar('b'); break;

@@ -106,6 +106,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
   fprintf(f, "         -X, --print-as-hex       change output format to hexadecimal\n");
+  fprintf(f, "         -G, --ignore-decimal     omit decimal points from output\n");
   fprintf(f, "\nCommands: dilation [N]            [N times] dilation algorithm"
              "\n                                  (set_pixels_filter with mask"
 	     " of 1 pixel)\n");
