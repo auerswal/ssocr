@@ -100,7 +100,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -f, --foreground=COLOR   set foreground color (black or white)\n");
   fprintf(f, "         -b, --background=COLOR   set background color (black or white)\n");
   fprintf(f, "         -I, --print-info         print image dimensions and used lum values\n");
-  fprintf(f, "         -g, --adjust-gray        use T1 and T2 as percentages of used values\n");
+  fprintf(f, "         -g, --adjust-gray        use T1 and T2 from gray_stretch as\n");
+  fprintf(f, "                                  percentages of used values\n");
   fprintf(f, "         -l, --luminance=KEYWORD  compute luminance using formula KEYWORD\n");
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
@@ -119,8 +120,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "          make_mono               make image monochrome\n");
   fprintf(f, "          grayscale               transform image to grayscale\n");
   fprintf(f, "          invert                  make inverted monochrome image\n");
-  fprintf(f, "          gray_stretch T1 T2      stretch luminance values\n");
-  fprintf(f, "                                  from [T1,T2] to [0,255]\n");
+  fprintf(f, "          gray_stretch T1 T2      stretch luminance values from [T1,T2] to\n");
+  fprintf(f, "                                  [0,255] (use --adjust-gray for percentages)\n");
   fprintf(f, "          dynamic_threshold W H   make image monochrome w. dynamic thresholding\n");
   fprintf(f, "                                  with a window of width W and height H\n");
   fprintf(f, "          rgb_threshold           make image monochrome by setting every pixel\n");

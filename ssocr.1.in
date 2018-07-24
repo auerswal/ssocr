@@ -242,6 +242,13 @@ and any value above
 .B T2
 set to
 .IR 255 .
+Together with the option
+.BR --adjust-gray ,
+the values
+.B T1
+and
+.B T2
+are interpreted as percentages.
 .SS dynamic_threshold W H
 Convert the image to monochrome using dynamic thresholding a.k.a local
 adaptive thresholding.
