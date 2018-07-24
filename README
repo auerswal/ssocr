@@ -16,3 +16,8 @@ You can get the current ssocr version from the official ssocr website:
 http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 
 I am usually quicker to reply to emails than to GitHub issues.
+
+Every file in this repository is licensed under the GNU General Public
+License version 3 (or later), unless another license is explicitly
+given in the file itself. This includes all documentation files and
+the Makefile.
