@@ -169,7 +169,7 @@ represents a decimal point (or comma or thousands separator).
 Each hexadecimal number printed is the logical
 .I or
 of the set segments.
-.SS -G, --ignore-decimal
+.SS -C, --omit-decimal-point
 Omit decimal points from output.
 Decimal points are still recognized and counted against the number of digits.
 This can be used together with automatically detecting the number of digits to

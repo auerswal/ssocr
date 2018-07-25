@@ -120,7 +120,7 @@
 #define DEBUG_OUTPUT (1<<7)
 #define ASCII_ART_SEGMENTS (1<<8)
 #define PRINT_AS_HEX (1<<9)
-#define IGNORE_DECIMAL (1<<10)
+#define OMIT_DECIMAL (1<<10)
 
 /* colors used by ssocr */
 #define SSOCR_BLACK 0
