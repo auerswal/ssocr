@@ -22,6 +22,7 @@
 /* functions */
 
 /* print usage */
+void short_usage(char *name, FILE *f);
 void usage(char *name, FILE *f);
 
 /* print help for luminance functions */

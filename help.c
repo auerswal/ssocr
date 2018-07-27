@@ -74,6 +74,14 @@ void print_version(FILE *f)
              " under the terms\nof the GNU GPL (version 3 or later)\n");
 }
 
+/* print short usage */
+void short_usage(char *name, FILE *f)
+{
+  fprintf(f, "\nUsage: %s [OPTION]... [COMMAND]... IMAGE\n", name);
+  fprintf(f, "Use '%s --help' to print long help describing all options\n",
+          name);
+}
+
 /* print usage */
 void usage(char *name, FILE *f)
 {

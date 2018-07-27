@@ -358,7 +358,7 @@ int main(int argc, char **argv)
         }
         break;
       case '?':  /* missing argument or character not in optstring */
-        usage(argv[0],stderr);
+        short_usage(argv[0],stderr);
         exit (2);
         break;
       default:   /* this should not be reached */
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
           fprintf (stderr,
                    "error: getopt returned unhandled character code %X\n", c);
         }
-        usage(argv[0], stderr);
+        short_usage(argv[0], stderr);
         exit(99);
     }
   }
@@ -400,7 +400,7 @@ int main(int argc, char **argv)
   /* if no argument left exit the program */
   if(optind >= argc) {
     fprintf(stderr, "error: no image filename given\n");
-    usage(argv[0], stderr);
+    short_usage(argv[0], stderr);
     exit(99);
   }
   if(flags & DEBUG_OUTPUT) {
