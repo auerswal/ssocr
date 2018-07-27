@@ -17,6 +17,8 @@
 /* Copyright (C) 2004-2018 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
+#define PROG "ssocr"
+
 #ifndef SSOCR2_DEFINES_H
 #define SSOCR2_DEFINES_H
 
