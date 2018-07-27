@@ -68,8 +68,8 @@ void ssocr_set_color(fg_bg_t color)
                               ssocr_background, 255);
       break;
     default:
-      fprintf(stderr, "error: ssocr_set_color(): unknown color %d\n",
-          color);
+      fprintf(stderr, "%s: error: ssocr_set_color(): unknown color %d\n",
+          PROG, color);
       exit(99);
       break;
   }
@@ -118,8 +118,8 @@ int is_pixel_set(int value, double threshold)
       }
       break;
     default:
-      fprintf(stderr, "error: is_pixel_set(): foreground color neither black"
-                      " nor white\n");
+      fprintf(stderr, "%s: error: is_pixel_set(): foreground color neither"
+                      " black nor white\n", PROG);
       exit(99);
       break;
   }
@@ -319,17 +319,19 @@ Imlib_Image gray_stretch(Imlib_Image *source_image, double t1, double t2,
 
   /* do nothing if t1>=t2 */
   if(t1 >= t2) {
-    fprintf(stderr, "error: gray_stretch(): t1=%.2f >= t2=%.2f\n", t1, t2);
+    fprintf(stderr, "%s: error: gray_stretch(): t1=%.2f >= t2=%.2f\n",
+                    PROG, t1, t2);
     exit(99);
   }
 
   /* check if 0 < t1,t2 < MAXRGB */
   if(t1 <= 0.0) {
-    fprintf(stderr, "error: gray_stretch(): t1=%.2f <= 0.0\n", t1);
+    fprintf(stderr, "%s: error: gray_stretch(): t1=%.2f <= 0.0\n", PROG, t1);
     exit(99);
   }
   if(t2 >= MAXRGB) {
-    fprintf(stderr, "error: gray_stretch(): t2=%.2f >= %d.0\n", t2, MAXRGB);
+    fprintf(stderr, "%s: error: gray_stretch(): t2=%.2f >= %d.0\n",
+                    PROG, t2, MAXRGB);
     exit(99);
   }
 
@@ -580,12 +582,14 @@ double iterative_threshold(Imlib_Image *source_image, double thresh,
       }
     }
     if(!size_white) {
-      fprintf(stderr, "iterative_threshold(): error: no white pixels\n");
+      fprintf(stderr, "%s: iterative_threshold(): error: no white pixels\n",
+                      PROG);
       imlib_context_set_image(current_image);
       return thresh;
     }
     if(!size_black) {
-      fprintf(stderr, "iterative_threshold(): error: no black pixels\n");
+      fprintf(stderr, "%s: iterative_threshold(): error: no black pixels\n",
+                      PROG);
       imlib_context_set_image(current_image);
       return thresh;
     }
@@ -993,8 +997,8 @@ int get_lum(Imlib_Color *color, luminance_t lt)
     case GREEN:   return get_lum_green(color);
     case BLUE:    return get_lum_blue(color);
     default:
-      fprintf(stderr, "error: get_lum(): unknown transfer function no. %d\n",
-              lt);
+      fprintf(stderr, "%s: error: get_lum(): unknown transfer function"
+                      " no. %d\n", PROG, lt);
       exit(99);
   }
 }
@@ -1094,7 +1098,7 @@ void save_image(const char *image_type, Imlib_Image *image, const char *fmt,
     fprintf(stderr, "writing %s image to file %s\n", image_type, filename);
   imlib_save_image_with_error_return(filename, &save_error);
   if(save_error && save_error != IMLIB_LOAD_ERROR_NONE) {
-    fprintf(stderr, "error saving image file %s\n", filename);
+    fprintf(stderr, "%s: error saving image file %s\n", PROG, filename);
     report_imlib_error(save_error);
   }
   imlib_context_set_image(current_image);
@@ -1130,7 +1134,7 @@ luminance_t parse_lum(char *keyword)
 /* report Imlib2 load/save error to stderr */
 void report_imlib_error(Imlib_Load_Error error)
 {
-  fputs("  Imlib2 error code: ",stderr);
+  fputs(PROG ": Imlib2 error code: ",stderr);
   switch (error) {
     case IMLIB_LOAD_ERROR_NONE:
       fputs("IMLIB_LOAD_ERROR_NONE\n", stderr);

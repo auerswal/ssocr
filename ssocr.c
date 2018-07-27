@@ -72,7 +72,7 @@ static char * tmp_imgfile(unsigned int flags)
   }
   name = malloc(pattern_len);
   if(!name) {
-    perror("could not allocate memory for name of temporary file");
+    perror(PROG ": could not allocate memory for name of temporary file");
     exit(99);
   }
   if(dir)
@@ -88,7 +88,7 @@ static char * tmp_imgfile(unsigned int flags)
   umask(S_IRWXG | S_IRWXO);
   handle = mkstemp(name);
   if(handle < 0) {
-    perror("could not create temporary file");
+    perror(PROG ": could not create temporary file");
     exit(99);
   }
 
@@ -99,7 +99,7 @@ static char * tmp_imgfile(unsigned int flags)
   }
   close(handle); /* filehandle is no longer needed, Imlib2 uses filename */
   if(ferror(stdin) || (count <= 0)) {
-    perror("could not copy image data to temporary file");
+    perror(PROG ": could not copy image data to temporary file");
     unlink(name);
     exit(99);
   }
@@ -298,8 +298,8 @@ int main(int argc, char **argv)
             set_fg_color(SSOCR_WHITE);
             set_bg_color(SSOCR_BLACK);
           } else {
-            fprintf(stderr, "error: unknown foreground color %s,"
-                            " color must be black or white\n", optarg);
+            fprintf(stderr, "%s: error: unknown foreground color %s,"
+                            " color must be black or white\n", PROG, optarg);
             exit(99);
           }
         }
@@ -313,8 +313,8 @@ int main(int argc, char **argv)
             set_bg_color(SSOCR_WHITE);
             set_fg_color(SSOCR_BLACK);
           } else {
-            fprintf(stderr, "error: unknown background color %s,"
-                            " color must be black or white\n", optarg);
+            fprintf(stderr, "%s: error: unknown background color %s,"
+                            " color must be black or white\n", PROG, optarg);
             exit(99);
           }
         }
@@ -363,12 +363,11 @@ int main(int argc, char **argv)
         break;
       default:   /* this should not be reached */
         if((c>31) && (c<127)) {
-          fprintf (stderr, 
-                   "error: getopt returned unhandled character %c (code %X)\n",
-                   c, c);
+          fprintf (stderr, "%s: error: getopt returned unhandled character %c"
+		           " (code %X)\n", PROG, c, c);
         } else {
-          fprintf (stderr,
-                   "error: getopt returned unhandled character code %X\n", c);
+          fprintf (stderr, "%s: error: getopt returned unhandled character code"
+	                   " %X\n", PROG, c);
         }
         short_usage(PROG, stderr);
         exit(99);
@@ -399,7 +398,7 @@ int main(int argc, char **argv)
 
   /* if no argument left exit the program */
   if(optind >= argc) {
-    fprintf(stderr, "error: no image filename given\n");
+    fprintf(stderr, "%s: error: no image filename given\n", PROG);
     short_usage(PROG, stderr);
     exit(99);
   }
@@ -427,7 +426,7 @@ int main(int argc, char **argv)
     imgfile = argv[argc-1];
   }
   if(!image) {
-    fprintf(stderr, "could not load image %s\n", imgfile);
+    fprintf(stderr, "%s: error: could not load image %s\n", PROG, imgfile);
     report_imlib_error(load_error);
     exit(99);
   }
@@ -593,7 +592,7 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr, "error: shear command needs an argument\n");
+          fprintf(stderr, "%s: error: shear command needs an argument\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("set_pixels_filter",argv[i]) == 0) {
@@ -612,8 +611,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr,
-              "error: set_pixels_filter command needs an argument\n");
+          fprintf(stderr, "%s: error: set_pixels_filter command needs an:"
+	                  " argument\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("keep_pixels_filter",argv[i]) == 0) {
@@ -632,8 +631,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr,
-              "error: keep_pixels_filter command needs an argument\n");
+          fprintf(stderr, "%s: error: keep_pixels_filter command needs an"
+	                  " argument\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("dynamic_threshold",argv[i]) == 0) {
@@ -654,8 +653,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr,
-              "error: dynamic_threshold command needs two arguments\n");
+          fprintf(stderr, "%s: error: dynamic_threshold command needs two"
+	                  " arguments\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
@@ -720,8 +719,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr,
-              "error: gray_stretch command needs two arguments\n");
+          fprintf(stderr, "%s: error: gray_stretch command needs two"
+	                  " arguments\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("grayscale",argv[i]) == 0) {
@@ -771,7 +770,7 @@ int main(int argc, char **argv)
           /* adapt threshold to cropped image */
           thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);
         } else {
-          fprintf(stderr, "error: crop command needs 4 arguments\n");
+          fprintf(stderr, "%s: error: crop command needs 4 arguments\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("rotate",argv[i]) == 0) {
@@ -789,7 +788,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr, "error: rotate command needs an argument\n");
+          fprintf(stderr, "%s: error: rotate command needs an argument\n",
+	                  PROG);
           exit(99);
         }
       } else if(strcasecmp("mirror",argv[i]) == 0) {
@@ -802,8 +802,8 @@ int main(int argc, char **argv)
           } else if(strncasecmp("vert",argv[i+1],4) == 0) {
             new_image = mirror(&image, VERTICAL);
           } else {
-            fprintf(stderr,
-                    "error: argument to 'mirror' must be 'horiz' or 'vert'\n");
+            fprintf(stderr, "%s: error: argument to 'mirror' must be 'horiz'"
+	                    " or 'vert'\n", PROG);
             exit(99);
           }
 	  i++;
@@ -811,8 +811,8 @@ int main(int argc, char **argv)
           imlib_free_image();
           image = new_image;
         } else {
-          fprintf(stderr,
-                  "error: mirror command needs argument 'horiz' or 'vert'\n");
+          fprintf(stderr, "%s: error: mirror command needs argument 'horiz'"
+	                  " or 'vert'\n", PROG);
           exit(99);
         }
       } else {
@@ -840,12 +840,12 @@ int main(int argc, char **argv)
   /* allocate memory for seven segment digits */
   if(number_of_digits > -1) {
     if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
-      perror("digits = calloc()");
+      perror(PROG ": digits = calloc()");
       exit(99);
     }
   } else {
     if(!(digits = calloc(1, sizeof(digit_struct)))) {
-      perror("digits = calloc()");
+      perror(PROG ": digits = calloc()");
       exit(99);
     }
   }
@@ -908,7 +908,7 @@ int main(int argc, char **argv)
       }
       /* if number of digits is not known, add memory for another digit */
       if(!(digits = realloc(digits, (d+1) * sizeof(digit_struct)))) {
-        perror("digits = realloc()");
+        perror(PROG ": digits = realloc()");
         exit(99);
       }
       /* initialize additional memory */
