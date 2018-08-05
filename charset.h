@@ -21,7 +21,10 @@
 
 /* functions */
 
+/* initialize the character set array with the given character set */
+void init_charset(charset_t cs);
+
 /* print a digit according to charset, return 1 if unknown, else 0 */
-int print_digit(int digit, charset_t charset, unsigned int flags);
+int print_digit(int digit, unsigned int flags);
 
 #endif /* SSOCR2_CHARSET_H */

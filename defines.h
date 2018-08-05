@@ -55,6 +55,9 @@
 #define DECIMAL 128
 #define MINUS HORIZ_MID
 
+/* maximum number used for a character #define */
+#define CHARSET_MAX 128
+
 /* digits */
 #define D_ZERO (ALL_SEGS & ~HORIZ_MID)
 #define D_ONE (VERT_RIGHT_UP | VERT_RIGHT_DOWN)

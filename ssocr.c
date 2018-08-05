@@ -1312,8 +1312,9 @@ int main(int argc, char **argv)
       printf("%02x", digits[i].digit);
     }
   } else {
+    init_charset(charset);
     for(i=0; i<number_of_digits; i++) {
-      unknown_digit += print_digit(digits[i].digit, charset, flags);
+      unknown_digit += print_digit(digits[i].digit, flags);
     }
   }
   putchar('\n');
