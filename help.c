@@ -141,6 +141,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
   fprintf(f, "         -X, --print-as-hex       change output format to hexadecimal\n");
   fprintf(f, "         -C, --omit-decimal-point omit decimal points from output\n");
+  fprintf(f, "         -c, --charset=KEYWORD    select recognized characters\n");
+  fprintf(f, "                                  use -c help for list of KEYWORDS\n");
   fprintf(f, "\nCommands: dilation [N]            [N times] dilation algorithm"
              "\n                                  (set_pixels_filter with mask"
 	     " of 1 pixel)\n");

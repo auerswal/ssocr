@@ -183,9 +183,10 @@ int main(int argc, char **argv)
       {"ascii-art-segments", 0, 0, 'S'}, /* print found segments in ASCII art */
       {"print-as-hex", 0, 0, 'X'}, /* change output format to hex */
       {"omit-decimal-point", 0, 0, 'C'}, /* omit decimal points from output */
+      {"charset", 1, 0, 'c'}, /* omit decimal points from output */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXC",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -359,6 +360,11 @@ int main(int argc, char **argv)
                   flags & OMIT_DECIMAL);
         }
         break;
+      case 'c':
+        if(optarg) {
+          charset = parse_charset(optarg);
+        }
+        break;
       case '?':  /* missing argument or character not in optstring */
         short_usage(PROG,stderr);
         exit (2);
@@ -392,6 +398,8 @@ int main(int argc, char **argv)
                     (ssocr_background == SSOCR_BLACK) ? "black" : "white");
     fprintf(stderr, "luminance  = ");
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
+    fprintf(stderr, "charset    = ");
+    print_cs_key(charset, stderr); fprintf(stderr, "\n");
     fprintf(stderr, "height/width threshold for one   = %d\n", one_ratio);
     fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);

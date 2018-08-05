@@ -21,6 +21,9 @@
 
 /* functions */
 
+/* parse KEYWORD from --charset option */
+charset_t parse_charset(char *keyword);
+
 /* initialize the character set array with the given character set */
 void init_charset(charset_t cs);
 

@@ -20,9 +20,31 @@
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
 #include <stdlib.h>         /* exit */
 
+/* string manipulation */
+#include <strings.h>        /* strncasecmp */
+
 /* my headers */
 #include "defines.h"        /* defines */
 #include "help.h"           /* character set keyword functions */
+
+/* parse KEYWORD from --charset option */
+charset_t parse_charset(char *keyword)
+{
+  if(strncasecmp(keyword, "help", 4) == 0) {
+    print_cs_help();
+    exit(42);
+  } else if(strncasecmp(keyword, "full", 4) == 0) {
+    return CS_FULL;
+  } else if(strncasecmp(keyword, "digits", 6) == 0) {
+    return CS_DIGITS;
+  } else if(strncasecmp(keyword, "decimal", 7) == 0) {
+    return CS_DECIMAL;
+  } else if(strncasecmp(keyword, "hex", 3) == 0) {
+    return CS_HEXADECIMAL;
+  } else {
+    return DEFAULT_CHARSET;
+  }
+}
 
 /* array for character set */
 static char charset_array[CHARSET_MAX + 1];
