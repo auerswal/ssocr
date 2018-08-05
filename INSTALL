@@ -14,13 +14,18 @@ To change the default install location of /usr/local to /usr, type:
 make PREFIX=/usr install
 
 You have to keep track of the installed files yourself, if you want to
-remove them later on. If you prefer to install a .deb package for easier
-removal, you can build a .deb package by typing:
+remove them later on.
+
+If you prefer to install a .deb package for easier removal, you can
+build a .deb package by typing:
 
 make deb
 
 Prerequisites
 -------------
+- A system sufficiently compatible to POSIX and GNU.
+- POSIX utilities chmod, date, install, printf, sh, sed (or compatible)
+- GNU utilities gzip, bzip2, tar (or compatible)
 - Imlib2 shared library and development headers. On a Debian or Ubuntu system
   they are provided by the packages libimlib2 and libimlib2-dev.
   On Mac OS X you can use 'brew' to install Imlib2: brew install imlib2
@@ -33,11 +38,13 @@ Prerequisites
 Additional Makefile Targets
 ---------------------------
 - clean:              remove generated files
-- tar:                create a tar-ball of the sources for distribution
+- tar:                create a bzip2 compressed tar-ball of the sources for
+                      distribution
 - ssocr-manpage.html: create HTML version of man page
 
 Platform Specifics
 ------------------
+- I am testing on GNU/Linux only
 - You may need to rename the binary from ssocr to ssocr.exe to use it on Windows
 - You may need to specify the X11 include path manually on macOS, using e.g.
   make CPPFLAGS=-I/opt/X11/include
