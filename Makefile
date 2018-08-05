@@ -9,11 +9,12 @@ VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
 
 all: ssocr ssocr.1
 
-ssocr: ssocr.o imgproc.o help.o
+ssocr: ssocr.o imgproc.o help.o charset.o
 
-ssocr.o: ssocr.c ssocr.h defines.h imgproc.h help.h Makefile
+ssocr.o: ssocr.c ssocr.h defines.h imgproc.h help.h charset.h Makefile
 imgproc.o: imgproc.c defines.h imgproc.h help.h Makefile
 help.o: help.c defines.h imgproc.h help.h Makefile
+charset.o: charset.c charset.h defines.h help.h Makefile
 
 ssocr.1: ssocr.1.in Makefile
 	sed -e "s/@VERSION@/$(VERSION)/" \

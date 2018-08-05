@@ -40,6 +40,7 @@
 #include "ssocr.h"          /* types */
 #include "imgproc.h"        /* image processing */
 #include "help.h"           /* online help */
+#include "charset.h"        /* character set selection and printing */
 
 /* global variables */
 int ssocr_foreground = SSOCR_DEFAULT_FOREGROUND;
@@ -133,6 +134,7 @@ int main(int argc, char **argv)
   char *debug_image_file=NULL; /* ...to this file */
   unsigned int flags=0; /* set by options, see #defines in .h file */
   luminance_t lt=DEFAULT_LUM_FORMULA; /* luminance function */
+  charset_t charset=DEFAULT_CHARSET; /* character set */
 
   int w, h, lum;  /* width, height, pixel luminance */
   int col=UNKNOWN;  /* is column dark or light? */
@@ -1311,39 +1313,7 @@ int main(int argc, char **argv)
     }
   } else {
     for(i=0; i<number_of_digits; i++) {
-      switch(digits[i].digit) {
-        case D_ZERO: putchar('0'); break;
-        case D_ONE: putchar('1'); break;
-        case D_TWO: putchar('2'); break;
-        case D_THREE: putchar('3'); break;
-        case D_FOUR: putchar('4'); break;
-        case D_FIVE: putchar('5'); break;
-        case D_SIX: putchar('6'); break;
-        case D_SEVEN: /* fallthrough */
-        case D_ALTSEVEN: putchar('7'); break;
-        case D_EIGHT: putchar('8'); break;
-        case D_NINE: /* fallthrough */
-        case D_ALTNINE: putchar('9'); break;
-        case D_DECIMAL: if(!(flags & OMIT_DECIMAL)) putchar('.'); break;
-        case D_MINUS: putchar('-'); break;
-        case D_HEX_A: putchar('a'); break;
-        case D_HEX_b: putchar('b'); break;
-        case D_HEX_C: /* fallthrough */
-        case D_HEX_c: putchar('c'); break;
-        case D_HEX_d: putchar('d'); break;
-        case D_HEX_E: putchar('e'); break;
-        case D_HEX_F: putchar('f'); break;
-        case D_U: putchar('u'); break;
-        case D_T: putchar('t'); break;
-        case D_L: putchar('l'); break;
-        case D_H: putchar('h'); break;
-        case D_R: putchar('r'); break;
-        case D_P: putchar('p'); break;
-        case D_N: putchar('n'); break;
-        /* finding a digit with no set segments is not supposed to happen */
-        case D_UNKNOWN: putchar(' '); unknown_digit++; break;
-        default: putchar('_'); unknown_digit++; break;
-      }
+      unknown_digit += print_digit(digits[i].digit, charset, flags);
     }
   }
   putchar('\n');

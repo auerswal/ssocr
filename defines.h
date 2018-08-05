@@ -163,4 +163,14 @@ typedef enum mirror_e {
   VERTICAL
 } mirror_t;
 
+/* character sets to choose from */
+typedef enum charset_e {
+  CS_FULL,
+  CS_DIGITS,
+  CS_DECIMAL,
+  CS_HEXADECIMAL
+} charset_t;
+
+#define DEFAULT_CHARSET CS_FULL
+
 #endif /* SSOCR2_DEFINES_H */

@@ -62,6 +62,33 @@ void print_lum_help(void)
   puts("blue      use B value");
 }
 
+/* get keyword corresponding to character set define */
+const char *cs_key(charset_t cs)
+{
+  switch(cs) {
+    case CS_FULL: return "full";
+    case CS_DIGITS: return "digits";
+    case CS_DECIMAL: return "decimal";
+    case CS_HEXADECIMAL: return "hex";
+    default: return "UNKNOWN";
+  }
+}
+
+/* print character set keyword */
+void print_cs_key(charset_t cs, FILE *f)
+{
+  fputs(cs_key(cs), f);
+}
+
+/* print help for character sets */
+void print_cs_help(void)
+{
+  puts("full      all characters supported by ssocr");
+  puts("digits    digits 0 to 9");
+  puts("decimal   digits 0 to 9, decimal point, minus");
+  puts("hex       digits 0 to f, decimal point, minus ");
+}
+
 /* print version */
 void print_version(FILE *f)
 {
@@ -163,6 +190,8 @@ void usage(char *name, FILE *f)
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
   fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);
   fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
+  fprintf(f, "          character set          = ");
+  print_cs_key(DEFAULT_CHARSET, f); fputs("\n", f);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");
   fprintf(f, "           they are given, in the resulting image the given number of digits\n");
   fprintf(f, "           are searched and recognized, after which the recognized number is\n");

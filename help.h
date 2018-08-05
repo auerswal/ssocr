@@ -34,4 +34,13 @@ void print_version(FILE *f);
 /* print luminance keyword */
 void print_lum_key(luminance_t lt, FILE *f);
 
+/* get keyword corresponding to character set define */
+const char *cs_key(charset_t cs);
+
+/* print character set keyword */
+void print_cs_key(charset_t cs, FILE *f);
+
+/* print help for character sets */
+void print_cs_help(void);
+
 #endif /* SSOCR2_HELP_H */
