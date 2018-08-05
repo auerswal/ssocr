@@ -19,7 +19,6 @@
 
 /* standard things */
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
-#include <stdlib.h>         /* exit */
 
 /* string manipulation */
 #include <string.h>         /* strcpy */
