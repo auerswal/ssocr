@@ -24,8 +24,9 @@ make deb
 Prerequisites
 -------------
 - A system sufficiently compatible to POSIX and GNU.
-- POSIX utilities chmod, date, install, printf, sh, sed (or compatible)
-- GNU utilities gzip, bzip2, tar (or compatible)
+- POSIX utilities: chmod, printf, sh, sed (or compatible)
+- GNU utilities: date, gzip, install, tar (or compatible)
+- Other utilities: bzip2
 - Imlib2 shared library and development headers. On a Debian or Ubuntu system
   they are provided by the packages libimlib2 and libimlib2-dev.
   On Mac OS X you can use 'brew' to install Imlib2: brew install imlib2
