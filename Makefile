@@ -33,12 +33,25 @@ install: all
 ssocr-dir:
 	install -d ssocr-$(VERSION)
 	install -m 0644 Makefile $(DOCS) *.[ch] *.in ssocr-$(VERSION)
+	install -d ssocr-$(VERSION)/notdebian
+	install -m 0644 notdebian/* ssocr-$(VERSION)/notdebian
+	chmod +x ssocr-$(VERSION)/notdebian/rules
+
+notdebian/changelog:
+	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * self built package of current ssocr version in .deb format\n\n -- $(USER)  $(shell date -R)\n" >$@
+
+notdeb: notdebian/changelog notdebian/control notdebian/rules ssocr-dir
+	(cd ssocr-$(VERSION); ln -sv notdebian debian; fakeroot debian/rules binary; fakeroot debian/rules clean)
 
 tar: ssocr-dir
 	tar cvfj ssocr-$(VERSION).tar.bz2 ssocr-$(VERSION)
 
 clean:
-	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.bz2
+	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html
+	$(RM) notdebian/changelog
 	$(RM) -r ssocr-$(VERSION) ssocr-?.?.? ssocr-?.??.?
+
+distclean: clean
+	$(RM) *.deb *.bz2
 
 .PHONY: clean tar ssocr-dir install
