@@ -33,7 +33,7 @@ install: all
 ssocr-dir:
 	install -d ssocr-$(VERSION)
 	install -m 0644 Makefile $(DOCS) *.[ch] *.in ssocr-$(VERSION)
-	
+
 tar: ssocr-dir
 	tar cvfj ssocr-$(VERSION).tar.bz2 ssocr-$(VERSION)
 
