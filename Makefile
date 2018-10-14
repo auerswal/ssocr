@@ -41,7 +41,7 @@ notdebian/changelog:
 	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * self built package of current ssocr version in .deb format\n\n -- $(USER)  $(shell date -R)\n" >$@
 
 selfdeb: notdebian/changelog notdebian/control notdebian/rules ssocr-dir
-	(cd ssocr-$(VERSION); ln -sv notdebian debian; fakeroot debian/rules binary; fakeroot debian/rules clean)
+	(cd ssocr-$(VERSION); ln -sv notdebian debian; fakeroot debian/rules binary; fakeroot debian/rules clean; rm -f debian)
 
 tar: ssocr-dir
 	tar cvfj ssocr-$(VERSION).tar.bz2 ssocr-$(VERSION)
