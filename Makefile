@@ -33,22 +33,12 @@ install: all
 ssocr-dir:
 	install -d ssocr-$(VERSION)
 	install -m 0644 Makefile $(DOCS) *.[ch] *.in ssocr-$(VERSION)
-	install -d ssocr-$(VERSION)/debian
-	install -m 0644 debian/* ssocr-$(VERSION)/debian
-	chmod +x ssocr-$(VERSION)/debian/rules
-
-debian/changelog:
-	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * Debian package of current ssocr version\n\n -- $(USER)  $(shell date -R)\n" >$@
-
-deb: debian/changelog debian/control debian/rules ssocr-dir
-	(cd ssocr-$(VERSION); fakeroot debian/rules binary; fakeroot debian/rules clean)
-
+	
 tar: ssocr-dir
 	tar cvfj ssocr-$(VERSION).tar.bz2 ssocr-$(VERSION)
 
 clean:
-	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.deb *.bz2
-	$(RM) debian/changelog
+	$(RM) ssocr ssocr.1 *.o *~ testbild.png ssocr-manpage.html *.bz2
 	$(RM) -r ssocr-$(VERSION) ssocr-?.?.? ssocr-?.??.?
 
-.PHONY: clean tar deb ssocr-dir install
+.PHONY: clean tar ssocr-dir install
