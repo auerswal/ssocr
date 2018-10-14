@@ -38,10 +38,13 @@ Prerequisites
 
 Additional Makefile Targets
 ---------------------------
-- clean:              remove generated files
+- clean:              remove generated files except packages
+- distclean:          remove all generated files
 - tar:                create a bzip2 compressed tar-ball of the sources for
                       distribution
 - ssocr-manpage.html: create HTML version of man page
+- selfdeb:            create a package file in .deb format that can be
+                      installed on Debian-like distributions
 
 Platform Specifics
 ------------------
@@ -54,3 +57,9 @@ Website
 -------
 You can get the current ssocr version from the official ssocr website:
 http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+
+Third Party Packages
+--------------------
+There exist third party packaging efforts for e.g. GNU/Linux distributions
+and FreeBSD. Thus you can search the packaging system of your distribution
+for an ssocr package.
