@@ -21,3 +21,8 @@ Every file in this repository or archive is licensed under the GNU
 General Public License version 3 (or later), unless another license is
 explicitly given in the file itself. This includes all documentation
 files and the Makefile, and all other files.
+
+Prebuilt binaries for the following distributions are available
+FreeBSD: https://repology.org/metapackage/ssocr/versions
+Debian: http://sid.ethz.ch/debian/ssocr/
+   (can be rebuilt on Ubuntu from the Debian source package)
