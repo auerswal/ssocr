@@ -14,6 +14,8 @@ quotes).
 
 You can get the current ssocr version from the official ssocr website:
 http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+(Links to ssocr should point to the official website, not to a convenience
+copy of the development repository, e.g. on GitHub.)
 
 I am usually quicker to reply to emails than to GitHub issues.
 
