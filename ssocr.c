@@ -71,7 +71,7 @@ static char * tmp_imgfile(unsigned int flags)
     pattern_len = strlen(TMP_FILE_DIR) + strlen(DIR_SEP)
                 + strlen(TMP_FILE_PATTERN) + 1;
   }
-  name = malloc(pattern_len);
+  name = calloc(pattern_len, sizeof(char));
   if(!name) {
     perror(PROG ": could not allocate memory for name of temporary file");
     exit(99);
