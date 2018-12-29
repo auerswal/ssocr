@@ -76,10 +76,11 @@ static char * tmp_imgfile(unsigned int flags)
     exit(99);
   }
   if(dir)
-    name = strcat(name, dir);
+    name = strncat(name, dir, pattern_len - strlen(name) - 1);
   else
-    name = strcat(name, TMP_FILE_DIR);
-  name = strcat(name, DIR_SEP TMP_FILE_PATTERN);
+    name = strncat(name, TMP_FILE_DIR, pattern_len - strlen(name) - 1);
+  name = strncat(name, DIR_SEP TMP_FILE_PATTERN,
+                 pattern_len - strlen(name) - 1);
   if(flags & DEBUG_OUTPUT)
     fprintf(stderr, "pattern for temporary file is %s\n", name);
 
