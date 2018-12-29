@@ -64,12 +64,11 @@ static char * tmp_imgfile(unsigned int flags)
     if(flags & DEBUG_OUTPUT)
       fprintf(stderr, "using %s for temporary files, from $TMP env variable\n",
               dir);
-    pattern_len = strlen(dir) + strlen(DIR_SEP) + strlen(TMP_FILE_PATTERN) + 1;
+    pattern_len = strlen(dir) + strlen(DIR_SEP TMP_FILE_PATTERN) + 1;
   } else {
     if(flags & DEBUG_OUTPUT)
       fprintf(stderr, "using " TMP_FILE_DIR " for temporary files\n");
-    pattern_len = strlen(TMP_FILE_DIR) + strlen(DIR_SEP)
-                + strlen(TMP_FILE_PATTERN) + 1;
+    pattern_len = strlen(TMP_FILE_DIR DIR_SEP TMP_FILE_PATTERN) + 1;
   }
   name = calloc(pattern_len, sizeof(char));
   if(!name) {
@@ -80,8 +79,7 @@ static char * tmp_imgfile(unsigned int flags)
     name = strcat(name, dir);
   else
     name = strcat(name, TMP_FILE_DIR);
-  name = strcat(name, DIR_SEP);
-  name = strcat(name, TMP_FILE_PATTERN);
+  name = strcat(name, DIR_SEP TMP_FILE_PATTERN);
   if(flags & DEBUG_OUTPUT)
     fprintf(stderr, "pattern for temporary file is %s\n", name);
 
