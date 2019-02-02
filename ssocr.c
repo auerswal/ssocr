@@ -290,7 +290,7 @@ int main(int argc, char **argv)
       case 'p':
         flags |= PROCESS_ONLY; break;
       case 'P':
-        flags |= DEBUG_OUTPUT; break;
+        flags |= (VERBOSE | DEBUG_OUTPUT); break;
       case 'f':
         if(optarg) {
           if(strcasecmp(optarg, "black") == 0) {
