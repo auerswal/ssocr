@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2018 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2019 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* ImLib2 Header */
