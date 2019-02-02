@@ -124,7 +124,7 @@ int main(int argc, char **argv)
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
-  int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus' */
+  int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus'*/
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
       {"one-ratio", 1, 0, 'r'}, /* height/width threshold to recognize a one */
-      {"minus-ratio", 1, 0, 'm'}, /* width/height threshold to recognize a minus sign */
+      {"minus-ratio", 1, 0, 'm'}, /* w/h threshold to recognize a minus sign */
       {"output-image", 1, 0, 'o'}, /* write processed image to given file */
       {"output-format", 1, 0, 'O'}, /* format of output image */
       {"debug-image", 2, 0, 'D'}, /* write a debug image */
@@ -1239,10 +1239,9 @@ int main(int argc, char **argv)
       if(found_pixels >= need_pixels) {
         digits[d].digit |= VERT_RIGHT_UP;
       }
-      found_pixels = 0;
-      half = 1;
       /* check lower vertical segments */
-      half=1; /* in which half we are */
+      half = 1; /* new scan starts in first half */
+      found_pixels = 0;
       three_quarters = digits[d].y1 + 3 * (digits[d].y2 - digits[d].y1) / 4;
       for(i=digits[d].x1; i<=digits[d].x2; i++) {
         imlib_image_query_pixel(i, three_quarters, &color);
