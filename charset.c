@@ -59,7 +59,6 @@ void init_charset(charset_t cs)
   }
   switch(cs) {
     case CS_FULL:
-      charset_array[D_UNKNOWN] = ' ';
       charset_array[D_ZERO] = '0';
       charset_array[D_ONE] = '1';
       charset_array[D_TWO] = '2';
@@ -90,7 +89,6 @@ void init_charset(charset_t cs)
       charset_array[D_N] = 'n';
       break;
     case CS_DIGITS:
-      charset_array[D_UNKNOWN] = ' ';
       charset_array[D_ZERO] = '0';
       charset_array[D_ONE] = '1';
       charset_array[D_TWO] = '2';
@@ -106,7 +104,6 @@ void init_charset(charset_t cs)
       charset_array[D_ALTNINE] = '9';
       break;
     case CS_DECIMAL:
-      charset_array[D_UNKNOWN] = ' ';
       charset_array[D_ZERO] = '0';
       charset_array[D_ONE] = '1';
       charset_array[D_TWO] = '2';
@@ -124,7 +121,6 @@ void init_charset(charset_t cs)
       charset_array[D_MINUS] = '-';
       break;
     case CS_HEXADECIMAL:
-      charset_array[D_UNKNOWN] = ' ';
       charset_array[D_ZERO] = '0';
       charset_array[D_ONE] = '1';
       charset_array[D_TWO] = '2';
@@ -164,7 +160,7 @@ int print_digit(int digit, unsigned int flags)
   if(digit <= CHARSET_MAX) {
     c = charset_array[digit];
   }
-  if(c == '_' || c == ' ') {
+  if(c == '_') {
     unknown_digit = 1;
   }
   if(!((c == '.') && (flags & OMIT_DECIMAL))) {
