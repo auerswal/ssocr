@@ -831,7 +831,7 @@ Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
   Imlib_Image current_image; /* save image pointer */
   int height, width; /* image dimensions */
   int x,y; /* iteration variables / target coordinates */
-  Imlib_Color color_return; /* for imlib_query_pixel() */
+  Imlib_Color c; /* for imlib_query_pixel() */
 
   /* save pointer to current image */
   current_image = imlib_context_get_image();
@@ -846,9 +846,9 @@ Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
   if(direction == HORIZONTAL) {
     for(x = width-1; x>=0; x--) {
       for(y = 0; y < height; y++) {
-        imlib_image_query_pixel(width - 1 - x, y, &color_return);
+        imlib_image_query_pixel(width - 1 - x, y, &c);
         imlib_context_set_image(new_image);
-        imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
         imlib_image_draw_pixel(x,y,0);
         imlib_context_set_image(*source_image);
       }
@@ -856,9 +856,9 @@ Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
   } else if(direction == VERTICAL) {
     for(x = 0; x < width; x++) {
       for(y = height-1; y >= 0; y--) {
-        imlib_image_query_pixel(x, height - 1 - y, &color_return);
+        imlib_image_query_pixel(x, height - 1 - y, &c);
         imlib_context_set_image(new_image);
-        imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
         imlib_image_draw_pixel(x,y,0);
         imlib_context_set_image(*source_image);
       }
