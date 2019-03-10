@@ -826,7 +826,7 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
 }
 
 /* mirror image horizontally or vertically */
-Imlib_Image mirror(Imlib_Image *source_image, mirror_t direction)
+Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
 {
   Imlib_Image new_image; /* construct filtered image here */
   Imlib_Image current_image; /* save image pointer */

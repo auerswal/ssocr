@@ -23,4 +23,8 @@ typedef struct {
   int x1,y1,x2,y2,digit;
 } digit_struct;
 
+typedef struct {
+  int R, G, B, A;
+} color_struct;
+
 #endif /* SSOCR2_H */

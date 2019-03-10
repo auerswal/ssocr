@@ -107,6 +107,35 @@ static char * tmp_imgfile(unsigned int flags)
   return name;
 }
 
+/* return number of foreground pixels in a scan line */
+static unsigned int scanline(Imlib_Image *image, Imlib_Image *debug_image,
+                             int x, int y, int len, direction_t dir,
+                             color_struct d_color, double thresh,
+                             luminance_t lt, unsigned int flags)
+{
+  Imlib_Color imlib_color;
+  int lum, i, ix=x, iy=y, start, end;
+  unsigned int found_pixels = 0;
+  start = (dir == HORIZONTAL) ? x : y;
+  end = start + len;
+  for (i = start; i <= end; i++) {
+    if (dir == HORIZONTAL) ix = i;
+    else iy = i;
+    imlib_image_query_pixel(ix, iy, &imlib_color);
+    lum = get_lum(&imlib_color, lt);
+    if(is_pixel_set(lum, thresh)) {
+      if(flags & USE_DEBUG_IMAGE) {
+        imlib_context_set_image(*debug_image);
+        imlib_context_set_color(d_color.R, d_color.G, d_color.B, d_color.A);
+        imlib_image_draw_pixel(ix, iy, 0);
+        imlib_context_set_image(*image);
+      }
+      found_pixels++;
+    }
+  }
+  return found_pixels;
+}
+
 /*** main() ***/
 
 int main(int argc, char **argv)
@@ -146,6 +175,7 @@ int main(int argc, char **argv)
   int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
   digit_struct *digits=NULL; /* position of digits in image */
   int found_pixels=0; /* how many pixels are already found */
+  color_struct d_color = {0, 0, 0, 0}; /* drawing color */
 
   /* if we provided no arguments to the program exit */
   if (argc < 2) {
@@ -928,7 +958,7 @@ int main(int argc, char **argv)
 
   /* after the loop above the program should be in state FIND_DARK,
    * i.e. after the last digit some light was found
-   * if it is still searching for light end the digit at the border of the
+   * if it is still searching for light then end the digit at the border of the
    * image */
   if(state == (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK) {
     digits[d].x2 = w-1;
@@ -1159,118 +1189,80 @@ int main(int argc, char **argv)
   /* now the digits are located and they have to be identified */
   /* iterate over digits */
   for(d=0; d<number_of_digits; d++) {
-    int middle=0, quarter=0, three_quarters=0; /* scanlines */
     int d_height=0; /* height of digit */
-    /* if digits[d].digit == D_ONE do nothing */
+    /* skip digits with zero width or height */
+    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2)) {
+      if(flags & DEBUG_OUTPUT)
+        fprintf(stderr, " skipping digit %d with zero width or height\n", d);
+      continue;
+    }
+    /* skip already recognized digits */
     if(digits[d].digit == D_UNKNOWN) {
-      int third=1; /* in which third we are */
-      int half;
+      int middle = (digits[d].x1 + digits[d].x2) / 2;
+      int quarter = digits[d].y1 + (digits[d].y2 - digits[d].y1) / 4;
+      int three_quarters = digits[d].y1 + 3 * (digits[d].y2 - digits[d].y1) / 4;
       found_pixels=0; /* how many pixels are already found */
       d_height = digits[d].y2 - digits[d].y1;
-      /* check horizontal segments */
-      /* vertical scan at x == middle */
-      middle = (digits[d].x1 + digits[d].x2) / 2;
-      for(j=digits[d].y1; j<=digits[d].y2; j++) {
-        imlib_image_query_pixel(middle, j, &color);
-        lum = get_lum(&color, lt);
-        if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-          if(flags & USE_DEBUG_IMAGE) {
-            imlib_context_set_image(debug_image);
-            if(third == 1) {
-              imlib_context_set_color(255,0,0,255);
-            } else if(third == 2) {
-              imlib_context_set_color(0,255,0,255);
-            } else if(third == 3) {
-              imlib_context_set_color(0,0,255,255);
-            }
-            imlib_image_draw_pixel(middle,j,0);
-            imlib_context_set_image(image);
-          }
-          found_pixels++;
-        }
-        /* pixels in first third count towards upper segment */
-        if(j >= digits[d].y1 + d_height/3 && third == 1) {
-          if(found_pixels >= need_pixels) {
-            digits[d].digit |= HORIZ_UP; /* add upper segment */
-          }
-          found_pixels = 0;
-          third++;
-        } else if(j >= digits[d].y1 + 2*d_height/3 && third == 2) {
-        /* pixels in second third count towards middle segment */
-          if(found_pixels >= need_pixels) {
-            digits[d].digit |= HORIZ_MID; /* add middle segment */
-          }
-          found_pixels = 0;
-          third++;
-        }
+      /* check horizontal segments (vertical scan, x == middle) */
+      d_color.R = d_color.A = 255;
+      d_color.G = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image, middle, digits[d].y1,
+                              d_height/3, VERTICAL, d_color, thresh, lt, flags);
+      if(found_pixels >= need_pixels) {
+        digits[d].digit |= HORIZ_UP; /* add upper segment */
       }
-      /* found_pixels contains pixels of last third */
+      d_color.G = d_color.A = 255;
+      d_color.R = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image, middle,
+                              digits[d].y1 + d_height/3, d_height/3, VERTICAL,
+                              d_color, thresh, lt, flags);
+      if(found_pixels >= need_pixels) {
+        digits[d].digit |= HORIZ_MID; /* add middle segment */
+      }
+      d_color.B = d_color.A = 255;
+      d_color.R = d_color.G = 0;
+      found_pixels = scanline(&image, &debug_image, middle,
+                              digits[d].y1 + 2*d_height/3, d_height/3, VERTICAL,
+                              d_color, thresh, lt, flags);
       if(found_pixels >= need_pixels) {
         digits[d].digit |= HORIZ_DOWN; /* add lower segment */
       }
-      found_pixels = 0;
-      /* check upper vertical segments */
-      half=1; /* in which half we are */
-      quarter = digits[d].y1 + (digits[d].y2 - digits[d].y1) / 4;
-      for(i=digits[d].x1; i<=digits[d].x2; i++) {
-        imlib_image_query_pixel(i, quarter, &color);
-        lum = get_lum(&color, lt);
-        if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-          if(flags & USE_DEBUG_IMAGE) {
-            if(half == 1) {
-              imlib_context_set_color(255,0,0,255);
-            } else if(half == 2) {
-              imlib_context_set_color(0,255,0,255);
-            }
-            imlib_context_set_image(debug_image);
-            imlib_image_draw_pixel(i,quarter,0);
-            imlib_context_set_image(image);
-          }
-          found_pixels++;
-        }
-        if(i >= middle && half == 1) {
-          if(found_pixels >= need_pixels) {
-            digits[d].digit |= VERT_LEFT_UP;
-          }
-          found_pixels = 0;
-          half++;
-        }
+      /* check upper vertical segments (horizontal scan, y == quarter) */
+      d_color.R = d_color.A = 255;
+      d_color.G = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image, digits[d].x1, quarter,
+                              (digits[d].x2 - digits[d].x1) / 2, HORIZONTAL,
+                              d_color, thresh, lt, flags);
+      if (found_pixels >= need_pixels) {
+        digits[d].digit |= VERT_LEFT_UP; /* add upper left segment */
       }
-      if(found_pixels >= need_pixels) {
-        digits[d].digit |= VERT_RIGHT_UP;
+      d_color.G = d_color.A = 255;
+      d_color.R = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image,
+                              (digits[d].x1 + digits[d].x2) / 2 + 1,
+                              quarter, (digits[d].x2 - digits[d].x1) / 2 - 1,
+                              HORIZONTAL, d_color, thresh, lt, flags);
+      if (found_pixels >= need_pixels) {
+        digits[d].digit |= VERT_RIGHT_UP; /* add upper right segment */
       }
-      /* check lower vertical segments */
-      half = 1; /* new scan starts in first half */
-      found_pixels = 0;
-      three_quarters = digits[d].y1 + 3 * (digits[d].y2 - digits[d].y1) / 4;
-      for(i=digits[d].x1; i<=digits[d].x2; i++) {
-        imlib_image_query_pixel(i, three_quarters, &color);
-        lum = get_lum(&color, lt);
-        if(is_pixel_set(lum, thresh)) /* dark i.e. pixel is set */ {
-          if(flags & USE_DEBUG_IMAGE) {
-            if(half == 1) {
-              imlib_context_set_color(255,0,0,255);
-            } else if(half == 2) {
-              imlib_context_set_color(0,255,0,255);
-            }
-            imlib_context_set_image(debug_image);
-            imlib_image_draw_pixel(i,three_quarters,0);
-            imlib_context_set_image(image);
-          }
-          found_pixels++;
-        }
-        if(i >= middle && half == 1) {
-          if(found_pixels >= need_pixels) {
-            digits[d].digit |= VERT_LEFT_DOWN;
-          }
-          found_pixels = 0;
-          half++;
-        }
+      /* check lower vertical segments (horizontal scan, y == three_quarters) */
+      d_color.R = d_color.A = 255;
+      d_color.G = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image, digits[d].x1,
+                              three_quarters, (digits[d].x2 - digits[d].x1) / 2,
+                              HORIZONTAL, d_color, thresh, lt, flags);
+      if (found_pixels >= need_pixels) {
+        digits[d].digit |= VERT_LEFT_DOWN; /* add lower left segment */
       }
-      if(found_pixels >= need_pixels) {
-        digits[d].digit |= VERT_RIGHT_DOWN;
+      d_color.G = d_color.A = 255;
+      d_color.R = d_color.B = 0;
+      found_pixels = scanline(&image, &debug_image,
+                              (digits[d].x1 + digits[d].x2) / 2 + 1,
+                              three_quarters, (digits[d].x2-digits[d].x1)/2 - 1,
+                              HORIZONTAL, d_color, thresh, lt, flags);
+      if (found_pixels >= need_pixels) {
+        digits[d].digit |= VERT_RIGHT_DOWN; /* add lower right segment */
       }
-      found_pixels = 0;
     }
   }
 
