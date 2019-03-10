@@ -847,21 +847,21 @@ Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
   if(direction == HORIZONTAL) {
     for(x = width-1; x>=0; x--) {
       for(y = 0; y < height; y++) {
-	imlib_image_query_pixel(width - 1 - x, y, &color_return);
-	imlib_context_set_image(new_image);
-	imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
-	imlib_image_draw_pixel(x,y,0);
-	imlib_context_set_image(*source_image);
+        imlib_image_query_pixel(width - 1 - x, y, &color_return);
+        imlib_context_set_image(new_image);
+        imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+        imlib_image_draw_pixel(x,y,0);
+        imlib_context_set_image(*source_image);
       }
     }
   } else if(direction == VERTICAL) {
     for(x = 0; x < width; x++) {
       for(y = height-1; y >= 0; y--) {
-	imlib_image_query_pixel(x, height - 1 - y, &color_return);
-	imlib_context_set_image(new_image);
-	imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
-	imlib_image_draw_pixel(x,y,0);
-	imlib_context_set_image(*source_image);
+        imlib_image_query_pixel(x, height - 1 - y, &color_return);
+        imlib_context_set_image(new_image);
+        imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+        imlib_image_draw_pixel(x,y,0);
+        imlib_context_set_image(*source_image);
       }
     }
   }

@@ -145,10 +145,10 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  use -c help for list of KEYWORDS\n");
   fprintf(f, "\nCommands: dilation [N]            [N times] dilation algorithm"
              "\n                                  (set_pixels_filter with mask"
-	     " of 1 pixel)\n");
+             " of 1 pixel)\n");
   fprintf(f, "          erosion [N]             [N times] erosion algorithm\n"
              "                                  (set_pixels_filter with mask"
-	     " of 9 pixels)\n");
+             " of 9 pixels)\n");
   fprintf(f, "          closing [N]             closing algorithm\n");
   fprintf(f, "                                  ([N times] dilation then [N times] erosion)\n");
   fprintf(f, "          opening [N]             opening algorithm\n");

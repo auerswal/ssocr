@@ -145,7 +145,7 @@ void init_charset(charset_t cs)
       break;
     default:
       fprintf(stderr, "%s: error: charset %s is not implemented\n",
-		      PROG, cs_key(cs));
+                      PROG, cs_key(cs));
       exit(99);
       break;
   }

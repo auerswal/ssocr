@@ -401,10 +401,10 @@ int main(int argc, char **argv)
       default:   /* this should not be reached */
         if((c>31) && (c<127)) {
           fprintf (stderr, "%s: error: getopt returned unhandled character %c"
-		           " (code %X)\n", PROG, c, c);
+                           " (code %X)\n", PROG, c, c);
         } else {
           fprintf (stderr, "%s: error: getopt returned unhandled character code"
-	                   " %X\n", PROG, c);
+                           " %X\n", PROG, c);
         }
         short_usage(PROG, stderr);
         exit(99);
@@ -522,8 +522,8 @@ int main(int argc, char **argv)
           new_image = dilation(&image, thresh, lt, n);
         } else {
           if(flags & VERBOSE) fputs(" processing dilation (1)\n", stderr);
-	  new_image = dilation(&image, thresh, lt, 1);
-	}
+          new_image = dilation(&image, thresh, lt, 1);
+        }
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
@@ -541,7 +541,7 @@ int main(int argc, char **argv)
           new_image = erosion(&image, thresh, lt, n);
         } else {
           if(flags & VERBOSE) fputs(" processing erosion (1)\n", stderr);
-	  new_image = erosion(&image, thresh, lt, 1);
+          new_image = erosion(&image, thresh, lt, 1);
         }
         imlib_context_set_image(image);
         imlib_free_image();
@@ -651,7 +651,7 @@ int main(int argc, char **argv)
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: set_pixels_filter command needs an:"
-	                  " argument\n", PROG);
+                          " argument\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("keep_pixels_filter",argv[i]) == 0) {
@@ -671,7 +671,7 @@ int main(int argc, char **argv)
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: keep_pixels_filter command needs an"
-	                  " argument\n", PROG);
+                          " argument\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("dynamic_threshold",argv[i]) == 0) {
@@ -693,7 +693,7 @@ int main(int argc, char **argv)
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: dynamic_threshold command needs two"
-	                  " arguments\n", PROG);
+                          " arguments\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
@@ -759,7 +759,7 @@ int main(int argc, char **argv)
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: gray_stretch command needs two"
-	                  " arguments\n", PROG);
+                          " arguments\n", PROG);
           exit(99);
         }
       } else if(strcasecmp("grayscale",argv[i]) == 0) {
@@ -828,7 +828,7 @@ int main(int argc, char **argv)
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: rotate command needs an argument\n",
-	                  PROG);
+                          PROG);
           exit(99);
         }
       } else if(strcasecmp("mirror",argv[i]) == 0) {
@@ -842,16 +842,16 @@ int main(int argc, char **argv)
             new_image = mirror(&image, VERTICAL);
           } else {
             fprintf(stderr, "%s: error: argument to 'mirror' must be 'horiz'"
-	                    " or 'vert'\n", PROG);
+                            " or 'vert'\n", PROG);
             exit(99);
           }
-	  i++;
+          i++;
           imlib_context_set_image(image);
           imlib_free_image();
           image = new_image;
         } else {
           fprintf(stderr, "%s: error: mirror command needs argument 'horiz'"
-	                  " or 'vert'\n", PROG);
+                          " or 'vert'\n", PROG);
           exit(99);
         }
       } else {
