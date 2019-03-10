@@ -784,7 +784,7 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
   int height, width; /* image dimensions */
   int x,y; /* iteration variables / target coordinates */
   int sx,sy; /* source coordinates */
-  Imlib_Color color_return; /* for imlib_query_pixel() */
+  Imlib_Color c; /* for imlib_query_pixel() */
 
   /* save pointer to current image */
   current_image = imlib_context_get_image();
@@ -805,9 +805,9 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
       sx = (x-width/2) * cos(theta) + (y-height/2) * sin(theta) + width/2;
       sy = (y-height/2) * cos(theta) - (x-width/2) * sin(theta) + height/2;
       if((sx >= 0) && (sx <= width) && (sy >= 0) && (sy <= height)) {
-        imlib_image_query_pixel(sx, sy, &color_return);
+        imlib_image_query_pixel(sx, sy, &c);
         imlib_context_set_image(new_image);
-        imlib_context_set_color(color_return.red, color_return.green, color_return.blue, color_return.alpha);
+        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
       } else {
         imlib_context_set_image(new_image);
         ssocr_set_color(BG);
