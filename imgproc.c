@@ -596,7 +596,6 @@ double iterative_threshold(Imlib_Image *source_image, double thresh,
     avg_white = sum_white / size_white;
     avg_black = sum_black / size_black;
     new_thresh = (avg_white + avg_black) / (2.0 * MAXRGB);
-    /*fprintf(stderr, "iterative_threshold(): new_thresh = %f\n", new_thresh);*/
   } while(fabs(new_thresh - old_thresh) > EPSILON);
 
   /* restore image from before function call */
