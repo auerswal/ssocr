@@ -19,7 +19,7 @@ remove them later on.
 If you prefer to install a .deb package for easier removal, you can
 build a .deb package by typing:
 
-make deb
+make selfdeb
 
 Prerequisites
 -------------
