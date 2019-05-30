@@ -2,16 +2,16 @@ Building and Installing
 -----------------------
 To build ssocr, type:
 
-make
+    make
 
 You can use ssocr from the directory you build it, no installation required.
 If you want to install it to your system, type:
 
-make install
+    make install
 
 To change the default install location of /usr/local to /usr, type:
 
-make PREFIX=/usr install
+    make PREFIX=/usr install
 
 You have to keep track of the installed files yourself, if you want to
 remove them later on.
@@ -19,7 +19,7 @@ remove them later on.
 If you prefer to install a .deb package for easier removal, you can
 build a .deb package by typing:
 
-make selfdeb
+    make selfdeb
 
 Prerequisites
 -------------
