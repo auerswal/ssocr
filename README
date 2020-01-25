@@ -21,7 +21,10 @@ http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 (Links to ssocr should point to the official website, not to a convenience
 copy of the development repository, e.g. on GitHub.)
 
-I am usually quicker to reply to emails than to GitHub issues.
+I am usually quicker to reply to emails than to GitHub issues.  But
+increasingly Google blocks emails sent by me, so if you do not receive
+an answer from me, consider opening a GitHub issue.  Perhaps your mail
+provider does not allow you to read my solutions to your ssocr problems.
 
 Every file in this repository or archive is licensed under the GNU
 General Public License version 3 (or later), unless another license is
