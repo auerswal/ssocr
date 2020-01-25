@@ -103,6 +103,9 @@ The image is written to the file
 unless a filename
 .B FILE
 is given.
+This debug image often helps in understanding why
+.BR ssocr (1)
+does not recognize the number from a given image.
 .SS -P, --debug-output
 Print information helpful for debugging to standard error.
 .SS -f, --foreground COLOR
@@ -352,6 +355,10 @@ and shifted inside.
 Pixels shifted out of the image are dropped.
 Many seven segment displays use slightly skewed digits,
 this command can be used to compensate this.
+Sometimes
+.BR ssocr (1)
+cannot separate a decimal point from the preceding digit
+without shearing the image.
 .SS rotate THETA
 Rotate the image
 .B THETA
