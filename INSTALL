@@ -50,8 +50,8 @@ Platform Specifics
 ------------------
 - I am testing on GNU/Linux only
 - I am testing with GCC only
-- You may need to rename the binary from ssocr to ssocr.exe to use it on Windows
-- You may need to specify the X11 include path manually on macOS, using e.g.
+- On Windows, you may need to rename the binary from ssocr to ssocr.exe
+- On macOS, you may need to specify the X11 include path manually, using e.g.
   make CPPFLAGS=-I/opt/X11/include
 
 Some users have reported problems with their C compilers.  If you are not
