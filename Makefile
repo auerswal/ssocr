@@ -1,10 +1,10 @@
-CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -Werror -pedantic-errors -fstack-protector-all $(shell imlib2-config --cflags) -O3
-LDLIBS := -lm $(shell imlib2-config --libs)
-PREFIX := /usr/local
-BINDIR := $(PREFIX)/bin
-MANDIR := $(PREFIX)/share/man/man1
-DOCDIR := $(PREFIX)/share/doc/ssocr
-DOCS   := AUTHORS COPYING INSTALL README THANKS
+CFLAGS  := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -Werror -pedantic-errors -fstack-protector-all $(shell imlib2-config --cflags) -O3
+LDLIBS  := -lm $(shell imlib2-config --libs)
+PREFIX  := /usr/local
+BINDIR  := $(PREFIX)/bin
+MANDIR  := $(PREFIX)/share/man/man1
+DOCDIR  := $(PREFIX)/share/doc/ssocr
+DOCS    := AUTHORS COPYING INSTALL README THANKS
 VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
 
 all: ssocr ssocr.1
