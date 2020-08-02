@@ -49,9 +49,21 @@ Additional Makefile Targets
 Platform Specifics
 ------------------
 - I am testing on GNU/Linux only
+- I am testing with GCC only
 - You may need to rename the binary from ssocr to ssocr.exe to use it on Windows
 - You may need to specify the X11 include path manually on macOS, using e.g.
   make CPPFLAGS=-I/opt/X11/include
+
+Some users have reported problems with their C compilers.  If you are not
+using a stable release version of GCC, you may need to disable security
+features supposed to be provided by the C compiler, but broken in your
+specific compiler version.  To do this, remove the following from the
+CFLAGS definition in the Makefile:
+
+    -D_FORTIFY_SOURCE=2 -fstack-protector-all
+
+If you need to do this to compile ssocr, please consider reporting the issue
+to your source for your C compiler (e.g., vendor or distribution).
 
 Website
 -------
