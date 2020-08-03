@@ -1,3 +1,6 @@
+# minimal CFLAGS definition (try if compilation fails with default CFLAGS)
+#CFLAGS  := $(shell imlib2-config --cflags)
+# default CFLAGS definition
 CFLAGS  := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -Werror -pedantic-errors -fstack-protector-all $(shell imlib2-config --cflags) -O3
 LDLIBS  := -lm $(shell imlib2-config --libs)
 PREFIX  := /usr/local

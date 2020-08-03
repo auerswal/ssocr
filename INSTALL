@@ -54,6 +54,8 @@ Platform Specifics
 - On macOS, you may need to specify the X11 include path manually, using e.g.
   make CPPFLAGS=-I/opt/X11/include
 
+C Compiler Problems:
+--------------------
 Some users have reported problems with their C compilers.  If you are not
 using a stable release version of GCC, you may need to disable security
 features supposed to be provided by the C compiler, but broken in your
@@ -64,6 +66,23 @@ CFLAGS definition in the Makefile:
 
 If you need to do this to compile ssocr, please consider reporting the issue
 to your source for your C compiler (e.g., vendor or distribution).
+
+Another problem can be the introduction of new compiler warnings.  Some of
+those are prone to false positives, and this problem does occur for stable
+GCC releases as well.  Because ssocr's CFLAGS include both options -Werror
+and -pedantic-errors, false positives will break compilation of ssocr.
+To work around this problem, you can remove both of these options from
+the CFLAGS definition in the Makefile:
+
+    -Werror -pedantic-errors
+
+If you suspect that your C compiler has problems with the ssocr source code,
+you can use the minimal CFLAGS definition given below:
+
+    CFLAGS := $(shell imlib2-config --cflags)
+
+You can do this by commenting out the default CFLAGS definition and removing
+the comment sign in front of the minimal CFLAGS definition in the Makefile.
 
 Website
 -------
