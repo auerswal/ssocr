@@ -4,7 +4,7 @@ To build ssocr, type:
 
     make
 
-You can use ssocr from the directory you build it, no installation required.
+You can use ssocr from the directory you built it, no installation required.
 If you want to install it to your system, type:
 
     make install
