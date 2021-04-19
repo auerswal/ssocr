@@ -193,6 +193,8 @@ void usage(char *name, FILE *f)
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
   fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);
   fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
+  fprintf(f, "          max_dig_h/h threshold for decimal sep = %2d\n", DEC_H_RATIO);
+  fprintf(f, "          max_dig_w/w threshold for decimal sep = %2d\n", DEC_W_RATIO);
   fprintf(f, "          character set          = ");
   print_cs_key(DEFAULT_CHARSET, f); fputs("\n", f);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");
