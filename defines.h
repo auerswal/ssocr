@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2019 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2021 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 #define PROG "ssocr"
@@ -23,7 +23,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.19.0+"
+#define VERSION "2.20.0"
 
 /* states */
 #define FIND_DARK 0
@@ -94,7 +94,7 @@
 /* a decimal point (or thousands separator) is recognized by height less
  * than <maximum digit height> / DEC_H_RATIO and width less than
  * <maximum digit width> / DEC_W_RATIO */
-#define DEC_H_RATIO 7
+#define DEC_H_RATIO 5
 #define DEC_W_RATIO 2 /* needs to work with just ones in the display, too */
 
 /* a one is recognized by a height/width ratio > ONE_RATIO (as ints) */

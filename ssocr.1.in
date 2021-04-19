@@ -67,6 +67,14 @@ for a description of the algorithm.
 .SS -m, --minus-ratio RATIO
 Set the width/height ratio to recognize a minus sign.
 This uses the same idea as recognizing the digit one.
+.SS -H, --dec-h-ratio RATIO
+Set the max_digit_height/height ratio used for recognition of a decimal
+separator.
+This value is used in combination with the max_digit_width/width ratio.
+.SS -W, --dec-w-ratio RATIO
+Set the max_digit_width/width ratio used for recognition of a decimal
+separator.
+This value is used in combination with the max_digit_height/height ratio.
 .SS -o, --output-image FILE
 Write the processed image to FILE.
 Use

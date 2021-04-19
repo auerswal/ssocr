@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2019 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2021 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* standard things */
@@ -93,7 +93,7 @@ void print_version(FILE *f)
 {
   fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
              VERSION);
-  fprintf(f, "Copyright (C) 2004-2019 by Erik Auerswald"
+  fprintf(f, "Copyright (C) 2004-2021 by Erik Auerswald"
              " <auerswal@unix-ag.uni-kl.de>\n");
   fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
   fprintf(f, "This is free software, and you are welcome to redistribute it"
@@ -126,6 +126,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
   fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
   fprintf(f, "         -m, --minus-ratio=#      width/height ratio to recognize a minus sign\n");
+  fprintf(f, "         -H, --dec-h-ratio=#      max_dig_h/h ratio to recognize decimal point\n");
+  fprintf(f, "         -W, --dec-w-ratio=#      max_dig_w/w ratio to recognize decimal point\n");
   fprintf(f, "         -o, --output-image=FILE  write processed image to FILE\n");
   fprintf(f, "         -O, --output-format=FMT  use output format FMT (Imlib2 formats)\n");
   fprintf(f, "         -p, --process-only       do image processing only, no OCR\n");

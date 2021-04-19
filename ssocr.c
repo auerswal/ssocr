@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2004-2019 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2004-2021 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 /* Copyright (C) 2013 Cristiano Fontana <fontanacl@ornl.gov> */
 
 /* ImLib2 Header */
@@ -154,6 +154,8 @@ int main(int argc, char **argv)
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
   int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus'*/
+  int dec_h_ratio = DEC_H_RATIO; /* max_dig_h/h > dec_h_ratio => possibly '.' */
+  int dec_w_ratio = DEC_W_RATIO; /* max_dig_w/w > dec_w_ratio => possibly '.' */
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
@@ -213,9 +215,11 @@ int main(int argc, char **argv)
       {"print-as-hex", 0, 0, 'X'}, /* change output format to hex */
       {"omit-decimal-point", 0, 0, 'C'}, /* omit decimal points from output */
       {"charset", 1, 0, 'c'}, /* omit decimal points from output */
+      {"dec-h-ratio", 1, 0, 'H'}, /* height ratio for decimal point detection */
+      {"dec-w-ratio", 1, 0, 'W'}, /* width ratio for decimal point detection */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:",
+    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -394,6 +398,24 @@ int main(int argc, char **argv)
           charset = parse_charset(optarg);
         }
         break;
+      case 'H':
+        if(optarg) {
+          dec_h_ratio = atoi(optarg);
+          if(dec_h_ratio < 2) {
+            fprintf(stderr, "warning: ignoring --dec-h-ratio=%s\n", optarg);
+            dec_h_ratio = DEC_H_RATIO;
+          }
+        }
+        break;
+      case 'W':
+        if(optarg) {
+          dec_w_ratio = atoi(optarg);
+          if(dec_w_ratio < 1) {
+            fprintf(stderr, "warning: ignoring --dec-w-ratio=%s\n", optarg);
+            dec_w_ratio = DEC_W_RATIO;
+          }
+        }
+        break;
       case '?':  /* missing argument or character not in optstring */
         short_usage(PROG,stderr);
         exit (2);
@@ -431,6 +453,8 @@ int main(int argc, char **argv)
     print_cs_key(charset, stderr); fprintf(stderr, "\n");
     fprintf(stderr, "height/width threshold for one   = %d\n", one_ratio);
     fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
+    fprintf(stderr, "max_dig_h/h threshold for decimal = %d\n", dec_h_ratio);
+    fprintf(stderr, "max_dig_w/w threshold for decimal = %d\n", dec_w_ratio);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
   }
@@ -1153,8 +1177,8 @@ int main(int argc, char **argv)
      * and its width is less than 1/2 of the maximum digit width (the widest
      * digit might be a one), assume it is a decimal point */
     if((digits[d].digit == D_UNKNOWN) &&
-       (max_dig_h / (digits[d].y2 - digits[d].y1) > 5) &&
-       (max_dig_w / (digits[d].x2 - digits[d].x1) > 2)) {
+       (max_dig_h / (digits[d].y2 - digits[d].y1) > dec_h_ratio) &&
+       (max_dig_w / (digits[d].x2 - digits[d].x1) > dec_w_ratio)) {
       digits[d].digit = D_DECIMAL;
       if(flags & DEBUG_OUTPUT)
         fprintf(stderr, " digit %d is a decimal point\n", d);
