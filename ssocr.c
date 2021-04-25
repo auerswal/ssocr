@@ -136,6 +136,15 @@ static unsigned int scanline(Imlib_Image *image, Imlib_Image *debug_image,
   return found_pixels;
 }
 
+/* print given number of space characters to given stream */
+static void print_spaces(FILE *f, int n)
+{
+  int i;
+  for (i = 0; i < n; i++) {
+    fputc(' ', f);
+  }
+}
+
 /*** main() ***/
 
 int main(int argc, char **argv)
@@ -156,6 +165,7 @@ int main(int argc, char **argv)
   int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus'*/
   int dec_h_ratio = DEC_H_RATIO; /* max_dig_h/h > dec_h_ratio => possibly '.' */
   int dec_w_ratio = DEC_W_RATIO; /* max_dig_w/w > dec_w_ratio => possibly '.' */
+  double spc_fac = SPC_FAC; /* add spaces if digit distance > spc_fac*min_dst */
   double thresh=THRESHOLD;  /* border between light and dark */
   int offset;  /* offset for shear */
   double theta; /* rotation angle */
@@ -217,9 +227,13 @@ int main(int argc, char **argv)
       {"charset", 1, 0, 'c'}, /* omit decimal points from output */
       {"dec-h-ratio", 1, 0, 'H'}, /* height ratio for decimal point detection */
       {"dec-w-ratio", 1, 0, 'W'}, /* width ratio for decimal point detection */
+      {"print-spaces", 0, 0, 's'}, /* print spaces between distant digits */
+      {"space-factor", 1, 0, 'A'}, /* relative distance to add spaces */
+      {"space-average", 0, 0, 'G'}, /* avg instead of min dst for spaces */
       {0, 0, 0, 0} /* terminate long options */
     };
-    c = getopt_long (argc, argv, "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:",
+    c = getopt_long (argc, argv,
+                     "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -416,6 +430,33 @@ int main(int argc, char **argv)
           }
         }
         break;
+      case 's':
+        flags |= PRINT_SPACES;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & PRINT_SPACES=%d\n", flags & PRINT_SPACES);
+        }
+        break;
+      case 'A':
+        if(optarg) {
+          spc_fac = atof(optarg);
+          if(spc_fac < 1.0) {
+            spc_fac = SPC_FAC;
+            if(flags & (VERBOSE | DEBUG_OUTPUT)) {
+              fprintf(stderr, "ignoring --space-factor=%s\n", optarg);
+            }
+          }
+          if(flags & DEBUG_OUTPUT) {
+            fprintf(stderr, "spc_fac = %f (default: %f)\n", spc_fac, SPC_FAC);
+          }
+        }
+        break;
+      case 'G':
+        flags |= SPC_USE_AVG_DST;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & SPC_USE_AVG_DST=%d\n",
+                          flags & SPC_USE_AVG_DST);
+        }
+        break;
       case '?':  /* missing argument or character not in optstring */
         short_usage(PROG,stderr);
         exit (2);
@@ -440,6 +481,15 @@ int main(int argc, char **argv)
     fprintf(stderr, "flags & ABSOLUTE_THRESHOLD=%d\n",flags&ABSOLUTE_THRESHOLD);
     fprintf(stderr, "flags & DO_ITERATIVE_THRESHOLD=%d\n",
                     flags & DO_ITERATIVE_THRESHOLD);
+    fprintf(stderr, "flags & USE_DEBUG_IMAGE=%d\n", flags & USE_DEBUG_IMAGE);
+    fprintf(stderr, "flags & DEBUG_OUTPUT=%d\n", flags & PRINT_INFO);
+    fprintf(stderr, "flags & PROCESS_ONLY=%d\n", flags & PROCESS_ONLY);
+    fprintf(stderr, "flags & ASCII_ART_SEGMENTS=%d\n",
+                    flags & ASCII_ART_SEGMENTS);
+    fprintf(stderr, "flags & PRINT_AS_HEX=%d\n", flags & PRINT_AS_HEX);
+    fprintf(stderr, "flags & OMIT_DECIMAL=%d\n", flags & OMIT_DECIMAL);
+    fprintf(stderr, "flags & PRINT_SPACES=%d\n", flags & PRINT_SPACES);
+    fprintf(stderr, "flags & SPC_USE_AVG_DST=%d\n", flags & SPC_USE_AVG_DST);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
     fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
@@ -455,6 +505,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
     fprintf(stderr, "max_dig_h/h threshold for decimal = %d\n", dec_h_ratio);
     fprintf(stderr, "max_dig_w/w threshold for decimal = %d\n", dec_w_ratio);
+    fprintf(stderr, "distance factor for adding spaces = %.2f\n", spc_fac);
     fprintf(stderr, "optind=%d argc=%d\n", optind, argc);
     fprintf(stderr, "================================================================================\n");
   }
@@ -1290,6 +1341,56 @@ int main(int argc, char **argv)
     }
   }
 
+  /* check spacing of digits when --print-spaces is given and there are more
+   * more than two digits
+  */
+  if ((flags & PRINT_SPACES) && (number_of_digits > 2)) {
+    int min_dst, avg_dst, dst_sum, cur_dst, base_dst, num_spc;
+    if (flags & DEBUG_OUTPUT) {
+      fputs("looking for white space\n", stderr);
+    }
+
+    /* determine distance between digits */
+    min_dst = dst_sum = digits[1].x2 - digits[0].x2;
+    if (flags & DEBUG_OUTPUT) {
+      fprintf(stderr, " distance between digits 0 and 1 is %d\n", min_dst);
+    }
+    for (i = 2; i < number_of_digits; i++) {
+      cur_dst = digits[i].x2 - digits[i-1].x2;
+      if (flags & DEBUG_OUTPUT) {
+        fprintf(stderr, " distance between digits %d and %d is %d\n",
+                       i-1, i, cur_dst);
+      }
+      if (cur_dst < min_dst) {
+        min_dst = cur_dst;
+      }
+      dst_sum += cur_dst;
+    }
+    avg_dst = dst_sum / (number_of_digits - 1);
+    base_dst = (flags & SPC_USE_AVG_DST) ? avg_dst : min_dst;
+    if (base_dst < 1) {
+      base_dst = 1;
+    }
+    if (flags & DEBUG_OUTPUT) {
+      fprintf(stderr, " minimum digit distance: %d\n", min_dst);
+      fprintf(stderr, " average digit distance: %d\n", avg_dst);
+      fprintf(stderr, " adding spaces for distance greater than: %d\n",
+                      (int) (spc_fac * base_dst));
+    }
+
+    /* determine number of spaces after each digit */
+    for (i = 0; i < (number_of_digits - 1); i++) {
+      num_spc = (int) ((digits[i+1].x2 - digits[i].x2) / (spc_fac * base_dst));
+      if (num_spc > 0) {
+        if (flags & DEBUG_OUTPUT) {
+          fprintf(stderr, " adding %d space character(s) after digit %d\n",
+                          num_spc, i);
+        }
+        digits[i].spaces = num_spc;
+      }
+    }
+  }
+
   /* print found segments as ASCII art if debug output is enabled
    * or ASCII art output is requested explicitely
    * example digits known by ssocr:
@@ -1305,6 +1406,7 @@ int main(int argc, char **argv)
       fputc(' ', stderr);
       digits[i].digit & HORIZ_UP ? fputc('_', stderr) : fputc(' ', stderr);
       fputc(' ', stderr);
+      print_spaces(stderr, digits[i].spaces * 3);
     }
     fputc('\n', stderr);
     /* middle row */
@@ -1314,6 +1416,7 @@ int main(int argc, char **argv)
       digits[i].digit & HORIZ_MID ? fputc('_', stderr) :
         digits[i].digit == D_MINUS ? fputc('_', stderr) : fputc(' ', stderr);
       digits[i].digit & VERT_RIGHT_UP ? fputc('|', stderr) : fputc(' ', stderr);
+      print_spaces(stderr, digits[i].spaces * 3);
     }
     fputc('\n', stderr);
     /* bottom row */
@@ -1323,6 +1426,7 @@ int main(int argc, char **argv)
       digits[i].digit&HORIZ_DOWN ? fputc('_', stderr) : 
         digits[i].digit == D_DECIMAL ? fputc('.', stderr) : fputc(' ', stderr);
       digits[i].digit&VERT_RIGHT_DOWN ? fputc('|', stderr) : fputc(' ', stderr);
+      print_spaces(stderr, digits[i].spaces * 3);
     }
     fputs("\n\n", stderr);
   }
@@ -1332,11 +1436,13 @@ int main(int argc, char **argv)
     for(i=0; i<number_of_digits; i++) {
       if(i > 0) putchar(':');
       printf("%02x", digits[i].digit);
+      print_spaces(stdout, digits[i].spaces);
     }
   } else {
     init_charset(charset);
     for(i=0; i<number_of_digits; i++) {
       unknown_digit += print_digit(digits[i].digit, flags);
+      print_spaces(stdout, digits[i].spaces);
     }
   }
   putchar('\n');

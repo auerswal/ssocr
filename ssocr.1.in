@@ -153,6 +153,17 @@ the used formula.
 The default of
 .I Rec709
 should work well in most cases.
+.SS -s, --print-spaces
+Print space characters between digits (characters) that are farther apart
+than a factor times the minimum distance between digits (characters).
+.SS -A, --space-factor FACTOR
+Use the given
+.B FACTOR
+instead of the default value to determine white space between digits
+(characters).
+.SS -G, --space-average
+Use the average distance between digits (characters) instead of the minimum
+distance to determine white space between digits.
 .SS -S, --ascii-art-segments
 Prints the recognized segments, i.e. the display as seen by
 .BR ssocr ,

@@ -23,7 +23,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.20.0"
+#define VERSION "2.21.0"
 
 /* states */
 #define FIND_DARK 0
@@ -103,6 +103,9 @@
 /* a minus sign is recognized by a width/height ratio > MINUS_RATIO (as ints) */
 #define MINUS_RATIO 2
 
+/* add space characters if digit distance is greater than SPC_FAC * min dist */
+#define SPC_FAC 1.4
+
 /* to find segment need # of pixels */
 #define NEED_PIXELS 1
 
@@ -126,6 +129,8 @@
 #define ASCII_ART_SEGMENTS (1<<8)
 #define PRINT_AS_HEX (1<<9)
 #define OMIT_DECIMAL (1<<10)
+#define PRINT_SPACES (1<<11)
+#define SPC_USE_AVG_DST (1<<12)
 
 /* colors used by ssocr */
 #define SSOCR_BLACK 0

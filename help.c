@@ -140,6 +140,10 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  percentages of used values\n");
   fprintf(f, "         -l, --luminance=KEYWORD  compute luminance using formula KEYWORD\n");
   fprintf(f, "                                  use -l help for list of KEYWORDS\n");
+  fprintf(f, "         -s, --print-spaces       print spaces between more distant digits\n");
+  fprintf(f, "         -A, --space-factor=FAC   relative distance to add spaces\n");
+  fprintf(f, "         -G, --space-average      use average instead of minimum distance\n");
+  fprintf(f, "                                  to determine spaces between digits\n");
   fprintf(f, "         -S, --ascii-art-segments print recognized segments a ASCII art\n");
   fprintf(f, "         -X, --print-as-hex       change output format to hexadecimal\n");
   fprintf(f, "         -C, --omit-decimal-point omit decimal points from output\n");
@@ -169,8 +173,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "          r_threshold             make image monochrome using only red channel\n");
   fprintf(f, "          g_threshold             make image monochrome using only green channel\n");
   fprintf(f, "          b_threshold             make image monochrome using only blue channel\n");
-  fprintf(f, "          white_border [WIDTH]    make border of WIDTH (or 1) of image have\n");
-  fprintf(f, "                                  background color\n");
+  fprintf(f, "          white_border [WIDTH]    make border of WIDTH (or 1) in background\n");
+  fprintf(f, "                                  color\n");
   fprintf(f, "          shear OFFSET            shear image OFFSET pixels (at bottom) to the\n");
   fprintf(f, "                                  right\n");
   fprintf(f, "          rotate THETA            rotate image by THETA degrees\n");
@@ -195,6 +199,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
   fprintf(f, "          max_dig_h/h threshold for decimal sep = %2d\n", DEC_H_RATIO);
   fprintf(f, "          max_dig_w/w threshold for decimal sep = %2d\n", DEC_W_RATIO);
+  fprintf(f, "          space width factor     = %.2f\n", SPC_FAC);
   fprintf(f, "          character set          = ");
   print_cs_key(DEFAULT_CHARSET, f); fputs("\n", f);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");

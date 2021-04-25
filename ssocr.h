@@ -20,7 +20,7 @@
 #define SSOCR2_H
 
 typedef struct {
-  int x1,y1,x2,y2,digit;
+  int x1,y1,x2,y2,digit,spaces;
 } digit_struct;
 
 typedef struct {
