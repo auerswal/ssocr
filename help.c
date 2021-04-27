@@ -169,7 +169,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  with a window of width W and height H\n");
   fprintf(f, "          rgb_threshold           make image monochrome by setting every pixel\n");
   fprintf(f, "                                  with any values of red, green or blue below\n");
-  fprintf(f, "                                  below the threshold to black\n");
+  fprintf(f, "                                  the threshold to black\n");
   fprintf(f, "          r_threshold             make image monochrome using only red channel\n");
   fprintf(f, "          g_threshold             make image monochrome using only green channel\n");
   fprintf(f, "          b_threshold             make image monochrome using only blue channel\n");
@@ -213,6 +213,6 @@ void usage(char *name, FILE *f)
   fprintf(f, "             1 if a different number of digits have been found\n");
   fprintf(f, "             2 if one of the digits could not be recognized\n");
   fprintf(f, "             3 if successful image processing only\n");
-  fprintf(f, "            42 if -h, -V, or -l help\n");
+  fprintf(f, "            42 if -h, -V, -l help, or -c help\n");
   fprintf(f, "            99 otherwise\n");
 }
