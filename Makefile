@@ -9,6 +9,7 @@ MANDIR  := $(PREFIX)/share/man/man1
 DOCDIR  := $(PREFIX)/share/doc/ssocr
 DOCS    := AUTHORS COPYING INSTALL README THANKS
 VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
+CRYEARS := $(shell sed -n 's/^.*fprintf.*Copyright.*\(2004-2[0-9][0-9][0-9]\).*Erik.*Auerswald.*$$/\1/p' help.c)
 
 all: ssocr ssocr.1
 
@@ -20,8 +21,9 @@ help.o: help.c defines.h imgproc.h help.h Makefile
 charset.o: charset.c charset.h defines.h help.h Makefile
 
 ssocr.1: ssocr.1.in Makefile
-	sed -e "s/@VERSION@/$(VERSION)/" \
-	    -e "s/@DATE@/$(shell date +%Y-%m-%d)/" <$< >$@
+	sed -e 's/@VERSION@/$(VERSION)/' \
+	    -e "s/@DATE@/$(shell date +%Y-%m-%d)/" \
+	    -e 's/@CRYEARS@/$(CRYEARS)/' <$< >$@
 
 ssocr-manpage.html: ssocr.1
 	rman -f html -r '' $< >$@

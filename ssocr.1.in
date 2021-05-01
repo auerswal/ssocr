@@ -455,6 +455,12 @@ images.
 .SH AUTHOR
 .B ssocr
 was written by Erik Auerswald <auerswal@unix-ag.uni-kl.de>.
+.SH COPYRIGHT
+Copyright \(co @CRYEARS@ Erik Auerswald.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
 .SH "SEE ALSO"
 .BR netpbm (1),
 .BR ImageMagick (1),
