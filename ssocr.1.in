@@ -457,7 +457,9 @@ images.
 was written by Erik Auerswald <auerswal@unix-ag.uni-kl.de>.
 .SH COPYRIGHT
 Copyright \(co @CRYEARS@ Erik Auerswald.
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+License GPLv3+: GNU GPL version 3 or later
+.UR https://gnu.org/licenses/gpl.html
+.UE .
 .br
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -465,4 +467,5 @@ There is NO WARRANTY, to the extent permitted by law.
 .BR netpbm (1),
 .BR ImageMagick (1),
 .P
-https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+.UR https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+.UE
