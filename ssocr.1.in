@@ -9,101 +9,101 @@ reads an image file containing the picture of a seven segment display,
 recognizes the displayed digits and prints them to standard output.
 All image formats known by imlib2 are supported.
 Use
-.B -
+.B \-
 as file name to read the image from standard input.
 .B ssocr
 provides several image manipulation algorithms to enhance noisy images.
 .SH OPTIONS
-.SS -h, --help
+.SS \-h, \-\-help
 Write a help message to standard output.
 The default settings are shown as well.
-.SS -V, --version
+.SS \-V, \-\-version
 Write version information to standard output.
-.SS -v, --verbose
+.SS \-v, \-\-verbose
 Print information about program execution to standard error.
-.SS -t, --threshold THRESHOLD
+.SS \-t, \-\-threshold THRESHOLD
 Specify a percentage value as luminance threshold to differentiate between
 black and white. This threshold is adjusted to the luminance values occurring
 in the image, unless option
-.B --absolute-threshold
+.B \-\-absolute\-threshold
 is used. The default threshold is
 .IR 50 .
-.SS -a, --absolute-threshold
+.SS \-a, \-\-absolute\-threshold
 Do not adjust the threshold to the luminance values occuring in the image.
 Consider this option when using the
 .B dynamic_threshold
 command.
-.SS -T, --iter-threshold
+.SS \-T, \-\-iter\-threshold
 Use an iterative method (one-dimensional k-means clustering) to determine the
 threshold. The starting value can be specified with the
-.B --threshold
+.B \-\-threshold
 option.
-.SS -n, --number-pixels NUMBER
+.SS \-n, \-\-number\-pixels NUMBER
 Set the number of foreground pixels that have to be found in a scanline to
 recognize a segment.
 Can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
-.SS -i, --ignore-pixels NUMBER
+.SS \-i, \-\-ignore\-pixels NUMBER
 Set the number of foreground pixels that are ignored when deciding if a column
 consists only of background or foreground pixels.
 Can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
-.SS -d, --number-digits NUMBER
+.SS \-d, \-\-number\-digits NUMBER
 Specifies the number of digits shown in the image. Default value is
 .IR 6 .
 Use
-.I -1
+.I \-1
 to automatically detect the number of digits.
-.SS -r, --one-ratio RATIO
+.SS \-r, \-\-one\-ratio RATIO
 Set the height/width ratio threshold to recognize a digit as a one.
 RATIO takes integers only.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
-.SS -m, --minus-ratio RATIO
+.SS \-m, \-\-minus\-ratio RATIO
 Set the width/height ratio to recognize a minus sign.
 This uses the same idea as recognizing the digit one.
-.SS -H, --dec-h-ratio RATIO
+.SS \-H, \-\-dec\-h\-ratio RATIO
 Set the max_digit_height/height ratio used for recognition of a decimal
 separator.
 This value is used in combination with the max_digit_width/width ratio.
-.SS -W, --dec-w-ratio RATIO
+.SS \-W, \-\-dec\-w\-ratio RATIO
 Set the max_digit_width/width ratio used for recognition of a decimal
 separator.
 This value is used in combination with the max_digit_height/height ratio.
-.SS -o, --output-image FILE
+.SS \-o, \-\-output\-image FILE
 Write the processed image to FILE.
 Use
-.B -
+.B \-
 to write to standard output.
 Unless this option is used no image is written to disk.
 If a standard filename extension is used it is interpreted as the image
 format to use.
 Can be useful together with the
-.B --process-only
+.B \-\-process\-only
 option.
-.SS -O, --output-format FORMAT
+.SS \-O, \-\-output\-format FORMAT
 Specify the image format to use with
-.BR --output-image .
+.BR \-\-output\-image .
 This format must be recognized by imlib2.
 Standard filename extensions are used to describe the format.
 Overwrites the image file format automatically determined via the filename.
 If no format is specified via this option or the filename,
 .IR png
 is used.
-.SS -p, --process-only
+.SS \-p, \-\-process\-only
 Use
 .BR ssocr (1)
 as an image manipulation program.
 No image recognition is performed.
 Should be used together with the
--B --output-image
+\-B \-\-output\-image
 option.
-.SS -D, --debug-image[=FILE]
+.SS \-D, \-\-debug\-image[=FILE]
 Write a debug image showing the results of thresholding, segmentation and
 character recognition to disk.
 The image is written to the file
@@ -114,9 +114,9 @@ is given.
 This debug image often helps in understanding why
 .BR ssocr (1)
 does not recognize the number from a given image.
-.SS -P, --debug-output
+.SS \-P, \-\-debug\-output
 Print information helpful for debugging to standard error.
-.SS -f, --foreground COLOR
+.SS \-f, \-\-foreground COLOR
 Specify the foreground color (either
 .I black
 or
@@ -124,7 +124,7 @@ or
 This automatically sets the background color as well.
 Default is
 .IR black .
-.SS -b, --background COLOR
+.SS \-b, \-\-background COLOR
 Specify the background color (either
 .I black
 or
@@ -132,9 +132,9 @@ or
 This automatically sets the foreground color as well.
 Default is
 .IR white .
-.SS -I, --print-info
+.SS \-I, \-\-print\-info
 Prints image dimensions and range of used luminance values to standard error.
-.SS -g, --adjust-gray
+.SS \-g, \-\-adjust\-gray
 Interpret the values
 .B T1
 and
@@ -142,7 +142,7 @@ and
 given to the command
 .B gray_stretch
 as percentages instead of absolut luminance values.
-.SS -l, --luminance KEYWORD
+.SS \-l, \-\-luminance KEYWORD
 Choose the type of luminace computation.
 Using
 .I help
@@ -153,22 +153,22 @@ the used formula.
 The default of
 .I Rec709
 should work well in most cases.
-.SS -s, --print-spaces
+.SS \-s, \-\-print\-spaces
 Print space characters between digits (characters) that are farther apart
 than a factor times the minimum distance between digits (characters).
-.SS -A, --space-factor FACTOR
+.SS \-A, \-\-space\-factor FACTOR
 Use the given
 .B FACTOR
 instead of the default value to determine white space between digits
 (characters).
-.SS -G, --space-average
+.SS \-G, \-\-space\-average
 Use the average distance between digits (characters) instead of the minimum
 distance to determine white space between digits.
-.SS -S, --ascii-art-segments
+.SS \-S, \-\-ascii\-art\-segments
 Prints the recognized segments, i.e. the display as seen by
 .BR ssocr ,
 as ASCII art to standard error.
-.SS -X, --print-as-hex
+.SS \-X, \-\-print\-as\-hex
 Prints the recognized segments as a string of hexadecimal numbers separated
 by a colon instead of digits and characters.
 Each number comprises two hexadecimal digits (one byte).
@@ -191,12 +191,12 @@ represents a decimal point (or comma or thousands separator).
 Each hexadecimal number printed is the logical
 .I or
 of the set segments.
-.SS -C, --omit-decimal-point
+.SS \-C, \-\-omit\-decimal\-point
 Omit decimal points from output.
 Decimal points are still recognized and counted against the number of digits.
 This can be used together with automatically detecting the number of digits to
 ignore isolated groups of pixels in an image.
-.SS -c, --charset KEYWORD
+.SS \-c, \-\-charset KEYWORD
 Select the set of characters that ssocr shall recognize.
 This affects if a display showing a six with missing top segment is recognized
 as
@@ -263,14 +263,14 @@ Remove any foreground pixels without neighbouring foreground pixels.
 .SS make_mono
 Convert the image to monochrome using thresholding.
 The threshold can be specified with option
-.B --threshold
+.B \-\-threshold
 and is adjusted to the used luminance interval of the image unless option
-.B --absolute-threshold
+.B \-\-absolute\-threshold
 is used.
 .SS grayscale
 Transform image to gray values using luminance.
 The formula to compute luminance can be specified using option
-.BR --luminance .
+.BR \-\-luminance .
 .SS invert
 Set every foreground pixel to background color and vice versa.
 .SS gray_stretch T1 T2
@@ -287,7 +287,7 @@ and any value above
 set to
 .IR 255 .
 Together with the option
-.BR --adjust-gray ,
+.BR \-\-adjust\-gray ,
 the values
 .B T1
 and
@@ -302,17 +302,17 @@ and height
 .B H
 around the current pixel is used to determine the (local) thresholding value.
 Consider using the
-.B --absolute-threshold
+.B \-\-absolute\-threshold
 option together with a manually adjusted
-.B --threshold
+.B \-\-threshold
 for predictable results.
 .SS rgb_threshold
 Convert the image to monochrome using simple thresholding for every color
 channel.
 This is the same as
-.B --luminance=minimum make_mono.
+.B \-\-luminance=minimum make_mono.
 You should use
-.B --luminance=minimum
+.B \-\-luminance=minimum
 and
 .B make_mono
 or
@@ -322,9 +322,9 @@ instead.
 Convert the image to monochrome using simple thresholding.
 Only the red color channel is used.
 This is the same as
-.B --luminance=red make_mono.
+.B \-\-luminance=red make_mono.
 You should use
-.B --luminance red
+.B \-\-luminance red
 and
 .B make_mono
 or
@@ -334,9 +334,9 @@ instead.
 Convert the image to monochrome using simple thresholding.
 Only the green color channel is used.
 This is the same as
-.B --luminance=green make_mono.
+.B \-\-luminance=green make_mono.
 You should use
-.B --luminance green
+.B \-\-luminance green
 and
 .B make_mono
 or
@@ -346,9 +346,9 @@ instead.
 Convert the image to monochrome using simple thresholding.
 Only the blue color channel is used.
 This is the same as
-.B --luminance=blue make_mono.
+.B \-\-luminance=blue make_mono.
 You should use
-.B --luminance blue
+.B \-\-luminance blue
 and
 .B make_mono
 or
@@ -454,7 +454,7 @@ does not work well with
 images.
 .SH AUTHOR
 .B ssocr
-was written by Erik Auerswald <auerswal@unix-ag.uni-kl.de>.
+was written by Erik Auerswald <auerswal@unix\-ag.uni\-kl.de>.
 .SH COPYRIGHT
 Copyright \(co @CRYEARS@ Erik Auerswald.
 License GPLv3+: GNU GPL version 3 or later
@@ -467,5 +467,5 @@ There is NO WARRANTY, to the extent permitted by law.
 .BR netpbm (1),
 .BR ImageMagick (1),
 .P
-.UR https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+.UR https://www.unix\-ag.uni\-kl.de/~auerswal/ssocr/
 .UE
