@@ -17,7 +17,7 @@ you can read it using "make ssocr.1 && man ./ssocr.1" (without the
 quotes).
 
 You can get the current ssocr version from the official ssocr website:
-http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 (Links to ssocr should point to the official website, not to a convenience
 copy of the development repository, e.g. on GitHub.)
 

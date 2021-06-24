@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Erik Auerswald <auerswal@unix-ag.uni-kl.de>
 Build-Depends: debhelper (>= 7), libimlib2-dev, libfreetype6-dev, zlib1g-dev, libx11-dev, libxext-dev
 Standards-Version: 3.8.1
-Homepage: http://www.unix-ag.uni-kl.de/~auerswal/ssocr/
+Homepage: https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 
 Package: ssocr
 Architecture: any
