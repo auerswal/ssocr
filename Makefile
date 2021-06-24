@@ -26,7 +26,7 @@ ssocr.1: ssocr.1.in Makefile
 	    -e 's/@CRYEARS@/$(CRYEARS)/' <$< >$@
 
 ssocr-manpage.html: ssocr.1
-	rman -f html -r '' $< >$@
+	mandoc -T html $< >$@
 
 install: all
 	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR) $(DESTDIR)$(DOCDIR)
