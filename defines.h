@@ -87,6 +87,7 @@
 #define D_R (D_ZERO & ~(VERT_RIGHT_DOWN | HORIZ_DOWN))
 #define D_P (D_HEX_F | VERT_RIGHT_UP)
 #define D_N (D_ZERO & ~HORIZ_DOWN)
+/* an N in the lower half can only happen when digit boundary detection fails *//* define D_LOW_N (VERT_LEFT_DOWN | VERT_RIGHT_DOWN | HORIZ_MID) */
 #define D_UNKNOWN 0
 
 #define NUMBER_OF_DIGITS 6 /* in this special case */
