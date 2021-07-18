@@ -88,6 +88,7 @@ void init_charset(charset_t cs)
       charset_array[D_P] = 'p';
       charset_array[D_N] = 'n';
       charset_array[D_Y] = 'y';
+      charset_array[D_J] = 'j';
       break;
     case CS_DIGITS:
       charset_array[D_ZERO] = '0';
