@@ -32,6 +32,9 @@ Prerequisites
   On Mac OS X you can use 'brew' to install Imlib2: brew install imlib2
   (see https://brew.sh/)
 - imlib2-config (part of libimlib2-dev on Debian or Ubuntu)
+- Imlib2 requires the X11/Xlib.h header and links against some X11 libraries,
+  at least on GNU/Linux with X11 GUI, thus X11 shared libraries and development
+  headers are required for ssocr, too, although ssocr does not use X11 itself
 - Build tools, e.g. build-essential on a Debian (or Ubuntu) system.
 - To build a .deb package, you probably need the debhelper package.
 - To create an HTML version of the man page, you need rman.
