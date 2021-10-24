@@ -51,8 +51,10 @@ Platform Specifics
 - I am testing on GNU/Linux only
 - I am testing with GCC only
 - On Windows, you may need to rename the binary from ssocr to ssocr.exe
-- On macOS, you may need to specify the X11 include path manually, using e.g.
-  make CPPFLAGS=-I/opt/X11/include
+- On macOS, you may need to specify the X11 include path manually.
+  The following have been reported as working on macOS at some time:
+  - make CPPFLAGS=-I/opt/X11/include
+  - make CPPFLAGS=-I/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers/
 
 C Compiler Problems:
 --------------------
