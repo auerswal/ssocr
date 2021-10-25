@@ -72,14 +72,10 @@ CFLAGS definition in the Makefile:
 If you need to do this to compile ssocr, please consider reporting the issue
 to your source for your C compiler (e.g., vendor or distribution).
 
-Another problem can be the introduction of new compiler warnings.  Some of
-those are prone to false positives, and this problem does occur for stable
-GCC releases as well.  Because ssocr's CFLAGS include both options -Werror
-and -pedantic-errors, false positives will break compilation of ssocr.
-To work around this problem, you can remove both of these options from
-the CFLAGS definition in the Makefile:
-
-    -Werror -pedantic-errors
+Another problem can be the introduction of new compiler warnings.
+Some of those are prone to false positives, and this problem does occur
+for stable GCC releases as well.  Because of this I have removed -Werror
+and -pedantic-errors from ssocr's CFLAGS.
 
 If you suspect that your C compiler has problems with the ssocr source code,
 you can use the minimal CFLAGS definition given below:
