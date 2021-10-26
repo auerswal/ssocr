@@ -25,7 +25,7 @@
 #include <stdlib.h>         /* exit */
 
 /* string manipulation */
-#include <string.h>         /* strcpy */
+#include <string.h>         /* strcasecmp, strcmp, strrchr */
 
 /* sin, cos */
 #include <math.h>

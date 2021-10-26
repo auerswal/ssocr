@@ -27,7 +27,7 @@
 #include <stdlib.h>         /* exit */
 
 /* string manipulation */
-#include <string.h>         /* strcpy, strdup */
+#include <string.h>         /* strdup, strlen, strncat */
 
 /* option parsing */
 #include <getopt.h>         /* getopt */
