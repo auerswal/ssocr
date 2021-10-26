@@ -22,6 +22,7 @@
 #include <Imlib2.h>
 
 /* standard things */
+#include <stdint.h>         /* SIZE_MAX */
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
 #include <stdlib.h>         /* exit */
 
@@ -57,28 +58,27 @@ static char * tmp_imgfile(unsigned int flags)
   int handle;
   unsigned char buf;
   ssize_t count = 0;
+  size_t pat_suffix_len = strlen(DIR_SEP TMP_FILE_PATTERN);
 
   /* find a suitable place (directory) for the tmp file and create pattern */
   dir = getenv("TMP");
-  if(dir) {
-    if(flags & DEBUG_OUTPUT)
-      fprintf(stderr, "using %s for temporary files, from $TMP env variable\n",
-              dir);
-    pattern_len = strlen(dir) + strlen(DIR_SEP TMP_FILE_PATTERN) + 1;
-  } else {
-    if(flags & DEBUG_OUTPUT)
-      fprintf(stderr, "using " TMP_FILE_DIR " for temporary files\n");
-    pattern_len = strlen(TMP_FILE_DIR DIR_SEP TMP_FILE_PATTERN) + 1;
+  if(dir && strlen(dir) >= SIZE_MAX - pat_suffix_len - 1) {
+    dir = TMP_FILE_DIR;
+    fprintf(stderr, "%s: warning: ignoring too long $TMP env variable\n",
+                    PROG);
+  } else if(!dir) {
+    dir = TMP_FILE_DIR;
   }
+  if(flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "using directory %s for temporary files\n", dir);
+  }
+  pattern_len = strlen(dir) + pat_suffix_len + 1;
   name = calloc(pattern_len, sizeof(char));
   if(!name) {
     perror(PROG ": could not allocate memory for name of temporary file");
     exit(99);
   }
-  if(dir)
-    name = strncat(name, dir, pattern_len - strlen(name) - 1);
-  else
-    name = strncat(name, TMP_FILE_DIR, pattern_len - strlen(name) - 1);
+  name = strncat(name, dir, pattern_len - strlen(name) - 1);
   name = strncat(name, DIR_SEP TMP_FILE_PATTERN,
                  pattern_len - strlen(name) - 1);
   if(flags & DEBUG_OUTPUT)
