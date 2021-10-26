@@ -20,9 +20,6 @@
 /* standard things */
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
 
-/* string manipulation */
-#include <string.h>         /* strcpy */
-
 /* my headers */
 #include "defines.h"        /* defines */
 
