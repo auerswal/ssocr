@@ -27,7 +27,7 @@
 #include <stdlib.h>         /* exit */
 
 /* string manipulation */
-#include <string.h>         /* strdup, strlen, strncat */
+#include <string.h>         /* memcpy, strdup, strlen */
 
 /* option parsing */
 #include <getopt.h>         /* getopt */
@@ -59,6 +59,7 @@ static char * tmp_imgfile(unsigned int flags)
   unsigned char buf;
   ssize_t count = 0;
   size_t pat_suffix_len = strlen(DIR_SEP TMP_FILE_PATTERN);
+  size_t dir_len;
 
   /* find a suitable place (directory) for the tmp file and create pattern */
   dir = getenv("TMP");
@@ -72,15 +73,15 @@ static char * tmp_imgfile(unsigned int flags)
   if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "using directory %s for temporary files\n", dir);
   }
-  pattern_len = strlen(dir) + pat_suffix_len + 1;
+  dir_len = strlen(dir);
+  pattern_len = dir_len + pat_suffix_len + 1;
   name = calloc(pattern_len, sizeof(char));
   if(!name) {
     perror(PROG ": could not allocate memory for name of temporary file");
     exit(99);
   }
-  name = strncat(name, dir, pattern_len - strlen(name) - 1);
-  name = strncat(name, DIR_SEP TMP_FILE_PATTERN,
-                 pattern_len - strlen(name) - 1);
+  memcpy(name, dir, dir_len);
+  memcpy(name + dir_len, DIR_SEP TMP_FILE_PATTERN, pat_suffix_len);
   if(flags & DEBUG_OUTPUT)
     fprintf(stderr, "pattern for temporary file is %s\n", name);
 
