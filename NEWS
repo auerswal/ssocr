@@ -1,0 +1,68 @@
+Noteworthy Changes in ssocr Releases
+====================================
+
+Version ?.??.? (????-??-??):
+----------------------------
+ * Fix compilation with GCC 10
+ * Add recognition of characters 'j' and 'y' to full charset
+ * Add this "NEWS" file
+
+Version 2.21.0 (2021-04-25):
+----------------------------
+ * Add ability to print spaces between digits that are positioned further away
+
+Version 2.20.0 (2021-04-19):
+----------------------------
+ * Add options to adjust the ratios used for decimal separator recognition
+
+Version 2.19.0 (2019-08-05):
+----------------------------
+ * Add option to select the set of recognized characters
+ * Add option to omit decimal points from the output
+
+Version 2.18.0 (2017-11-19):
+----------------------------
+ * Add convenience parameter N to the dilation and erosion command
+
+Version 2.17.0 (2017-10-22):
+----------------------------
+ * Add option to print detected segments as ASCII art w/o further debug output
+ * Add option to change the output to a hex string representing set segments
+ * Add 7 characters shown on a display used in a Chinese table tennis robot
+
+Version 2.16.0 (2013-12-29):
+----------------------------
+ * Add command to mirror the image horizontally or vertically
+
+Version 2.15.0 (2013-12-29):
+----------------------------
+ * Add detection of minus signs, thanks to a patch by Cristiano Fontana
+
+Version 2.14.0 (2013-08-04):
+----------------------------
+ * Add alternative version of the digit 9 w/o lower horizontal segment
+
+Version 2.13.0 (2012-11-04):
+----------------------------
+ * Add ability to automatically determine the number of digits
+
+Version 2.12.0 (2012-11-03):
+----------------------------
+ * Add recognition of hexadecimal digits
+
+Version 2.11.0 (2012-11-03):
+----------------------------
+ * Add detection of a decimal point
+
+Version 2.9.0 (2009-08-07):
+---------------------------
+ * Allow reading image data from a pipe (standard input)
+
+Versions 2.x.y:
+---------------
+ * ssocrpp is now part of ssocr
+
+Versions 1.x.y:
+---------------
+ * ssocr w/o image manipulation functions
+ * ssocrpp for image manipulation as preprocessing step before recognition
