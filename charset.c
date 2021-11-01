@@ -41,6 +41,8 @@ charset_t parse_charset(char *keyword)
     return CS_DECIMAL;
   } else if(strncasecmp(keyword, "hex", 3) == 0) {
     return CS_HEXADECIMAL;
+  } else if(strncasecmp(keyword, "tt_robot", 8) == 0) {
+    return CS_TT_ROBOT;
   } else {
     return DEFAULT_CHARSET;
   }
@@ -144,6 +146,32 @@ void init_charset(charset_t cs)
       charset_array[D_HEX_d] = 'd';
       charset_array[D_HEX_E] = 'e';
       charset_array[D_HEX_F] = 'f';
+      break;
+    case CS_TT_ROBOT:
+      charset_array[D_ZERO] = '0';
+      charset_array[D_ONE] = '1';
+      charset_array[D_TWO] = '2';
+      charset_array[D_THREE] = '3';
+      charset_array[D_FOUR] = '4';
+      charset_array[D_FIVE] = '5';
+      charset_array[D_SIX] = '6';
+      charset_array[D_SEVEN] = '7';
+      charset_array[D_TT_WRONG_SEVEN_1] = '7';
+      charset_array[D_TT_WRONG_SEVEN_2] = '7';
+      charset_array[D_EIGHT] = '8';
+      charset_array[D_NINE] = '9';
+      charset_array[D_MINUS] = '-';
+      charset_array[D_HEX_A] = 'a';
+      charset_array[D_HEX_b] = 'b';
+      charset_array[D_HEX_C] = 'c';
+      charset_array[D_HEX_d] = 'd';
+      charset_array[D_U] = 'v';
+      charset_array[D_T] = 't';
+      charset_array[D_L] = 'l';
+      charset_array[D_H] = 'h';
+      charset_array[D_R] = 'r';
+      charset_array[D_P] = 'p';
+      charset_array[D_N] = 'n';
       break;
     default:
       fprintf(stderr, "%s: error: charset %s is not implemented\n",

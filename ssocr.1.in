@@ -198,8 +198,8 @@ This can be used together with automatically detecting the number of digits to
 ignore isolated groups of pixels in an image.
 .SS \-c, \-\-charset KEYWORD
 Select the set of characters that ssocr shall recognize.
-This affects if a display showing a six with missing top segment is recognized
-as
+This affects, e.g., if a display showing a six with missing top segment is
+recognized as
 .I 6
 (with digits and decimal) or
 .I b
@@ -429,6 +429,8 @@ digits
 decimal
 .IP \(bu
 hex
+.IP \(bu
+tt_robot
 .SH EXIT STATUS
 .IP \(bu
 0, if the correct number of digits have been recognized

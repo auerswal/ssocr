@@ -66,6 +66,7 @@ const char *cs_key(charset_t cs)
     case CS_DIGITS: return "digits";
     case CS_DECIMAL: return "decimal";
     case CS_HEXADECIMAL: return "hex";
+    case CS_TT_ROBOT: return "tt_robot";
     default: return "UNKNOWN";
   }
 }
@@ -83,6 +84,7 @@ void print_cs_help(void)
   puts("digits    digits 0 to 9");
   puts("decimal   digits 0 to 9, decimal point, minus");
   puts("hex       digits 0 to f, decimal point, minus ");
+  puts("tt_robot  digits and characters used by a Chinese table tennis robot");
 }
 
 /* print version */

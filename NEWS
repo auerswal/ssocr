@@ -6,6 +6,7 @@ Version ?.??.? (????-??-??):
  * Fix compilation with GCC 10
  * Add recognition of characters 'j' and 'y' to full charset
  * Add this "NEWS" file
+ * Add character set "tt_robot"
 
 Version 2.21.0 (2021-04-25):
 ----------------------------
