@@ -83,7 +83,7 @@ void print_cs_help(void)
   puts("full      all characters supported by ssocr");
   puts("digits    digits 0 to 9");
   puts("decimal   digits 0 to 9, decimal point, minus");
-  puts("hex       digits 0 to f, decimal point, minus ");
+  puts("hex       digits 0 to f, decimal point, minus");
   puts("tt_robot  digits and characters used by a Chinese table tennis robot");
 }
 
