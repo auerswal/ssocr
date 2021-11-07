@@ -1,7 +1,7 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Version ?.??.? (????-??-??):
+Version 2.22.0 (2021-11-07):
 ----------------------------
  * Fix compilation with GCC 10
  * Add recognition of characters 'j' and 'y' to full charset
