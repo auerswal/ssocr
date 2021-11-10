@@ -29,7 +29,7 @@ in the image, unless option
 is used. The default threshold is
 .IR 50 .
 .SS \-a, \-\-absolute\-threshold
-Do not adjust the threshold to the luminance values occuring in the image.
+Do not adjust the threshold to the luminance values occurring in the image.
 Consider this option when using the
 .B dynamic_threshold
 command.
@@ -141,7 +141,7 @@ and
 .B T2
 given to the command
 .B gray_stretch
-as percentages instead of absolut luminance values.
+as percentages instead of absolute luminance values.
 .SS \-l, \-\-luminance KEYWORD
 Choose the type of luminace computation.
 Using
@@ -443,7 +443,7 @@ tt_robot
 .IP \(bu
 42, if help or version info was requested
 .IP \(bu
-99, if some other error occured
+99, if some other error occurred
 .SH ENVIRONMENT
 .B TMP
 can be used to specify a different directory for temporary files than
