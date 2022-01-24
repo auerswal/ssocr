@@ -37,7 +37,6 @@ Prerequisites
   headers are required for ssocr, too, although ssocr does not use X11 itself
 - Build tools, e.g. build-essential on a Debian (or Ubuntu) system.
 - To build a .deb package, you probably need the debhelper package.
-- To create an HTML version of the man page, you need rman.
 
 Additional Makefile Targets
 ---------------------------
