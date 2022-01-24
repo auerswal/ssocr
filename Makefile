@@ -1,8 +1,8 @@
 # minimal CFLAGS definition (try if compilation fails with default CFLAGS)
-#CFLAGS  := $(shell imlib2-config --cflags)
+#CFLAGS  := $(shell if command -v imlib2-config >/dev/null; then imlib2-config --cflags; else pkg-config --cflags imlib2; fi)
 # default CFLAGS definition
-CFLAGS  := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -fstack-protector-all $(shell imlib2-config --cflags) -O3
-LDLIBS  := -lm $(shell imlib2-config --libs)
+CFLAGS  := -D_FORTIFY_SOURCE=2 -Wall -W -Wextra -pedantic -fstack-protector-all $(shell if command -v imlib2-config >/dev/null; then imlib2-config --cflags; else pkg-config --cflags imlib2; fi) -O3
+LDLIBS  := -lm $(shell if command -v imlib2-config >/dev/null; then imlib2-config --libs; else pkg-config --libs imlib2; fi)
 PREFIX  := /usr/local
 BINDIR  := $(PREFIX)/bin
 MANDIR  := $(PREFIX)/share/man/man1
