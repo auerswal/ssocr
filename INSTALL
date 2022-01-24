@@ -31,7 +31,9 @@ Prerequisites
   they are provided by the packages libimlib2 and libimlib2-dev.
   On Mac OS X you can use 'brew' to install Imlib2: brew install imlib2
   (see https://brew.sh/)
-- imlib2-config (part of libimlib2-dev on Debian or Ubuntu)
+- pkg-config or imlib2-config (part of libimlib2-dev on Debian or Ubuntu)
+  [Imlib2 version 1.7.5 dropped the imlib2-config program in favor of using
+   pkg-config]
 - Imlib2 requires the X11/Xlib.h header and links against some X11 libraries,
   at least on GNU/Linux with X11 GUI, thus X11 shared libraries and development
   headers are required for ssocr, too, although ssocr does not use X11 itself
