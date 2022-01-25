@@ -1,6 +1,10 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
+Version 2.22.1 (2022-01-25):
+----------------------------
+ * Fix build failure with Imlib 1.7.5 (pkg-config replaces imlib2-config)
+
 Version 2.22.0 (2021-11-07):
 ----------------------------
  * Fix compilation with GCC 10
