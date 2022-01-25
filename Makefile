@@ -20,7 +20,7 @@ imgproc.o: imgproc.c defines.h imgproc.h help.h Makefile
 help.o: help.c defines.h imgproc.h help.h Makefile
 charset.o: charset.c charset.h defines.h help.h Makefile
 
-ssocr.1: ssocr.1.in Makefile
+ssocr.1: ssocr.1.in Makefile defines.h
 	sed -e 's/@VERSION@/$(VERSION)/' \
 	    -e "s/@DATE@/$(shell date +%Y-%m-%d)/" \
 	    -e 's/@CRYEARS@/$(CRYEARS)/' <$< >$@
