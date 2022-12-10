@@ -155,7 +155,8 @@ The default of
 should work well in most cases.
 .SS \-s, \-\-print\-spaces
 Print space characters between digits (characters) that are farther apart
-than a factor times the minimum distance between digits (characters).
+than a factor times the minimum (default) or average distance between digits
+(characters).
 .SS \-A, \-\-space\-factor FACTOR
 Use the given
 .B FACTOR
