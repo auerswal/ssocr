@@ -13,6 +13,15 @@ Use
 as file name to read the image from standard input.
 .B ssocr
 provides several image manipulation algorithms to enhance noisy images.
+.PP
+.B Options
+can be used to change
+.B ssocr
+behavior.
+.B Commands
+can be used to manipulate the input
+.I IMAGE
+before starting the recognition algorithm.
 .SH OPTIONS
 .SS \-h, \-\-help
 Write a help message to standard output.
@@ -215,6 +224,10 @@ The default is
 .I full
 (recognizing all characters known to ssocr in the image).
 .SH COMMANDS
+Most commands do not change the image dimensions.
+The
+.B crop
+command is a notable exception to this rule.
 .SS dilation [N]
 Filter image using dilation algorithm.
 Any pixel with at least one neighbour pixel set in the source image will be
@@ -396,6 +409,7 @@ Use only the subpicture with upper left corner (
 .B W
 and height
 .BR H .
+This command changes the image dimensions.
 .SS set_pixels_filter MASK
 Set every pixel in the filtered image that has at least
 .B MASK
