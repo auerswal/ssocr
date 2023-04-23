@@ -194,7 +194,7 @@ void usage(char *name, FILE *f)
       (SSOCR_DEFAULT_BACKGROUND == SSOCR_BLACK) ? "black" : "white");
   fprintf(f, "          luminance              = ");
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
-  fprintf(f, "          height/width threshold = %2d\n", ONE_RATIO);
+  fprintf(f, "          height/width threshold for digit one  = %2d\n", ONE_RATIO);
   fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
   fprintf(f, "          max_dig_h/h threshold for decimal sep = %2d\n", DEC_H_RATIO);
   fprintf(f, "          max_dig_w/w threshold for decimal sep = %2d\n", DEC_W_RATIO);
