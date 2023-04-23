@@ -56,7 +56,7 @@ See the web page of
 for a description of the algorithm.
 .SS \-i, \-\-ignore\-pixels NUMBER
 Set the number of foreground pixels that are ignored when deciding if a column
-consists only of background or foreground pixels.
+or row consists only of background or foreground pixels.
 Can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
