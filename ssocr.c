@@ -502,8 +502,8 @@ int main(int argc, char **argv)
     print_lum_key(lt, stderr); fprintf(stderr, "\n");
     fprintf(stderr, "charset    = ");
     print_cs_key(charset, stderr); fprintf(stderr, "\n");
-    fprintf(stderr, "height/width threshold for one   = %d\n", one_ratio);
-    fprintf(stderr, "width/height threshold for minus = %d\n", minus_ratio);
+    fprintf(stderr, "height/width threshold for one    = %d\n", one_ratio);
+    fprintf(stderr, "width/height threshold for minus  = %d\n", minus_ratio);
     fprintf(stderr, "max_dig_h/h threshold for decimal = %d\n", dec_h_ratio);
     fprintf(stderr, "max_dig_w/w threshold for decimal = %d\n", dec_w_ratio);
     fprintf(stderr, "distance factor for adding spaces = %.2f\n", spc_fac);
