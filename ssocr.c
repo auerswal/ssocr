@@ -108,7 +108,7 @@ static char * tmp_imgfile(unsigned int flags)
   return name;
 }
 
-/* return number of foreground pixels in a scan line */
+/* return number of foreground pixels in a scanline */
 static unsigned int scanline(Imlib_Image *image, Imlib_Image *debug_image,
                              int x, int y, int len, direction_t dir,
                              color_struct d_color, double thresh,

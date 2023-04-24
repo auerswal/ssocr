@@ -172,7 +172,7 @@ typedef enum luminance_e {
   BLUE
 } luminance_t;
 
-/* direction, to mirror horizontally or vertically, or for a scan line */
+/* direction, to mirror horizontally or vertically, or for a scanline */
 typedef enum direction_e {
   HORIZONTAL,
   VERTICAL
