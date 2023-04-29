@@ -159,7 +159,8 @@ int main(int argc, char **argv)
 
   int i, j, d;  /* iteration variables */
   int unknown_digit=0; /* was one of the 6 found digits an unknown one? */
-  int need_pixels = NEED_PIXELS; /*pixels needed to recognize a segment as set*/
+  int need_pixels = NEED_PIXELS; /* pixels needed to set segment in scanline */
+  int min_segment = MIN_SEGMENT; /* minimum pixels needed for a segment */
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
@@ -208,6 +209,7 @@ int main(int argc, char **argv)
       {"absolute-threshold", 0, 0, 'a'}, /* use treshold value as provided */
       {"iter-threshold", 0, 0, 'T'}, /* use treshold value as provided */
       {"number-pixels", 1, 0, 'n'}, /* pixels needed to regard segment as set */
+      {"min-segment", 1, 0, 'N'}, /* minimum pixels needed for a segment */
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
       {"one-ratio", 1, 0, 'r'}, /* height/width threshold to recognize a one */
@@ -234,7 +236,7 @@ int main(int argc, char **argv)
       {0, 0, 0, 0} /* terminate long options */
     };
     c = getopt_long (argc, argv,
-                     "hVt:vaTn:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
+                     "hVt:vaTn:N:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -279,6 +281,26 @@ int main(int argc, char **argv)
           if(need_pixels < 1) {
             fprintf(stderr, "warning: ignoring --number-pixels=%s\n", optarg);
             need_pixels = NEED_PIXELS;
+          }
+          if(flags & DEBUG_OUTPUT) {
+            fprintf(stderr, "need_pixels = %d\n", need_pixels);
+          }
+        }
+        break;
+      case 'N':
+        if(optarg) {
+          min_segment = atoi(optarg);
+          if(min_segment < 1) {
+            fprintf(stderr, "warning: ignoring --min-segment=%s\n", optarg);
+            min_segment = MIN_SEGMENT;
+            if(flags & DEBUG_OUTPUT) {
+              fprintf(stderr, "min_segment = %d\n", min_segment);
+            }
+          } else {
+            need_pixels = min_segment;
+            if(flags & DEBUG_OUTPUT) {
+              fprintf(stderr, "min_segment = need_pixels = %d\n", min_segment);
+            }
           }
         }
         break;
@@ -492,6 +514,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "flags & PRINT_SPACES=%d\n", flags & PRINT_SPACES);
     fprintf(stderr, "flags & SPC_USE_AVG_DST=%d\n", flags & SPC_USE_AVG_DST);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
+    fprintf(stderr, "min_segment = %d\n", min_segment);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
     fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
     fprintf(stderr, "foreground = %d (%s)\n", ssocr_foreground,
@@ -1196,10 +1219,11 @@ int main(int argc, char **argv)
   if(flags & DEBUG_OUTPUT)
     fputs("looking for digit 1\n",stderr);
   for(d=0; d<number_of_digits; d++) {
-    /* skip digits with zero width */
-    if(digits[d].x1 == digits[d].x2) {
+    /* skip digits too narrow for a segment */
+    if(digits[d].x2 - digits[d].x1 < min_segment) {
       if(flags & DEBUG_OUTPUT)
-        fprintf(stderr, " skipping digit %d with zero width\n", d);
+        fprintf(stderr, " skipping too narrow digit %d with width %d\n", d,
+                digits[d].x2 - digits[d].x1);
       continue;
     }
     /* if width of digit is less than 1/one_ratio of its height it is a 1
@@ -1241,10 +1265,11 @@ int main(int argc, char **argv)
   if(flags & DEBUG_OUTPUT)
     fputs("looking for minus signs\n",stderr);
   for(d=0; d<number_of_digits; d++) {
-    /* skip digits with zero height */
-    if(digits[d].y1 == digits[d].y2) {
+    /* skip digits too short for a segment */
+    if(digits[d].y2 - digits[d].y1 < min_segment) {
       if(flags & DEBUG_OUTPUT)
-        fprintf(stderr, " skipping digit %d with zero height\n", d);
+        fprintf(stderr, " skipping too short digit %d with height %d\n", d,
+                digits[d].y2 - digits[d].y1);
       continue;
     }
     /* if height of digit is less than 1/minus_ratio of its height it is a 1
@@ -1263,13 +1288,16 @@ int main(int argc, char **argv)
   }
 
   /* now the digits are located and they have to be identified */
+  if(flags & DEBUG_OUTPUT)
+    fputs("starting scanline based recognition for remaining digits\n", stderr);
   /* iterate over digits */
   for(d=0; d<number_of_digits; d++) {
     int d_height=0; /* height of digit */
-    /* skip digits with zero width or height */
-    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2)) {
+    /* skip digits too small to contain a segment */
+    if((digits[d].x2 - digits[d].x1 < min_segment) ||
+       (digits[d].y2 - digits[d].y1 < min_segment)) {
       if(flags & DEBUG_OUTPUT)
-        fprintf(stderr, " skipping digit %d with zero width or height\n", d);
+        fprintf(stderr, " skipping digit %d smaller than minimum segment\n", d);
       continue;
     }
     /* skip already recognized digits */

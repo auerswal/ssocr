@@ -120,6 +120,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -a, --absolute-threshold don't adjust threshold to image\n");
   fprintf(f, "         -T, --iter-threshold     use iterative thresholding method\n");
   fprintf(f, "         -n, --number-pixels=#    number of pixels needed to recognize a segment\n");
+  fprintf(f, "         -N, --min-segment=SIZE   minimum width and height of a segment\n");
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
   fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
@@ -185,6 +186,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "          keep_pixels_filter MASK keeps pixels that have at least MASK neighbor\n");
   fprintf(f, "                                  pixels set (not counting the checked pixel)\n");
   fprintf(f, "\nDefaults: needed pixels          = %2d\n", NEED_PIXELS);
+  fprintf(f, "          minimum segment size   = %2d\n", MIN_SEGMENT);
   fprintf(f, "          ignored pixels         = %2d\n", IGNORE_PIXELS);
   fprintf(f, "          no. of digits          = %2d\n", NUMBER_OF_DIGITS);
   fprintf(f, "          threshold              = %5.2f\n", THRESHOLD);

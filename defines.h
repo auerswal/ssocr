@@ -113,8 +113,14 @@
 /* add space characters if digit distance is greater than SPC_FAC * min dist */
 #define SPC_FAC 1.4
 
-/* to find segment need # of pixels */
+/* number of set pixels needed in a scanline to recognize a segment */
 #define NEED_PIXELS 1
+
+/* minimum number of pixels required for a segment
+ * this generalizes to both scanline and ratio based digit detection,
+ * but only when the digit is built using segments, i.e., this is not
+ * used for decimal separators */
+#define MIN_SEGMENT 1
 
 /* ignore # of pixels when checking a column fo black or white */
 #define IGNORE_PIXELS 0

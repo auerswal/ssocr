@@ -50,7 +50,21 @@ option.
 .SS \-n, \-\-number\-pixels NUMBER
 Set the number of foreground pixels that have to be found in a scanline to
 recognize a segment.
+This does not apply to ratio based recognition.
 Can be used to ignore some noise in the picture.
+See the web page of
+.BR ssocr (1)
+for a description of the algorithm.
+.SS \-N, \-\-min\-segment SIZE
+Set the minimum number of pixels required for width and height of an individual
+segment of a seven segment display.
+A set segment in the display must have both a width and height of at least
+.B SIZE
+pixels.
+This minimum is used for both scanline based and ratio based recognition.
+It is not applied to decimal separator detection,
+because those are not comprised of regular segments.
+This option can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
