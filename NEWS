@@ -5,6 +5,7 @@ Upcoming Version ?.??.? (????-??-??):
 -------------------------------------
  * New option -N, --min-segment to specify the minimum width and height of
    a segment, for both scanline based and ratio based character recognition
+ * New option -M, --min-char-dims to specify minimum character dimensions
 
 Version 2.22.2 (2023-04-24):
 ----------------------------

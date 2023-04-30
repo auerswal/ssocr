@@ -27,4 +27,8 @@ typedef struct {
   int R, G, B, A;
 } color_struct;
 
+typedef struct {
+  int w, h;
+} dimensions_struct;
+
 #endif /* SSOCR2_H */

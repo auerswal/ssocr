@@ -122,6 +122,12 @@
  * used for decimal separators */
 #define MIN_SEGMENT 1
 
+/* minimum width of a character respectively digit */
+#define MIN_CHAR_W 1
+
+/* minimum height of a character respectively digit */
+#define MIN_CHAR_H 1
+
 /* ignore # of pixels when checking a column fo black or white */
 #define IGNORE_PIXELS 0
 

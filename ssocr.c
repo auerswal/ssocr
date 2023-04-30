@@ -27,7 +27,7 @@
 #include <stdlib.h>         /* exit */
 
 /* string manipulation */
-#include <string.h>         /* memcpy, strdup, strlen */
+#include <string.h>         /* memcpy, strchr, strdup, strlen */
 
 /* option parsing */
 #include <getopt.h>         /* getopt */
@@ -146,6 +146,52 @@ static void print_spaces(FILE *f, int n)
   }
 }
 
+/* parse dimensions given as a string in the format "WxH" */
+static int parse_width_height(const char *s, dimensions_struct *d)
+{
+  size_t l;
+  const char *width_string;
+  char *height_string;
+  int w, h;
+  if (!s || !d) {
+    fputs(PROG ": error: parse_width_height() called with NULL pointer\n",
+          stderr);
+    return 1;
+  }
+  l = strlen(s);
+  if (l == 0) {
+    fputs(PROG ": error: parse_width_height() called with empty string\n",
+          stderr);
+    return 1;
+  }
+  width_string = s;
+  height_string = strchr(s, 'x');
+  if (!height_string) {
+    fputs(PROG ": error: no 'x' in dimension specification\n", stderr);
+    return 1;
+  }
+  if (width_string == height_string) {
+    fputs(PROG ": error: width missing from dimension specification\n", stderr);
+    return 1;
+  }
+  height_string++;
+  if (strlen(height_string) == 0) {
+    fputs(PROG ": error: height missing from dimension specification\n",stderr);
+    return 1;
+  }
+  w = atoi(width_string);
+  h = atoi(height_string);
+  if (w < 1 || h < 1) {
+    fprintf(stderr,
+            PROG ": warning: ignoring mininmum character dimensions %dx%d\n",
+            w, h);
+    return 1;
+  }
+  d->w = w;
+  d->h = h;
+  return 0;
+}
+
 /*** main() ***/
 
 int main(int argc, char **argv)
@@ -161,6 +207,7 @@ int main(int argc, char **argv)
   int unknown_digit=0; /* was one of the 6 found digits an unknown one? */
   int need_pixels = NEED_PIXELS; /* pixels needed to set segment in scanline */
   int min_segment = MIN_SEGMENT; /* minimum pixels needed for a segment */
+  dimensions_struct min_char_dims; /* minimum character dimensions (W x H) */
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int potential_digits; /* number of potential digits after segmentation */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
@@ -192,6 +239,10 @@ int main(int argc, char **argv)
   int found_pixels=0; /* how many pixels are already found */
   color_struct d_color = {0, 0, 0, 0}; /* drawing color */
 
+  /* initialize minimum character dimensions structure */
+  min_char_dims.w = MIN_CHAR_W;
+  min_char_dims.h = MIN_CHAR_H;
+
   /* if we provided no arguments to the program exit */
   if (argc < 2) {
     usage(PROG, stderr);
@@ -211,6 +262,7 @@ int main(int argc, char **argv)
       {"iter-threshold", 0, 0, 'T'}, /* use treshold value as provided */
       {"number-pixels", 1, 0, 'n'}, /* pixels needed to regard segment as set */
       {"min-segment", 1, 0, 'N'}, /* minimum pixels needed for a segment */
+      {"min-char-dims", 1, 0, 'M'}, /* minimum character (digit) dimensions */
       {"ignore-pixels", 1, 0, 'i'}, /* pixels ignored when searching digits */
       {"number-digits", 1, 0, 'd'}, /* number of digits in image */
       {"one-ratio", 1, 0, 'r'}, /* height/width threshold to recognize a one */
@@ -237,7 +289,7 @@ int main(int argc, char **argv)
       {0, 0, 0, 0} /* terminate long options */
     };
     c = getopt_long (argc, argv,
-                     "hVt:vaTn:N:i:d:r:m:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
+                     "hVt:vaTn:N:i:d:r:m:M:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -302,6 +354,19 @@ int main(int argc, char **argv)
             if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, "min_segment = need_pixels = %d\n", min_segment);
             }
+          }
+        }
+        break;
+      case 'M':
+        if(optarg) {
+          int ret;
+          ret = parse_width_height(optarg, &min_char_dims);
+          if (ret) {
+            fprintf(stderr, "warning: ignoring --min-char-dims=%s\n", optarg);
+          }
+          if(flags & DEBUG_OUTPUT) {
+            fprintf(stderr, "min_char_dims = %dx%d\n", min_char_dims.w,
+                    min_char_dims.h);
           }
         }
         break;
@@ -516,6 +581,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "flags & SPC_USE_AVG_DST=%d\n", flags & SPC_USE_AVG_DST);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
     fprintf(stderr, "min_segment = %d\n", min_segment);
+    fprintf(stderr, "min_char_dims = %dx%d\n",min_char_dims.w,min_char_dims.h);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
     fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
     fprintf(stderr, "foreground = %d (%s)\n", ssocr_foreground,
@@ -1152,6 +1218,56 @@ int main(int argc, char **argv)
       }
     }
   }
+  if (flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "image segmentation found %d potential digits\n",
+            potential_digits);
+  }
+
+  /* image has been segmented into potential digits, ignore too small ones */
+  if (min_char_dims.w > 1 || min_char_dims.h > 1) {
+    int digit_count = 0, pos;
+    digit_struct *tmp;
+    if (flags & DEBUG_OUTPUT) {
+      fputs("dropping too small potential digits\n", stderr);
+    }
+    /* count sufficiently large digits */
+    for (d = 0; d < potential_digits; d++) {
+      if (digits[d].x2 - digits[d].x1 >= min_char_dims.w &&
+          digits[d].y2 - digits[d].y1 >= min_char_dims.h) {
+        if (flags & DEBUG_OUTPUT) {
+          fprintf(stderr, " keeping sufficiently large digit %d\n", d);
+        }
+        digit_count += 1;
+      } else if (flags & DEBUG_OUTPUT) {
+        fprintf(stderr, " dropping too small potential digit %d\n", d);
+      }
+    }
+    if (flags & DEBUG_OUTPUT) {
+      fprintf(stderr, "keeping %d of %d potential digits\n", digit_count,
+              potential_digits);
+    }
+    /* allocate memory for sufficiently large digits */
+    if(!(tmp = calloc(digit_count, sizeof(digit_struct)))) {
+      perror(PROG ": tmp = calloc()");
+      exit(99);
+    }
+    /* keep only sufficiently large digits */
+    pos = 0;
+    for (d = 0; d < potential_digits; d++) {
+      if (digits[d].x2 - digits[d].x1 >= min_char_dims.w &&
+          digits[d].y2 - digits[d].y1 >= min_char_dims.h) {
+        if (pos >= digit_count) {
+          fputs(PROG ": error copying digit information", stderr);
+          exit(99);
+        }
+        memcpy(tmp + pos, digits + d, sizeof(digit_struct));
+        pos++;
+      }
+    }
+    free(digits);
+    digits = tmp;
+    potential_digits = digit_count;
+  }
 
   /* check if expected number of digits have been found */
   if ((number_of_digits > -1) && (number_of_digits != potential_digits)) {
@@ -1166,13 +1282,13 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  /* accept all potential characters / digits */
+  /* continue to work with the accepted number of characters / digits */
   number_of_digits = potential_digits;
   if (flags & DEBUG_OUTPUT) {
     fprintf(stderr, "image segmentation found %d digits\n", number_of_digits);
   }
 
-  /* draw rectangles around digits */
+  /* draw rectangles around accepted digits */
   if(flags & USE_DEBUG_IMAGE) {
     imlib_context_set_image(debug_image);
     imlib_context_set_color(128,128,128,255); /* gray line */
@@ -1204,7 +1320,7 @@ int main(int argc, char **argv)
 
   /* debug: write digit info to stderr */
   if(flags & DEBUG_OUTPUT) {
-    fprintf(stderr, "found %d digits\n", d);
+    fprintf(stderr, "found %d digits\n", number_of_digits);
     for(d=0; d<number_of_digits; d++) {
       fprintf(stderr, "digit %d: (%d,%d) -> (%d,%d), width: %d (%5.2f%%) "
                       "height: %d (%5.2f%%)\n",

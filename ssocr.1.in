@@ -75,6 +75,18 @@ Can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
+.SS \-M, \-\-min\-char\-dims WIDTHxHEIGHT
+Specify the minimum dimensions of characters respectively digits.
+When the segmentation step finds potential digits,
+those with a width less than
+.B WIDTH
+or a height less than
+.B HEIGHT
+are ignored.
+Can be used to ignore some noise in the picture.
+See the web page of
+.BR ssocr (1)
+for a description of the algorithm.
 .SS \-d, \-\-number\-digits NUMBER
 Specifies the number of digits shown in the image. Default value is
 .IR 6 .

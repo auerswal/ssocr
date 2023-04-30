@@ -123,6 +123,7 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -N, --min-segment=SIZE   minimum width and height of a segment\n");
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
+  fprintf(f, "         -M, --min-char-dims=WxH  minimum width and height of a character/digit\n");
   fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
   fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
   fprintf(f, "         -m, --minus-ratio=#      width/height ratio to recognize a minus sign\n");
@@ -185,23 +186,25 @@ void usage(char *name, FILE *f)
   fprintf(f, "                                  pixels set (including checked position)\n");
   fprintf(f, "          keep_pixels_filter MASK keeps pixels that have at least MASK neighbor\n");
   fprintf(f, "                                  pixels set (not counting the checked pixel)\n");
-  fprintf(f, "\nDefaults: needed pixels          = %2d\n", NEED_PIXELS);
-  fprintf(f, "          minimum segment size   = %2d\n", MIN_SEGMENT);
-  fprintf(f, "          ignored pixels         = %2d\n", IGNORE_PIXELS);
-  fprintf(f, "          no. of digits          = %2d\n", NUMBER_OF_DIGITS);
-  fprintf(f, "          threshold              = %5.2f\n", THRESHOLD);
-  fprintf(f, "          foreground             = %s\n",
+  fprintf(f, "\nDefaults: needed pixels            = %2d\n", NEED_PIXELS);
+  fprintf(f, "          minimum segment size     = %2d\n", MIN_SEGMENT);
+  fprintf(f, "          minimum character width  = %2d\n", MIN_CHAR_W);
+  fprintf(f, "          minimum character height = %2d\n", MIN_CHAR_H);
+  fprintf(f, "          ignored pixels           = %2d\n", IGNORE_PIXELS);
+  fprintf(f, "          no. of digits            = %2d\n", NUMBER_OF_DIGITS);
+  fprintf(f, "          threshold                = %5.2f\n", THRESHOLD);
+  fprintf(f, "          foreground               = %s\n",
       (SSOCR_DEFAULT_FOREGROUND == SSOCR_BLACK) ? "black" : "white");
-  fprintf(f, "          background             = %s\n",
+  fprintf(f, "          background               = %s\n",
       (SSOCR_DEFAULT_BACKGROUND == SSOCR_BLACK) ? "black" : "white");
-  fprintf(f, "          luminance              = ");
+  fprintf(f, "          luminance                = ");
   print_lum_key(DEFAULT_LUM_FORMULA, f); fprintf(f, "\n");
   fprintf(f, "          height/width threshold for digit one  = %2d\n", ONE_RATIO);
   fprintf(f, "          width/height threshold for minus sign = %2d\n", MINUS_RATIO);
   fprintf(f, "          max_dig_h/h threshold for decimal sep = %2d\n", DEC_H_RATIO);
   fprintf(f, "          max_dig_w/w threshold for decimal sep = %2d\n", DEC_W_RATIO);
-  fprintf(f, "          space width factor     = %.2f\n", SPC_FAC);
-  fprintf(f, "          character set          = ");
+  fprintf(f, "          space width factor       = %.2f\n", SPC_FAC);
+  fprintf(f, "          character set            = ");
   print_cs_key(DEFAULT_CHARSET, f); fputs("\n", f);
   fprintf(f, "\nOperation: The IMAGE is read, the COMMANDs are processed in the sequence\n");
   fprintf(f, "           they are given, in the resulting image the given number of digits\n");
