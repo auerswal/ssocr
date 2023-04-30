@@ -162,6 +162,7 @@ int main(int argc, char **argv)
   int need_pixels = NEED_PIXELS; /* pixels needed to set segment in scanline */
   int min_segment = MIN_SEGMENT; /* minimum pixels needed for a segment */
   int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
+  int potential_digits; /* number of potential digits after segmentation */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
   int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus'*/
@@ -975,17 +976,16 @@ int main(int argc, char **argv)
     debug_image = make_mono(&image, thresh, lt);
   }
 
-  /* allocate memory for seven segment digits */
-  if(number_of_digits > -1) {
-    if(!(digits = calloc(number_of_digits, sizeof(digit_struct)))) {
-      perror(PROG ": digits = calloc()");
-      exit(99);
-    }
-  } else {
-    if(!(digits = calloc(1, sizeof(digit_struct)))) {
-      perror(PROG ": digits = calloc()");
-      exit(99);
-    }
+  /* start image segmentation into possible characters / digits */
+  if (flags & DEBUG_OUTPUT) {
+    fputs("starting image segmentation\n", stderr);
+    fputs("starting horizontal partitioning\n", stderr);
+  }
+
+  /* allocate memory for one seven segment digit */
+  if(!(digits = calloc(1, sizeof(digit_struct)))) {
+    perror(PROG ": digits = calloc()");
+    exit(99);
   }
 
   /* horizontal partition */
@@ -1001,7 +1001,7 @@ int main(int argc, char **argv)
       if(is_pixel_set(lum, thresh)) /* dark */ {
         found_pixels++;
         if(found_pixels > ignore_pixels) {
-          /* 1 dark pixels darken the whole column */
+          /* 1 not ignored dark pixel darkens the whole column */
           col = (ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT;
         }
       } else if(col == UNKNOWN) /* light */ {
@@ -1012,15 +1012,9 @@ int main(int argc, char **argv)
     if((state == ((ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT))
         && (col == ((ssocr_foreground == SSOCR_BLACK) ? DARK : LIGHT))) {
       /* beginning of digit */
-      if((number_of_digits > -1) && (d >= number_of_digits)) {
-        fprintf(stderr, "found too many digits (%d)\n", d+1);
-        imlib_free_image_and_decache();
-        if(flags & USE_DEBUG_IMAGE) {
-          save_image("debug", debug_image, output_fmt,debug_image_file,flags);
-          imlib_context_set_image(debug_image);
-          imlib_free_image_and_decache();
-        }
-        exit(1);
+      if (flags & DEBUG_OUTPUT) {
+        fprintf(stderr, " start of potential digit %d in image column %d\n",
+                d, i);
       }
       digits[d].x1 = i;
       digits[d].y1 = 0;
@@ -1035,6 +1029,9 @@ int main(int argc, char **argv)
               ((ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK))
               && (col == ((ssocr_foreground == SSOCR_BLACK) ? LIGHT : DARK))){
       /* end of digit */
+      if (flags & DEBUG_OUTPUT) {
+        fprintf(stderr, " end of potential digit %d in image column %d\n",d,i);
+      }
       digits[d].x2 = i;
       digits[d].y2 = h-1;
       d++;
@@ -1044,7 +1041,7 @@ int main(int argc, char **argv)
         imlib_image_draw_line(i,0,i,h-1,0);
         imlib_context_set_image(image);
       }
-      /* if number of digits is not known, add memory for another digit */
+      /* add memory for another digit */
       if(!(digits = realloc(digits, (d+1) * sizeof(digit_struct)))) {
         perror(PROG ": digits = realloc()");
         exit(99);
@@ -1060,31 +1057,27 @@ int main(int argc, char **argv)
    * if it is still searching for light then end the digit at the border of the
    * image */
   if(state == (ssocr_foreground == SSOCR_BLACK) ? FIND_LIGHT : FIND_DARK) {
+    if (flags & DEBUG_OUTPUT) {
+      fprintf(stderr, " end of potential digit %d in image column %d\n",d,w-1);
+    }
     digits[d].x2 = w-1;
     digits[d].y2 = h-1;
     d++;
     state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
   }
-  if((number_of_digits > -1) && (d != number_of_digits)) {
-    fprintf(stderr, "found only %d of %d digits\n", d, number_of_digits);
-    imlib_free_image_and_decache();
-    if(flags & USE_DEBUG_IMAGE) {
-      save_image("debug", debug_image, output_fmt, debug_image_file, flags);
-      imlib_context_set_image(debug_image);
-      imlib_free_image_and_decache();
-    }
-    exit(1);
-  } else if(number_of_digits == -1) {
-    number_of_digits = d;
-    if(flags & DEBUG_OUTPUT) {
-      fprintf(stderr, "auto detecting number of digits: %d\n", d);
-    }
+
+  /* horizontal partitioning has found "d" potential characters / digits */
+  potential_digits = d;
+  if(flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "horizontal partitioning found %d digit(s)\n",
+            potential_digits);
   }
-  dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
-  dig_h = digits[number_of_digits-1].y2 - digits[0].y1;
 
   /* find upper and lower boundaries of every digit */
-  for(d=0; d<number_of_digits; d++) {
+  if (flags & DEBUG_OUTPUT) {
+    fputs("looking for upper and lower digit boundaries\n", stderr);
+  }
+  for(d=0; d<potential_digits; d++) {
     int found_top=0;
     state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
     /* start from top of image and scan rows for dark pixel(s) */
@@ -1159,8 +1152,28 @@ int main(int argc, char **argv)
       }
     }
   }
-  if(flags & USE_DEBUG_IMAGE) {
+
+  /* check if expected number of digits have been found */
+  if ((number_of_digits > -1) && (number_of_digits != potential_digits)) {
+    fprintf(stderr, PROG ": expected %d digits, but found %d\n",
+            number_of_digits, potential_digits);
+    imlib_free_image_and_decache();
+    if(flags & USE_DEBUG_IMAGE) {
+      save_image("debug", debug_image, output_fmt,debug_image_file,flags);
+      imlib_context_set_image(debug_image);
+      imlib_free_image_and_decache();
+    }
+    exit(1);
+  }
+
+  /* accept all potential characters / digits */
+  number_of_digits = potential_digits;
+  if (flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "image segmentation found %d digits\n", number_of_digits);
+  }
+
   /* draw rectangles around digits */
+  if(flags & USE_DEBUG_IMAGE) {
     imlib_context_set_image(debug_image);
     imlib_context_set_color(128,128,128,255); /* gray line */
     for(d=0; d<number_of_digits; d++) {
@@ -1168,6 +1181,14 @@ int main(int argc, char **argv)
           digits[d].x2-digits[d].x1, digits[d].y2-digits[d].y1);
     }
     imlib_context_set_image(image);
+  }
+
+  /* determine size of digit part of the image */
+  dig_w = digits[number_of_digits-1].x2 - digits[0].x1;
+  dig_h = digits[number_of_digits-1].y2 - digits[0].y1;
+  if (flags & DEBUG_OUTPUT) {
+    fprintf(stderr, "total width of digit area is %d\n", dig_w);
+    fprintf(stderr, "total height of digit area is %d\n", dig_h);
   }
 
   /* determine maximum digit dimensions */
