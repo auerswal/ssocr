@@ -208,8 +208,8 @@ static int parse_interval(const char *s, interval_struct *i) {
     i->min = i->max = min;
     return 0;
   }
-  if (min < 0) {
-    fputs(PROG": error: lower interval bound cannot be less than -1\n", stderr);
+  if (min < 1) {
+    fputs(PROG ": error: lower interval bound cannot be less than 1\n", stderr);
     return 1;
   }
   upper = strchr(s, '-');
