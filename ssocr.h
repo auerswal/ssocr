@@ -31,4 +31,8 @@ typedef struct {
   int w, h;
 } dimensions_struct;
 
+typedef struct {
+  int min, max;
+} interval_struct;
+
 #endif /* SSOCR2_H */

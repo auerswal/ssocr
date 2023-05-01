@@ -87,12 +87,16 @@ Can be used to ignore some noise in the picture.
 See the web page of
 .BR ssocr (1)
 for a description of the algorithm.
-.SS \-d, \-\-number\-digits NUMBER
+.SS \-d, \-\-number\-digits RANGE
 Specifies the number of digits shown in the image. Default value is
 .IR 6 .
 Use
 .I \-1
 to automatically detect the number of digits.
+Use a single positive number to specify an exact number of digits.
+Use two positive numbers separated with a hyphen
+.RI ( - )
+to specify an inclusive range of acceptable values for the number of digits.
 .SS \-r, \-\-one\-ratio RATIO
 Set the height/width ratio threshold to recognize a digit as a one.
 A digit with a height/width ratio greater than

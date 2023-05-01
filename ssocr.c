@@ -192,6 +192,45 @@ static int parse_width_height(const char *s, dimensions_struct *d)
   return 0;
 }
 
+/* parse description of interval in one of two formats:
+ * 1) a single number giving both upper and lower bound
+ * 2) two numbers separated by a hyphen */
+static int parse_interval(const char *s, interval_struct *i) {
+  int min, max;
+  char *upper;
+
+  if (!s) {
+    fputs(PROG ": error: empty interval description string\n", stderr);
+    return 1;
+  }
+  min = atoi(s);
+  if (min == -1) {
+    i->min = i->max = min;
+    return 0;
+  }
+  if (min < 0) {
+    fputs(PROG": error: lower interval bound cannot be less than -1\n", stderr);
+    return 1;
+  }
+  upper = strchr(s, '-');
+  if (!upper) {
+    i->min = i->max = min;
+    return 0;
+  }
+  if (upper == s) {
+    fputs(PROG ": error: lower interval bound cannot be omitted\n", stderr);
+    return 1;
+  }
+  max = atoi(++upper);
+  if (max < min) {
+    fputs(PROG ": error: upper bound less than lower bound\n", stderr);
+    return 1;
+  }
+  i->min = min;
+  i->max = max;
+  return 0;
+}
+
 /*** main() ***/
 
 int main(int argc, char **argv)
@@ -208,8 +247,9 @@ int main(int argc, char **argv)
   int need_pixels = NEED_PIXELS; /* pixels needed to set segment in scanline */
   int min_segment = MIN_SEGMENT; /* minimum pixels needed for a segment */
   dimensions_struct min_char_dims; /* minimum character dimensions (W x H) */
-  int number_of_digits = NUMBER_OF_DIGITS; /* look for this many digits */
   int potential_digits; /* number of potential digits after segmentation */
+  interval_struct expected_digits; /* expect number of digits is inside this */
+  int number_of_digits; /* number of digits found and accepted */
   int ignore_pixels = IGNORE_PIXELS; /* pixels to ignore when checking column */
   int one_ratio = ONE_RATIO; /* height/width > one_ratio => digit 'one' */
   int minus_ratio = MINUS_RATIO; /* height/width > minus_ratio => char 'minus'*/
@@ -239,9 +279,10 @@ int main(int argc, char **argv)
   int found_pixels=0; /* how many pixels are already found */
   color_struct d_color = {0, 0, 0, 0}; /* drawing color */
 
-  /* initialize minimum character dimensions structure */
+  /* initialize structures */
   min_char_dims.w = MIN_CHAR_W;
   min_char_dims.h = MIN_CHAR_H;
+  expected_digits.min = expected_digits.max = NUMBER_OF_DIGITS;
 
   /* if we provided no arguments to the program exit */
   if (argc < 2) {
@@ -381,10 +422,15 @@ int main(int argc, char **argv)
         break;
       case 'd':
         if(optarg) {
-          number_of_digits = atoi(optarg);
-          if((number_of_digits < 1) && (number_of_digits != -1)) {
+          int ret;
+          ret = parse_interval(optarg, &expected_digits);
+          if(ret) {
             fprintf(stderr, "warning: ignoring --number-digits=%s\n", optarg);
-            number_of_digits = NUMBER_OF_DIGITS;
+            expected_digits.min = expected_digits.max = NUMBER_OF_DIGITS;
+          }
+          if (flags & DEBUG_OUTPUT) {
+            fprintf(stderr, "expected_digits.min = %d\n", expected_digits.min);
+            fprintf(stderr, "expected_digits.max = %d\n", expected_digits.max);
           }
         }
         break;
@@ -583,7 +629,8 @@ int main(int argc, char **argv)
     fprintf(stderr, "min_segment = %d\n", min_segment);
     fprintf(stderr, "min_char_dims = %dx%d\n",min_char_dims.w,min_char_dims.h);
     fprintf(stderr, "ignore_pixels = %d\n", ignore_pixels);
-    fprintf(stderr, "number_of_digits = %d\n", number_of_digits);
+    fprintf(stderr, "expected_digits.min = %d\n", expected_digits.min);
+    fprintf(stderr, "expected_digits.max = %d\n", expected_digits.max);
     fprintf(stderr, "foreground = %d (%s)\n", ssocr_foreground,
                     (ssocr_foreground == SSOCR_BLACK) ? "black" : "white");
     fprintf(stderr, "background = %d (%s)\n", ssocr_background,
@@ -1270,9 +1317,11 @@ int main(int argc, char **argv)
   }
 
   /* check if expected number of digits have been found */
-  if ((number_of_digits > -1) && (number_of_digits != potential_digits)) {
-    fprintf(stderr, PROG ": expected %d digits, but found %d\n",
-            number_of_digits, potential_digits);
+  if ((expected_digits.min > -1) &&
+      ((potential_digits < expected_digits.min) ||
+       (potential_digits > expected_digits.max))) {
+    fprintf(stderr, PROG ": expected between %d and %d digits, but found %d\n",
+            expected_digits.min, expected_digits.max, potential_digits);
     imlib_free_image_and_decache();
     if(flags & USE_DEBUG_IMAGE) {
       save_image("debug", debug_image, output_fmt,debug_image_file,flags);

@@ -124,7 +124,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -i, --ignore-pixels=#    number of pixels ignored when searching digit\n");
   fprintf(f, "                                  boundaries\n");
   fprintf(f, "         -M, --min-char-dims=WxH  minimum width and height of a character/digit\n");
-  fprintf(f, "         -d, --number-digits=#    number of digits in image (-1 for auto)\n");
+  fprintf(f, "         -d, --number-digits=RNG  number of digits in image (-1 for auto,\n");
+  fprintf(f, "                                  positive number, or positive range)\n");
   fprintf(f, "         -r, --one-ratio=#        height/width ratio to recognize a \'one\'\n");
   fprintf(f, "         -m, --minus-ratio=#      width/height ratio to recognize a minus sign\n");
   fprintf(f, "         -H, --dec-h-ratio=#      max_dig_h/h ratio to recognize decimal point\n");
@@ -191,7 +192,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "          minimum character width  = %2d\n", MIN_CHAR_W);
   fprintf(f, "          minimum character height = %2d\n", MIN_CHAR_H);
   fprintf(f, "          ignored pixels           = %2d\n", IGNORE_PIXELS);
-  fprintf(f, "          no. of digits            = %2d\n", NUMBER_OF_DIGITS);
+  fprintf(f, "          minimum number of digits = %2d\n", NUMBER_OF_DIGITS);
+  fprintf(f, "          maximum number of digits = %2d\n", NUMBER_OF_DIGITS);
   fprintf(f, "          threshold                = %5.2f\n", THRESHOLD);
   fprintf(f, "          foreground               = %s\n",
       (SSOCR_DEFAULT_FOREGROUND == SSOCR_BLACK) ? "black" : "white");
