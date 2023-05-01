@@ -1,8 +1,8 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Upcoming Version ?.??.? (????-??-??):
--------------------------------------
+Version 2.23.0 (2023-05-01):
+----------------------------
  * New option -N, --min-segment to specify the minimum width and height of
    a segment, for both scanline based and ratio based character recognition
  * New option -M, --min-char-dims to specify minimum character dimensions
