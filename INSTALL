@@ -37,7 +37,7 @@ Prerequisites
 - Imlib2 requires the X11/Xlib.h header and links against some X11 libraries,
   at least on GNU/Linux with X11 GUI, thus X11 shared libraries and development
   headers are required for ssocr, too, although ssocr does not use X11 itself
-- Build tools, e.g. build-essential on a Debian (or Ubuntu) system.
+- Build tools, e.g., build-essential on a Debian (or Ubuntu) system.
 - To build a .deb package, you probably need the debhelper package.
 
 Additional Makefile Targets
@@ -93,6 +93,6 @@ https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 
 Third Party Packages
 --------------------
-There exist third party packaging efforts for e.g. GNU/Linux distributions
+There exist third party packaging efforts for, e.g., GNU/Linux distributions
 and FreeBSD. Thus you can search the packaging system of your distribution
 for an ssocr package.

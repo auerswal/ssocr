@@ -7,7 +7,7 @@ as well), Mac OS X (Homebrew can be used to install the library Imlib2,
 used by ssocr), and even on Windows (using Cygwin). ssocr should work
 on any UNIX-like or POSIX compatible operating system.
 
-Unless ssocr is installed via some packaging system, e.g. from a GNU/Linux
+Unless ssocr is installed via some packaging system, e.g., from a GNU/Linux
 distribution, it is distributed in source form and needs to be built
 before it can be used. See the INSTALL file for instructions on how to
 build ssocr.
@@ -19,7 +19,7 @@ quotes).
 You can get the current ssocr version from the official ssocr website:
 https://www.unix-ag.uni-kl.de/~auerswal/ssocr/
 (Links to ssocr should point to the official website, not to a convenience
-copy of the development repository, e.g. on GitHub.)
+copy of the development repository, e.g., on GitHub.)
 
 I am usually quicker to reply to emails than to GitHub issues.  But
 increasingly Google blocks emails sent by me, so if you do not receive
