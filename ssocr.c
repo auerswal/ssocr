@@ -1322,27 +1322,30 @@ int main(int argc, char **argv)
               digit_count, potential_digits);
       exit(99);
     }
-    /* allocate memory for sufficiently large digits we want to keep */
-    if(!(tmp = calloc(digit_count, sizeof(digit_struct)))) {
-      perror(PROG ": tmp = calloc()");
-      exit(99);
-    }
-    /* keep only sufficiently large digits */
-    pos = 0;
-    for (d = 0; d < potential_digits; d++) {
-      if (digits[d].x2 - digits[d].x1 >= min_char_dims.w &&
-          digits[d].y2 - digits[d].y1 >= min_char_dims.h) {
-        if (pos >= digit_count) {
-          fputs(PROG ": error copying digit information", stderr);
-          exit(99);
-        }
-        memcpy(tmp + pos, digits + d, sizeof(digit_struct));
-        pos++;
+    /* if potential digits are discarded, copy remaining ones to new memory */
+    if(digit_count < potential_digits) {
+      /* allocate memory for sufficiently large digits we want to keep */
+      if(!(tmp = calloc(digit_count, sizeof(digit_struct)))) {
+        perror(PROG ": tmp = calloc()");
+        exit(99);
       }
+      /* keep only sufficiently large digits */
+      pos = 0;
+      for (d = 0; d < potential_digits; d++) {
+        if (digits[d].x2 - digits[d].x1 >= min_char_dims.w &&
+            digits[d].y2 - digits[d].y1 >= min_char_dims.h) {
+          if (pos >= digit_count) {
+            fputs(PROG ": error copying digit information", stderr);
+            exit(99);
+          }
+          memcpy(tmp + pos, digits + d, sizeof(digit_struct));
+          pos++;
+        }
+      }
+      free(digits);
+      digits = tmp;
+      potential_digits = digit_count;
     }
-    free(digits);
-    digits = tmp;
-    potential_digits = digit_count;
   }
 
   /* check if expected number of digits have been found */
