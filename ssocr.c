@@ -22,6 +22,7 @@
 #include <Imlib2.h>
 
 /* standard things */
+#include <limits.h>         /* INT_MAX */
 #include <stdint.h>         /* SIZE_MAX */
 #include <stdio.h>          /* puts, printf, BUFSIZ, perror, FILE */
 #include <stdlib.h>         /* exit */
@@ -75,6 +76,10 @@ static char * tmp_imgfile(unsigned int flags)
   }
   dir_len = strlen(dir);
   pattern_len = dir_len + pat_suffix_len + 1;
+  if(pattern_len <= dir_len) {
+    fputs(PROG ": error: temporary file name length overflow\n", stderr);
+    exit(99);
+  }
   name = calloc(pattern_len, sizeof(char));
   if(!name) {
     perror(PROG ": could not allocate memory for name of temporary file");
@@ -243,6 +248,7 @@ int main(int argc, char **argv)
   int use_tmpfile=0; /* flag to know if temporary image file is used */
 
   int i, j, d;  /* iteration variables */
+  size_t cur_digit_mem, new_digit_mem; /* for overflow checks */
   int unknown_digit=0; /* was one of the 6 found digits an unknown one? */
   int need_pixels = NEED_PIXELS; /* pixels needed to set segment in scanline */
   int min_segment = MIN_SEGMENT; /* minimum pixels needed for a segment */
@@ -1147,6 +1153,11 @@ int main(int argc, char **argv)
       }
       digits[d].x2 = i;
       digits[d].y2 = h-1;
+      if((d >= INT_MAX - 1) || (d < 0)) {
+        fputs(PROG ": error: too many potential digits (integer overflow)\n",
+              stderr);
+        exit(99);
+      }
       d++;
       if(flags & USE_DEBUG_IMAGE) {
         imlib_context_set_image(debug_image);
@@ -1155,7 +1166,13 @@ int main(int argc, char **argv)
         imlib_context_set_image(image);
       }
       /* add memory for another digit */
-      if(!(digits = realloc(digits, (d+1) * sizeof(digit_struct)))) {
+      cur_digit_mem = d * sizeof(digit_struct);
+      new_digit_mem = (d+1) * sizeof(digit_struct);
+      if(new_digit_mem <= cur_digit_mem) {
+        fputs(PROG ": error: size_t overflow (memory for digits)\n", stderr);
+        exit(99);
+      }
+      if(!(digits = realloc(digits, new_digit_mem))) {
         perror(PROG ": digits = realloc()");
         exit(99);
       }
@@ -1293,7 +1310,19 @@ int main(int argc, char **argv)
       fprintf(stderr, "keeping %d of %d potential digits\n", digit_count,
               potential_digits);
     }
-    /* allocate memory for sufficiently large digits */
+    /* at least one digit is required */
+    if (digit_count < 1) {
+      fputs(PROG ": error: no sufficiently large digits found\n", stderr);
+      exit(1);
+    }
+    /* ensure we do not try to keep more digits than we have found */
+    if(digit_count > potential_digits) {
+      fprintf(stderr,
+              PROG ": error: trying to keep more digits (%d) than found (%d)\n",
+              digit_count, potential_digits);
+      exit(99);
+    }
+    /* allocate memory for sufficiently large digits we want to keep */
     if(!(tmp = calloc(digit_count, sizeof(digit_struct)))) {
       perror(PROG ": tmp = calloc()");
       exit(99);
