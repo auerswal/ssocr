@@ -23,7 +23,7 @@ charset.o: charset.c charset.h defines.h help.h Makefile
 
 ssocr.1: ssocr.1.in Makefile defines.h help.c
 	sed -e 's/@VERSION@/$(VERSION)/' \
-	    -e "s/@DATE@/$(MANYEAR)/" \
+	    -e 's/@DATE@/$(MANYEAR)/' \
 	    -e 's/@CRYEARS@/$(CRYEARS)/' <$< >$@
 
 ssocr-manpage.html: ssocr.1
