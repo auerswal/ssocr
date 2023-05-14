@@ -10,7 +10,7 @@ DOCDIR  := $(PREFIX)/share/doc/ssocr
 DOCS    := AUTHORS COPYING INSTALL README THANKS NEWS
 VERSION := $(shell sed -n 's/^.*VERSION.*"\(.*\)".*/\1/p' defines.h)
 CRYEARS := $(shell sed -n 's/^.*fprintf.*Copyright.*\(2004-2[0-9][0-9][0-9]\).*Erik.*Auerswald.*$$/\1/p' help.c)
-MANYEAR := $(shell sed -n 's/^.*fprintf.*Copyright.*2004-\(2[0-9][0-9][0-9]\).*Erik.*Auerswald.*$$/\1/p' help.c)
+RELDATE := $(shell sed -n 's/^Version [.0-9]* .\([-0-9]*\).*$$/\1/p' NEWS | head -n1)
 
 all: ssocr ssocr.1
 
@@ -21,9 +21,9 @@ imgproc.o: imgproc.c defines.h imgproc.h help.h Makefile
 help.o: help.c defines.h imgproc.h help.h Makefile
 charset.o: charset.c charset.h defines.h help.h Makefile
 
-ssocr.1: ssocr.1.in Makefile defines.h help.c
+ssocr.1: ssocr.1.in Makefile defines.h help.c NEWS
 	sed -e 's/@VERSION@/$(VERSION)/' \
-	    -e 's/@DATE@/$(MANYEAR)/' \
+	    -e 's/@DATE@/$(RELDATE)/' \
 	    -e 's/@CRYEARS@/$(CRYEARS)/' <$< >$@
 
 ssocr-manpage.html: ssocr.1

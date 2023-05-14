@@ -3,8 +3,8 @@ Noteworthy Changes in ssocr Releases
 
 Upcoming Version ?.??.? (????-??-??):
 -------------------------------------
- * The man page uses the year of the last ssocr update as its date instead
-   of the build day of the man page, to help reproducible builds
+ * The man page uses the latest ssocr release date as its date (to help
+   in creating reproducible builds)
  * Documentation improvements
 
 Version 2.23.0 (2023-05-01):
