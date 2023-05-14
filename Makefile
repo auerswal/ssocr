@@ -8,7 +8,7 @@ BINDIR  := $(PREFIX)/bin
 MANDIR  := $(PREFIX)/share/man/man1
 DOCDIR  := $(PREFIX)/share/doc/ssocr
 DOCS    := AUTHORS COPYING INSTALL README THANKS NEWS
-VERSION := $(shell sed -n 's/^.*VERSION.*\(".*"\).*/\1/p' defines.h)
+VERSION := $(shell sed -n 's/^.*VERSION.*"\(.*\)".*/\1/p' defines.h)
 CRYEARS := $(shell sed -n 's/^.*fprintf.*Copyright.*\(2004-2[0-9][0-9][0-9]\).*Erik.*Auerswald.*$$/\1/p' help.c)
 MANYEAR := $(shell sed -n 's/^.*fprintf.*Copyright.*2004-\(2[0-9][0-9][0-9]\).*Erik.*Auerswald.*$$/\1/p' help.c)
 
@@ -44,7 +44,7 @@ ssocr-dir:
 	chmod +x ssocr-$(VERSION)/notdebian/rules
 
 notdebian/changelog:
-	printf "ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * self built package of current ssocr version in .deb format\n\n -- $(USER)  $(shell date -R)\n" >$@
+	printf 'ssocr ($(VERSION)-1) unstable; urgency=low\n\n  * self built package of current ssocr version in .deb format\n\n -- $(USER)  $(shell date -R)\n' >$@
 
 selfdeb: notdebian/changelog notdebian/control notdebian/rules ssocr-dir
 	(cd ssocr-$(VERSION); ln -sv notdebian debian; fakeroot debian/rules binary; fakeroot debian/rules clean; rm -f debian)
