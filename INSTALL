@@ -26,7 +26,7 @@ Prerequisites
 - A C compiler compatible with GCC.
 - A system sufficiently compatible to POSIX and GNU.
 - POSIX utilities: chmod, head, printf, sh, sed (or compatible)
-- GNU utilities: date, gzip, install, tar (or compatible)
+- GNU utilities: date, gzip, install, make, tar (or compatible)
 - Other utilities: bzip2
 - Imlib2 shared library and development headers. On a Debian or Ubuntu system
   they are provided by the packages libimlib2 and libimlib2-dev.
