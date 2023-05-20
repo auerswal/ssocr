@@ -1,6 +1,10 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
+Upcoming Version ?.??.? (????-??-??):
+-------------------------------------
+ * Documentation improvements
+
 Version 2.23.1 (2023-05-18):
 ----------------------------
  * The man page uses the latest ssocr release date as its date (to help

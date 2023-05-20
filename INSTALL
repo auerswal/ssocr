@@ -23,6 +23,7 @@ build a .deb package by typing:
 
 Prerequisites
 -------------
+- A C compiler compatible with GCC.
 - A system sufficiently compatible to POSIX and GNU.
 - POSIX utilities: chmod, head, printf, sh, sed (or compatible)
 - GNU utilities: date, gzip, install, tar (or compatible)
@@ -39,6 +40,8 @@ Prerequisites
   headers are required for ssocr, too, although ssocr does not use X11 itself
 - Build tools, e.g., build-essential on a Debian (or Ubuntu) system.
 - To build a .deb package, you probably need the debhelper package.
+- To create an HTML version of the man page, you need a man utility that can
+  produce HTML output.
 
 Additional Makefile Targets
 ---------------------------
