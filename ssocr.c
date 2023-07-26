@@ -624,7 +624,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "flags & DO_ITERATIVE_THRESHOLD=%d\n",
                     flags & DO_ITERATIVE_THRESHOLD);
     fprintf(stderr, "flags & USE_DEBUG_IMAGE=%d\n", flags & USE_DEBUG_IMAGE);
-    fprintf(stderr, "flags & DEBUG_OUTPUT=%d\n", flags & PRINT_INFO);
+    fprintf(stderr, "flags & DEBUG_OUTPUT=%d\n", flags & DEBUG_OUTPUT);
     fprintf(stderr, "flags & PROCESS_ONLY=%d\n", flags & PROCESS_ONLY);
     fprintf(stderr, "flags & ASCII_ART_SEGMENTS=%d\n",
                     flags & ASCII_ART_SEGMENTS);
