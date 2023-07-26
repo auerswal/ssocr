@@ -616,6 +616,7 @@ int main(int argc, char **argv)
   }
   if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "================================================================================\n");
+    fprintf(stderr, "VERSION=%s\n", VERSION);
     fprintf(stderr, "flags & VERBOSE=%d\nthresh=%f\n", flags & VERBOSE, thresh);
     fprintf(stderr, "flags & PRINT_INFO=%d\nflags & ADJUST_GRAY=%d\n",
             flags & PRINT_INFO, flags & ADJUST_GRAY);
