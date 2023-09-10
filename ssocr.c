@@ -1353,8 +1353,15 @@ int main(int argc, char **argv)
   if ((expected_digits.min > -1) &&
       ((potential_digits < expected_digits.min) ||
        (potential_digits > expected_digits.max))) {
-    fprintf(stderr, PROG ": expected between %d and %d digits, but found %d\n",
-            expected_digits.min, expected_digits.max, potential_digits);
+    if (expected_digits.min != expected_digits.max) {
+      fprintf(stderr,
+              PROG ": expected between %d and %d digits, but found %d\n",
+              expected_digits.min, expected_digits.max, potential_digits);
+    } else {
+      fprintf(stderr, PROG ": expected %d digit%s, but found %d\n",
+              expected_digits.min, expected_digits.min > 1 ? "s" : "",
+              potential_digits);
+    }
     imlib_free_image_and_decache();
     if(flags & USE_DEBUG_IMAGE) {
       save_image("debug", debug_image, output_fmt,debug_image_file,flags);
