@@ -379,7 +379,8 @@ int main(int argc, char **argv)
         if(optarg) {
           need_pixels = atoi(optarg);
           if(need_pixels < 1) {
-            fprintf(stderr, "warning: ignoring --number-pixels=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --number-pixels=%s\n",
+                    optarg);
             need_pixels = NEED_PIXELS;
           }
           if(flags & DEBUG_OUTPUT) {
@@ -391,7 +392,8 @@ int main(int argc, char **argv)
         if(optarg) {
           min_segment = atoi(optarg);
           if(min_segment < 1) {
-            fprintf(stderr, "warning: ignoring --min-segment=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --min-segment=%s\n",
+                    optarg);
             min_segment = MIN_SEGMENT;
             if(flags & DEBUG_OUTPUT) {
               fprintf(stderr, "min_segment = %d\n", min_segment);
@@ -409,7 +411,8 @@ int main(int argc, char **argv)
           int ret;
           ret = parse_width_height(optarg, &min_char_dims);
           if (ret) {
-            fprintf(stderr, "warning: ignoring --min-char-dims=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --min-char-dims=%s\n",
+                    optarg);
           }
           if(flags & DEBUG_OUTPUT) {
             fprintf(stderr, "min_char_dims = %dx%d\n", min_char_dims.w,
@@ -421,7 +424,8 @@ int main(int argc, char **argv)
         if(optarg) {
           ignore_pixels = atoi(optarg);
           if(ignore_pixels < 0) {
-            fprintf(stderr, "warning: ignoring --ignore-pixels=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --ignore-pixels=%s\n",
+                    optarg);
             ignore_pixels = IGNORE_PIXELS;
           }
         }
@@ -431,7 +435,8 @@ int main(int argc, char **argv)
           int ret;
           ret = parse_interval(optarg, &expected_digits);
           if(ret) {
-            fprintf(stderr, "warning: ignoring --number-digits=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --number-digits=%s\n",
+                    optarg);
             expected_digits.min = expected_digits.max = NUMBER_OF_DIGITS;
           }
           if (flags & DEBUG_OUTPUT) {
@@ -444,7 +449,7 @@ int main(int argc, char **argv)
         if(optarg) {
           one_ratio = atoi(optarg);
           if(one_ratio < 2) {
-            fprintf(stderr, "warning: ignoring --one-ratio=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --one-ratio=%s\n",optarg);
             one_ratio = ONE_RATIO;
           }
         }
@@ -453,7 +458,8 @@ int main(int argc, char **argv)
         if(optarg) {
           minus_ratio = atoi(optarg);
           if(minus_ratio < 1) {
-            fprintf(stderr, "warning: ignoring --minus-ratio=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --minus-ratio=%s\n",
+                    optarg);
             minus_ratio = MINUS_RATIO;
           }
         }
@@ -557,7 +563,8 @@ int main(int argc, char **argv)
         if(optarg) {
           dec_h_ratio = atoi(optarg);
           if(dec_h_ratio < 2) {
-            fprintf(stderr, "warning: ignoring --dec-h-ratio=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --dec-h-ratio=%s\n",
+                    optarg);
             dec_h_ratio = DEC_H_RATIO;
           }
         }
@@ -566,7 +573,8 @@ int main(int argc, char **argv)
         if(optarg) {
           dec_w_ratio = atoi(optarg);
           if(dec_w_ratio < 1) {
-            fprintf(stderr, "warning: ignoring --dec-w-ratio=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring --dec-w-ratio=%s\n",
+                    optarg);
             dec_w_ratio = DEC_W_RATIO;
           }
         }
