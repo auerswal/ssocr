@@ -4,6 +4,7 @@ Noteworthy Changes in ssocr Releases
 Upcoming Version ?.??.? (????-??-??):
 -------------------------------------
  * Documentation improvements
+ * Error, warning, and debug message improvements
 
 Version 2.23.1 (2023-05-18):
 ----------------------------
