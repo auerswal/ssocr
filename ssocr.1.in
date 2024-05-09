@@ -426,7 +426,7 @@ or
 .B dynamic_threshold
 instead.
 .SS white_border [WIDTH]
-The border of the image is set to the foreground color.
+The border of the image is set to the background color.
 This border is one pixel wide unless a
 .B WIDTH
 >
