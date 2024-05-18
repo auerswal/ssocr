@@ -92,11 +92,11 @@ void print_version(FILE *f)
 {
   fprintf(f, "Seven Segment Optical Character Recognition Version %s\n",
              VERSION);
-  fprintf(f, "Copyright (C) 2004-2024 by Erik Auerswald"
+  fprintf(f, "Copyright (C) 2004-2024 Erik Auerswald"
              " <auerswal@unix-ag.uni-kl.de>\n");
-  fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY\n");
+  fprintf(f, "This program comes with ABSOLUTELY NO WARRANTY.\n");
   fprintf(f, "This is free software, and you are welcome to redistribute it"
-             " under the terms\nof the GNU GPL (version 3 or later)\n");
+             " under the terms\nof the GNU GPL (version 3 or later).\n");
 }
 
 /* print short usage */
