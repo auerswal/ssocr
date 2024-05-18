@@ -76,6 +76,7 @@
 #define D_HEX_A (ALL_SEGS & ~HORIZ_DOWN)
 #define D_HEX_b (ALL_SEGS & ~(HORIZ_UP | VERT_RIGHT_UP))
 #define D_HEX_C (ALL_SEGS & ~(VERT_RIGHT_UP | HORIZ_MID | VERT_RIGHT_DOWN))
+/* a C in the lower half can only happen when digit boundary detection fails */
 #define D_HEX_c (HORIZ_MID | VERT_LEFT_DOWN | HORIZ_DOWN)
 #define D_HEX_d (ALL_SEGS & ~(HORIZ_UP | VERT_LEFT_UP))
 #define D_HEX_E (ALL_SEGS & ~(VERT_RIGHT_UP | VERT_RIGHT_DOWN))
@@ -87,7 +88,8 @@
 #define D_R (D_ZERO & ~(VERT_RIGHT_DOWN | HORIZ_DOWN))
 #define D_P (D_HEX_F | VERT_RIGHT_UP)
 #define D_N (D_ZERO & ~HORIZ_DOWN)
-/* an N in the lower half can only happen when digit boundary detection fails *//* define D_LOW_N (VERT_LEFT_DOWN | VERT_RIGHT_DOWN | HORIZ_MID) */
+/* an N in the lower half can only happen when digit boundary detection fails */
+#define D_n (VERT_LEFT_DOWN | VERT_RIGHT_DOWN | HORIZ_MID)
 #define D_Y (ALL_SEGS & ~(HORIZ_UP | VERT_LEFT_DOWN))
 #define D_J (HORIZ_DOWN | VERT_RIGHT_UP | VERT_RIGHT_DOWN)
 /* add two "wrong" 7 definitions used in a character set for a Chinese
