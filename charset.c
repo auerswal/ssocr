@@ -86,6 +86,7 @@ void init_charset(charset_t cs)
       charset_array[D_T] = 't';
       charset_array[D_L] = 'l';
       charset_array[D_H] = 'h';
+      charset_array[D_h] = 'h';
       charset_array[D_R] = 'r';
       charset_array[D_P] = 'p';
       charset_array[D_N] = 'n';

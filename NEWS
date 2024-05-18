@@ -3,6 +3,7 @@ Noteworthy Changes in ssocr Releases
 
 Upcoming Version ?.??.? (????-??-??):
 -------------------------------------
+ * Add recognition of lower case variant of character 'h' to full charset
  * Documentation improvements
  * Error, warning, and debug message improvements
 
