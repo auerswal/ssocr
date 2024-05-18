@@ -87,6 +87,9 @@
 #define D_H (ALL_SEGS & ~(HORIZ_UP | HORIZ_DOWN))
 #define D_h (VERT_LEFT_UP | VERT_LEFT_DOWN | HORIZ_MID | VERT_RIGHT_DOWN)
 #define D_R (D_ZERO & ~(VERT_RIGHT_DOWN | HORIZ_DOWN))
+#define D_ALT_R (VERT_LEFT_UP | VERT_LEFT_DOWN | HORIZ_UP)
+/* an r in the lower half can only happen when digit boundary detection fails */
+#define D_r (VERT_LEFT_DOWN | HORIZ_MID)
 #define D_P (D_HEX_F | VERT_RIGHT_UP)
 #define D_N (D_ZERO & ~HORIZ_DOWN)
 /* an N in the lower half can only happen when digit boundary detection fails */
