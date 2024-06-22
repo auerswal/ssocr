@@ -1,8 +1,8 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Upcoming Version ?.??.? (????-??-??):
--------------------------------------
+Version 2.24.0 (2024-06-22):
+----------------------------
  * Fix decimal separator recognition when widest digit is a one
  * Add recognition of lower case variant of character 'h' to full charset
  * Add recognition of lower case variant of character 'r' to full charset
