@@ -278,6 +278,7 @@ int main(int argc, char **argv)
   int dig_w;  /* width of digit part of image */
   int dig_h;  /* height of digit part of image */
   int max_dig_h=0, max_dig_w=0; /* maximum height & width of digits found */
+  int widest_dig_is_one=0; /* set to one if the widest digit is a one */
   Imlib_Color color; /* Imlib2 RGBA color structure */
   /* state of search */
   int state = (ssocr_foreground == SSOCR_BLACK) ? FIND_DARK : FIND_LIGHT;
@@ -1518,6 +1519,56 @@ int main(int argc, char **argv)
                (digits[d].x2 - digits[d].x1) / (digits[d].y2 - digits[d].y1));
       }
       digits[d].digit = D_MINUS;
+    }
+  }
+
+  /* If the widest digit is a one, decimal points may be of the same width,
+   * and may thus not be detected.  Now that minus signs have been selected,
+   * if the widest digit still is a one (i.e., no minus signs), then decimal
+   * separators may also be recognized by checking only the height, not the
+   * width. */
+  if(flags & DEBUG_OUTPUT)
+    fputs("checking for special case of a one as widest character\n",stderr);
+  /* check if the widest digit is a one */
+  for(d=0; d<number_of_digits; d++) {
+    /* skip digits with zero width or height */
+    if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2)) {
+      if(flags & DEBUG_OUTPUT)
+        fprintf(stderr, " skipping digit %d with zero width or height\n", d);
+      continue;
+    }
+    if((digits[d].digit == D_ONE) && (digits[d].x2-digits[d].x1 >= max_dig_w)) {
+      widest_dig_is_one = 1;
+      if(flags & DEBUG_OUTPUT)
+        fputs(" widest digit is a one -> additional decimal point search\n",
+              stderr);
+      break;
+    }
+  }
+  if(!widest_dig_is_one) {
+    fputs(" widest digit is not a one, skipping extra decimal point search\n",
+          stderr);
+  } else {
+    /* widest digit is a one, thus decimal seperators may have been missed:
+     * identify a decimal point (or thousands separator) by relative height */
+    if(flags & DEBUG_OUTPUT)
+      fputs("looking for decimal points again\n",stderr);
+    for(d=0; d<number_of_digits; d++) {
+      /* skip digits with zero width or height */
+      if((digits[d].x1 == digits[d].x2) || (digits[d].y1 == digits[d].y2)) {
+        if(flags & DEBUG_OUTPUT)
+          fprintf(stderr, " skipping digit %d with zero width or height\n", d);
+        continue;
+      }
+      /* if height of a digit is less than 1/5 of the maximum digit height,
+       * and its width is less than 1/2 of the maximum digit width (the widest
+       * digit might be a one), assume it is a decimal point */
+      if((digits[d].digit == D_UNKNOWN) &&
+         (max_dig_h / (digits[d].y2 - digits[d].y1) > dec_h_ratio)) {
+        digits[d].digit = D_DECIMAL;
+        if(flags & DEBUG_OUTPUT)
+          fprintf(stderr, " digit %d is a decimal point\n", d);
+      }
     }
   }
 
