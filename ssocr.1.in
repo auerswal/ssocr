@@ -18,14 +18,24 @@ provides several image manipulation algorithms to enhance noisy images.
 can be used to change
 .B ssocr
 behavior.
+.PP
 .B Commands
 can be used to manipulate the input
 .I IMAGE
 before starting the recognition algorithm.
+.PP
 Two hyphens
 .RB ( \-\- )
 can be used as a special argument to end option-scanning, e.g.,
 in order to use a negative number as argument to a command.
+.PP
+When using a single character (i.e., short) option,
+Arguments can either directly follow the option character,
+or can be separated from the option character by whitespace.
+When using a multi character (i.e., long) option,
+Arguments must be separated from the option by either an equals sign
+.RB ( = ),
+or whitespace.
 .SH OPTIONS
 .SS \-h, \-\-help
 Write a help message to standard output.
