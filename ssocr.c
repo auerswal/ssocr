@@ -328,7 +328,7 @@ int main(int argc, char **argv)
       {"ascii-art-segments", 0, 0, 'S'}, /* print found segments in ASCII art */
       {"print-as-hex", 0, 0, 'X'}, /* change output format to hex */
       {"omit-decimal-point", 0, 0, 'C'}, /* omit decimal points from output */
-      {"charset", 1, 0, 'c'}, /* omit decimal points from output */
+      {"charset", 1, 0, 'c'}, /* select character set of display */
       {"dec-h-ratio", 1, 0, 'H'}, /* height ratio for decimal point detection */
       {"dec-w-ratio", 1, 0, 'W'}, /* width ratio for decimal point detection */
       {"print-spaces", 0, 0, 's'}, /* print spaces between distant digits */
