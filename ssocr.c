@@ -1546,8 +1546,9 @@ int main(int argc, char **argv)
     }
   }
   if(!widest_dig_is_one) {
-    fputs(" widest digit is not a one, skipping extra decimal point search\n",
-          stderr);
+    if(flags & DEBUG_OUTPUT)
+      fputs(" widest digit is not a one, skipping extra decimal point search\n",
+            stderr);
   } else {
     /* widest digit is a one, thus decimal seperators may have been missed:
      * identify a decimal point (or thousands separator) by relative height */
