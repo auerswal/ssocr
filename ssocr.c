@@ -558,6 +558,10 @@ int main(int argc, char **argv)
       case 'c':
         if(optarg) {
           charset = parse_charset(optarg);
+          if(charset == CS_PARSE_ERROR) {
+            fprintf(stderr, PROG ": warning: ignoring --charset=%s\n", optarg);
+            charset = DEFAULT_CHARSET;
+          }
         }
         break;
       case 'H':

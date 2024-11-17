@@ -202,7 +202,8 @@ typedef enum charset_e {
   CS_DIGITS,
   CS_DECIMAL,
   CS_HEXADECIMAL,
-  CS_TT_ROBOT
+  CS_TT_ROBOT,
+  CS_PARSE_ERROR
 } charset_t;
 
 #define DEFAULT_CHARSET CS_FULL

@@ -44,7 +44,7 @@ charset_t parse_charset(char *keyword)
   } else if(strncasecmp(keyword, "tt_robot", 8) == 0) {
     return CS_TT_ROBOT;
   } else {
-    return DEFAULT_CHARSET;
+    return CS_PARSE_ERROR;
   }
 }
 
