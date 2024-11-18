@@ -187,7 +187,8 @@ typedef enum luminance_e {
   MAXIMUM,
   RED,
   GREEN,
-  BLUE
+  BLUE,
+  LUM_PARSE_ERROR
 } luminance_t;
 
 /* direction, to mirror horizontally or vertically, or for a scanline */

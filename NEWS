@@ -4,6 +4,7 @@ Noteworthy Changes in ssocr Releases
 Version X.XX.X (XXXX-XX-XX):
 ----------------------------
  * Print warning when an unknown charset name is ignored
+ * Print warning when an unknown luminance formula name is ignored
  * Fix one debug message to be printed only with -P, --debug-output
  * Documentation improvements
 

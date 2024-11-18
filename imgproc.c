@@ -1126,7 +1126,7 @@ luminance_t parse_lum(char *keyword)
   } else if(strcasecmp(keyword, "blue") == 0) {
     return BLUE;
   } else {
-    return DEFAULT_LUM_FORMULA;
+    return LUM_PARSE_ERROR;
   }
 }
 

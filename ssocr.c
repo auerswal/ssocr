@@ -532,6 +532,12 @@ int main(int argc, char **argv)
       case 'l':
         if(optarg) {
           lt = parse_lum(optarg);
+          if(lt == LUM_PARSE_ERROR) {
+            fprintf(stderr,
+                    PROG ": warning: ignoring unknown luminance formula '%s'\n",
+                    optarg);
+            lt = DEFAULT_LUM_FORMULA;
+          }
         }
         break;
       case 'S':
