@@ -559,7 +559,8 @@ int main(int argc, char **argv)
         if(optarg) {
           charset = parse_charset(optarg);
           if(charset == CS_PARSE_ERROR) {
-            fprintf(stderr, PROG ": warning: ignoring --charset=%s\n", optarg);
+            fprintf(stderr, PROG ": warning: ignoring unknown charset '%s'\n",
+                    optarg);
             charset = DEFAULT_CHARSET;
           }
         }
