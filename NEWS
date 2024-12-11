@@ -1,7 +1,7 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Version X.XX.X (XXXX-XX-XX):
+Version 2.24.1 (2024-12-11):
 ----------------------------
  * Print warning when an unknown charset name is ignored
  * Print warning when an unknown luminance formula name is ignored
