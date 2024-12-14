@@ -27,8 +27,11 @@
 /* string manipulation */
 #include <string.h>         /* strcasecmp, strcmp, strrchr */
 
-/* sin, cos */
-#include <math.h>
+/* trigonometry */
+#include <math.h>           /* sin, cos, M_PI */
+#ifndef M_PI                /* sometimes, M_PI is not defined */
+#define M_PI 3.14159265358979323846
+#endif
 
 /* my headers */
 #include "defines.h"        /* defines */
