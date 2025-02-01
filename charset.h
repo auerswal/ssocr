@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* Copyright (C) 2018-2024 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
+/* Copyright (C) 2018-2025 Erik Auerswald <auerswal@unix-ag.uni-kl.de> */
 
 #ifndef SSOCR2_CHARSET_H
 #define SSOCR2_CHARSET_H
