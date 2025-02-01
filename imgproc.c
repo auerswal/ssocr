@@ -260,12 +260,6 @@ Imlib_Image keep_pixels_filter(Imlib_Image *source_image, double thresh,
   width = imlib_image_get_width();
   new_image = imlib_clone_image();
 
-  /* draw white (background) rectangle to clear new image */
-  imlib_context_set_image(new_image);
-  ssocr_set_color(BG);
-  imlib_image_draw_rectangle(0, 0, width, height);
-  imlib_context_set_image(*source_image);
-
   /* check for every pixel if it should be set in filtered image */
   for(x=0; x<width; x++) {
     for(y=0; y<height; y++) {
