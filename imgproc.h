@@ -40,6 +40,9 @@ void draw_fg_pixel(Imlib_Image *image, int x, int y);
 /* draw a background pixel */
 void draw_bg_pixel(Imlib_Image *image, int x, int y);
 
+/* draw a pixel of a given color */
+void draw_color_pixel(Imlib_Image *image, int x, int y, Imlib_Color color);
+
 /* check if a pixel is set regarding current foreground/background colors */
 int is_pixel_set(int value, double threshold);
 

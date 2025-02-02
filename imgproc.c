@@ -84,7 +84,7 @@ void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
   Imlib_Image *current_image; /* save current image */
 
   current_image = imlib_context_get_image();
-  imlib_context_set_image(image);
+  imlib_context_set_image(*image);
   ssocr_set_color(color);
   imlib_image_draw_pixel(x,y,0);
   imlib_context_set_image(current_image);
@@ -100,6 +100,18 @@ void draw_fg_pixel(Imlib_Image *image, int x, int y)
 void draw_bg_pixel(Imlib_Image *image, int x, int y)
 {
   draw_pixel(image, x, y, BG);
+}
+
+/* draw a pixel of a given color */
+void draw_color_pixel(Imlib_Image *image, int x, int y, Imlib_Color color)
+{
+  Imlib_Image *current_image; /* save current image */
+
+  current_image = imlib_context_get_image();
+  imlib_context_set_image(*image);
+  imlib_context_set_color(color.red, color.green, color.blue, color.alpha);
+  imlib_image_draw_pixel(x, y, 0);
+  imlib_context_set_image(current_image);
 }
 
 /* check if a pixel is set regarding current foreground/background colors */
@@ -168,9 +180,9 @@ Imlib_Image set_pixels_filter(Imlib_Image *source_image, double thresh,
       }
       /* set pixel if at least mask pixels around it are set */
       if(set_pixel >= mask) {
-        draw_fg_pixel(new_image, x, y);
+        draw_fg_pixel(&new_image, x, y);
       } else {
-        draw_bg_pixel(new_image, x, y);
+        draw_bg_pixel(&new_image, x, y);
       }
     }
   }
@@ -282,9 +294,9 @@ Imlib_Image keep_pixels_filter(Imlib_Image *source_image, double thresh,
       /* set pixel if at least mask pixels around it are set */
       /* mask = 1 keeps all pixels */
       if(set_pixel > mask) {
-        draw_fg_pixel(new_image, x, y);
+        draw_fg_pixel(&new_image, x, y);
       } else {
-        draw_bg_pixel(new_image, x, y);
+        draw_bg_pixel(&new_image, x, y);
       }
     }
   }
@@ -399,9 +411,9 @@ Imlib_Image dynamic_threshold(Imlib_Image *source_image,double t,luminance_t lt,
       lum = get_lum(&color, lt);
       thresh = get_threshold(source_image, t/100.0, lt, x-ww/2, y-ww/2, ww, wh);
       if(is_pixel_set(lum, thresh)) {
-        draw_fg_pixel(new_image, x, y);
+        draw_fg_pixel(&new_image, x, y);
       } else {
-        draw_bg_pixel(new_image, x, y);
+        draw_bg_pixel(&new_image, x, y);
       }
     }
   }
@@ -438,9 +450,9 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
       if(is_pixel_set(lum, thresh)) {
-        draw_fg_pixel(new_image, x, y);
+        draw_fg_pixel(&new_image, x, y);
       } else {
-        draw_bg_pixel(new_image, x, y);
+        draw_bg_pixel(&new_image, x, y);
       }
     }
   }
@@ -754,15 +766,11 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
     /* copy pixels */
     for(x=width-1; x>=shift; x--) {
       imlib_image_query_pixel(x-shift, y, &color_return);
-      imlib_context_set_image(new_image);
-      imlib_context_set_color(color_return.red, color_return.green,
-                              color_return.blue, color_return.alpha);
-      imlib_image_draw_pixel(x,y,0);
-      imlib_context_set_image(*source_image);
+      draw_color_pixel(&new_image, x, y, color_return);
     }
     /* fill with background */
     for(x=0; x<shift; x++) {
-      draw_bg_pixel(new_image, x, y);
+      draw_bg_pixel(&new_image, x, y);
     }
   }
 
@@ -803,14 +811,10 @@ Imlib_Image rotate(Imlib_Image *source_image, double theta)
       sy = (y-height/2) * cos(theta) - (x-width/2) * sin(theta) + height/2;
       if((sx >= 0) && (sx <= width) && (sy >= 0) && (sy <= height)) {
         imlib_image_query_pixel(sx, sy, &c);
-        imlib_context_set_image(new_image);
-        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
+        draw_color_pixel(&new_image, x, y, c);
       } else {
-        imlib_context_set_image(new_image);
-        ssocr_set_color(BG);
+        draw_bg_pixel(&new_image, x, y);
       }
-      imlib_image_draw_pixel(x,y,0);
-      imlib_context_set_image(*source_image);
     }
   }
 
@@ -844,20 +848,14 @@ Imlib_Image mirror(Imlib_Image *source_image, direction_t direction)
     for(x = width-1; x>=0; x--) {
       for(y = 0; y < height; y++) {
         imlib_image_query_pixel(width - 1 - x, y, &c);
-        imlib_context_set_image(new_image);
-        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_color_pixel(&new_image, x, y, c);
       }
     }
   } else if(direction == VERTICAL) {
     for(x = 0; x < width; x++) {
       for(y = height-1; y >= 0; y--) {
         imlib_image_query_pixel(x, height - 1 - y, &c);
-        imlib_context_set_image(new_image);
-        imlib_context_set_color(c.red, c.green, c.blue, c.alpha);
-        imlib_image_draw_pixel(x,y,0);
-        imlib_context_set_image(*source_image);
+        draw_color_pixel(&new_image, x, y, c);
       }
     }
   }
@@ -932,9 +930,9 @@ Imlib_Image invert(Imlib_Image *source_image, double thresh, luminance_t lt)
       imlib_image_query_pixel(x, y, &color);
       lum = get_lum(&color, lt);
       if(is_pixel_set(lum, thresh)) {
-        draw_bg_pixel(new_image, x, y);
+        draw_bg_pixel(&new_image, x, y);
       } else {
-        draw_fg_pixel(new_image, x, y);
+        draw_fg_pixel(&new_image, x, y);
       }
     }
   }

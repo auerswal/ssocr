@@ -114,16 +114,20 @@ static char * tmp_imgfile(unsigned int flags)
 }
 
 /* return number of foreground pixels in a scanline */
-static unsigned int scanline(Imlib_Image *image, Imlib_Image *debug_image,
+static unsigned int scanline(Imlib_Image *debug_image,
                              int x, int y, int len, direction_t dir,
                              color_struct d_color, double thresh,
                              luminance_t lt, unsigned int flags)
 {
-  Imlib_Color imlib_color;
+  Imlib_Color imlib_color, debug_color;
   int lum, i, ix=x, iy=y, start, end;
   unsigned int found_pixels = 0;
   start = (dir == HORIZONTAL) ? x : y;
   end = start + len;
+  debug_color.red = d_color.R;
+  debug_color.green = d_color.G;
+  debug_color.blue = d_color.B;
+  debug_color.alpha = d_color.A;
   for (i = start; i <= end; i++) {
     if (dir == HORIZONTAL) ix = i;
     else iy = i;
@@ -131,10 +135,7 @@ static unsigned int scanline(Imlib_Image *image, Imlib_Image *debug_image,
     lum = get_lum(&imlib_color, lt);
     if(is_pixel_set(lum, thresh)) {
       if(flags & USE_DEBUG_IMAGE) {
-        imlib_context_set_image(*debug_image);
-        imlib_context_set_color(d_color.R, d_color.G, d_color.B, d_color.A);
-        imlib_image_draw_pixel(ix, iy, 0);
-        imlib_context_set_image(*image);
+        draw_color_pixel(debug_image, ix, iy, debug_color);
       }
       found_pixels++;
     }
@@ -1607,14 +1608,14 @@ int main(int argc, char **argv)
       /* check horizontal segments (vertical scan, x == middle) */
       d_color.R = d_color.A = 255;
       d_color.G = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image, middle, digits[d].y1,
+      found_pixels = scanline(&debug_image, middle, digits[d].y1,
                               d_height/3, VERTICAL, d_color, thresh, lt, flags);
       if(found_pixels >= need_pixels) {
         digits[d].digit |= HORIZ_UP; /* add upper segment */
       }
       d_color.G = d_color.A = 255;
       d_color.R = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image, middle,
+      found_pixels = scanline(&debug_image, middle,
                               digits[d].y1 + d_height/3, d_height/3, VERTICAL,
                               d_color, thresh, lt, flags);
       if(found_pixels >= need_pixels) {
@@ -1622,7 +1623,7 @@ int main(int argc, char **argv)
       }
       d_color.B = d_color.A = 255;
       d_color.R = d_color.G = 0;
-      found_pixels = scanline(&image, &debug_image, middle,
+      found_pixels = scanline(&debug_image, middle,
                               digits[d].y1 + 2*d_height/3, d_height/3, VERTICAL,
                               d_color, thresh, lt, flags);
       if(found_pixels >= need_pixels) {
@@ -1631,7 +1632,7 @@ int main(int argc, char **argv)
       /* check upper vertical segments (horizontal scan, y == quarter) */
       d_color.R = d_color.A = 255;
       d_color.G = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image, digits[d].x1, quarter,
+      found_pixels = scanline(&debug_image, digits[d].x1, quarter,
                               (digits[d].x2 - digits[d].x1) / 2, HORIZONTAL,
                               d_color, thresh, lt, flags);
       if (found_pixels >= need_pixels) {
@@ -1639,7 +1640,7 @@ int main(int argc, char **argv)
       }
       d_color.G = d_color.A = 255;
       d_color.R = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image,
+      found_pixels = scanline(&debug_image,
                               (digits[d].x1 + digits[d].x2) / 2 + 1,
                               quarter, (digits[d].x2 - digits[d].x1) / 2 - 1,
                               HORIZONTAL, d_color, thresh, lt, flags);
@@ -1649,7 +1650,7 @@ int main(int argc, char **argv)
       /* check lower vertical segments (horizontal scan, y == three_quarters) */
       d_color.R = d_color.A = 255;
       d_color.G = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image, digits[d].x1,
+      found_pixels = scanline(&debug_image, digits[d].x1,
                               three_quarters, (digits[d].x2 - digits[d].x1) / 2,
                               HORIZONTAL, d_color, thresh, lt, flags);
       if (found_pixels >= need_pixels) {
@@ -1657,7 +1658,7 @@ int main(int argc, char **argv)
       }
       d_color.G = d_color.A = 255;
       d_color.R = d_color.B = 0;
-      found_pixels = scanline(&image, &debug_image,
+      found_pixels = scanline(&debug_image,
                               (digits[d].x1 + digits[d].x2) / 2 + 1,
                               three_quarters, (digits[d].x2-digits[d].x1)/2 - 1,
                               HORIZONTAL, d_color, thresh, lt, flags);
