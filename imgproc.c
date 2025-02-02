@@ -79,7 +79,7 @@ void ssocr_set_color(fg_bg_t color)
 }
 
 /* draw a fore- or background pixel */
-void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
+void draw_fg_bg_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
 {
   Imlib_Image *current_image; /* save current image */
 
@@ -93,13 +93,13 @@ void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color)
 /* draw a foreground pixel */
 void draw_fg_pixel(Imlib_Image *image, int x, int y)
 {
-  draw_pixel(image, x, y, FG);
+  draw_fg_bg_pixel(image, x, y, FG);
 }
 
 /* draw a background pixel */
 void draw_bg_pixel(Imlib_Image *image, int x, int y)
 {
-  draw_pixel(image, x, y, BG);
+  draw_fg_bg_pixel(image, x, y, BG);
 }
 
 /* draw a pixel of a given color */

@@ -32,7 +32,7 @@ void set_bg_color(int color);
 void ssocr_set_color(fg_bg_t color);
 
 /* draw a fore- or background pixel */
-void draw_pixel(Imlib_Image *image, int x, int y, fg_bg_t color);
+void draw_fg_bg_pixel(Imlib_Image *image, int x, int y, fg_bg_t color);
 
 /* draw a foreground pixel */
 void draw_fg_pixel(Imlib_Image *image, int x, int y);
