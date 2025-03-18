@@ -129,8 +129,8 @@ Imlib_Image grayscale(Imlib_Image *source_image, luminance_t lt);
 Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h);
 
 /* adapt threshold to image values values */
-double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, unsigned int flags);
+double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt,
+                       unsigned int flags);
 
 /* compute dynamic threshold value from the rectangle (x,y),(x+w,y+h) of
  * source_image */
@@ -139,7 +139,7 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
 
 /* determine threshold by an iterative method */
 double iterative_threshold(Imlib_Image *source_image, double thresh,
-                           luminance_t lt, int x, int y, int w, int h);
+                           luminance_t lt);
 
 /* get minimum and maximum gray (luminace) values */
 void get_minmaxval(Imlib_Image *source_image, luminance_t lt,

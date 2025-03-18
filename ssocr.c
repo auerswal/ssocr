@@ -734,7 +734,7 @@ int main(int argc, char **argv)
   }
 
   /* adapt threshold to image */
-  thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);
+  thresh = adapt_threshold(&image, thresh, lt, flags);
 
   /* process commands */
   if(flags & VERBOSE) /* then print found commands */ {
@@ -1052,7 +1052,7 @@ int main(int argc, char **argv)
                             " (lum should be in [0,255])\n", min, max);
           }
           /* adapt threshold to cropped image */
-          thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);
+          thresh = adapt_threshold(&image, thresh, lt, flags);
         } else {
           fprintf(stderr, "%s: error: crop command needs 4 arguments\n", PROG);
           exit(99);

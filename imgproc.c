@@ -465,20 +465,20 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
 }
 
 /* adapt threshold to image values values */
-double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt, int x,
-                       int y, int w, int h, unsigned int flags)
+double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt,
+                       unsigned int flags)
 {
   double t = thresh;
   if(!(flags & ABSOLUTE_THRESHOLD)) {
     if(flags & DEBUG_OUTPUT)
       fprintf(stderr, "adjusting threshold to image: %f ->", t);
-    t = get_threshold(image, thresh/100.0, lt, x, y, w, h);
+    t = get_threshold(image, thresh/100.0, lt, 0, 0, -1, -1);
     if(flags & DEBUG_OUTPUT)
       fprintf(stderr, " %f\n", t);
     if(flags & DO_ITERATIVE_THRESHOLD) {
       if(flags & DEBUG_OUTPUT)
         fprintf(stderr, "doing iterative_thresholding: %f ->", t);
-      t = iterative_threshold(image, t, lt, x, y, w, h);
+      t = iterative_threshold(image, t, lt);
       if(flags & DEBUG_OUTPUT)
         fprintf(stderr, " %f\n", t);
     }
@@ -537,7 +537,7 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
 
 /* determine threshold by an iterative method */
 double iterative_threshold(Imlib_Image *source_image, double thresh,
-                           luminance_t lt, int x, int y, int w, int h)
+                           luminance_t lt)
 {
   Imlib_Image current_image; /* save image pointer */
   int height, width; /* image dimensions */
@@ -562,23 +562,13 @@ double iterative_threshold(Imlib_Image *source_image, double thresh,
   height = imlib_image_get_height();
   width = imlib_image_get_width();
 
-  /* special value -1 for width or height means image width/height */
-  if(w == -1) w = width;
-  if(h == -1) h = width;
-
-  /* assure valid coordinates */
-  if(x+w > width) x = width-w;
-  if(y+h > height) y = height-h;
-  if(x<0) x=0;
-  if(y<0) y=0;
-
   /* find the threshold value to differentiate between dark and light */
   do {
     thresh_lum = MAXRGB * new_thresh;
     old_thresh = new_thresh;
     size_black = sum_black = size_white = sum_white = 0;
-    for(xi=0; (xi<w) && (xi<width); xi++) {
-      for(yi=0; (yi<h) && (yi<height); yi++) {
+    for(xi=0; xi<width; xi++) {
+      for(yi=0; yi<height; yi++) {
         imlib_image_query_pixel(xi, yi, &color);
         lum = get_lum(&color, lt);
         if(lum <= thresh_lum) {
