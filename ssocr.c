@@ -32,7 +32,7 @@
 
 /* option parsing */
 #include <getopt.h>         /* getopt */
-#include <unistd.h>         /* getopt */
+#include <unistd.h>         /* getopt, read, write, STDIN_FILENO */
 
 /* file permissions */
 #include <sys/stat.h>       /* umask */
@@ -57,8 +57,8 @@ static char * tmp_imgfile(unsigned int flags)
   char *name;
   size_t pattern_len;
   int handle;
-  unsigned char buf;
-  ssize_t count = 0;
+  unsigned char buf[BUFSIZ];
+  ssize_t read_count = 0, write_count = 0;
   size_t pat_suffix_len = strlen(DIR_SEP TMP_FILE_PATTERN);
   size_t dir_len;
 
@@ -99,12 +99,16 @@ static char * tmp_imgfile(unsigned int flags)
   }
 
   /* copy image data from stdin to tmp file */
-  while((fread(&buf, sizeof(char), 1, stdin)) > 0) {
-    count = write(handle, &buf, 1);
-    if (count <= 0) break;
+  while((read_count = read(STDIN_FILENO, buf, sizeof(buf))) > 0) {
+    write_count = write(handle, buf, read_count);
+    if (write_count <= 0) break;
   }
   close(handle); /* filehandle is no longer needed, Imlib2 uses filename */
-  if(ferror(stdin) || (count <= 0)) {
+  if(read_count < 0) {
+    perror(PROG ": could not read image from standard input");
+    exit(99);
+  }
+  if(write_count <= 0) {
     perror(PROG ": could not copy image data to temporary file");
     unlink(name);
     exit(99);
