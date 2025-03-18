@@ -1,6 +1,10 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
+Version ?.??.? (????-??-??):
+----------------------------
+ * Improved performance when reading image data via standard input
+
 Version 2.24.1 (2024-12-11):
 ----------------------------
  * Print warning when an unknown charset name is ignored
