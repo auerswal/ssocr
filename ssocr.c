@@ -727,9 +727,10 @@ int main(int argc, char **argv)
 
   /* get minimum and maximum "value" values */
   if((flags & DEBUG_OUTPUT) || (flags & PRINT_INFO)) {
+    double min, max;
+    get_minmaxval(&image, lt, &min, &max);
     fprintf(stderr, "%.2f <= lum <= %.2f (lum should be in [0,255])\n",
-                    get_minval(&image, 0, 0, -1, -1, lt),
-                    get_maxval(&image, 0, 0, -1, -1, lt));
+                    min, max);
   }
 
   /* adapt threshold to image */
@@ -989,8 +990,7 @@ int main(int argc, char **argv)
               fprintf(stderr, " adjusting T1=%.2f and T2=%.2f to image\n",
                               t1, t2);
             }
-            min = get_minval(&image, 0, 0, -1, -1, lt);
-            max = get_maxval(&image, 0, 0, -1, -1, lt);
+            get_minmaxval(&image, lt, &min, &max);
             t1 = min + t1/100.0 * (max - min);
             t2 = min + t2/100.0 * (max - min);
             if(flags & VERBOSE) {
@@ -1046,10 +1046,10 @@ int main(int argc, char **argv)
           }
           /* get minimum and maximum "value" values in cropped image */
           if((flags&DEBUG_OUTPUT) || (flags&PRINT_INFO) || (flags&VERBOSE)) {
+            double min, max;
+            get_minmaxval(&image, lt, &min, &max);
             fprintf(stderr, "  %.2f <= lum <= %.2f in cropped image"
-                            " (lum should be in [0,255])\n",
-                            get_minval(&image, 0, 0, -1, -1, lt),
-                            get_maxval(&image, 0, 0, -1, -1, lt));
+                            " (lum should be in [0,255])\n", min, max);
           }
           /* adapt threshold to cropped image */
           thresh = adapt_threshold(&image, thresh, lt, 0, 0, -1, -1, flags);

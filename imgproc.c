@@ -613,92 +613,39 @@ double iterative_threshold(Imlib_Image *source_image, double thresh,
   return new_thresh * 100;
 }
 
-/* get minimum lum value */
-double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,
-                 luminance_t lt)
+/* get minimum and maximum lum values */
+void get_minmaxval(Imlib_Image *source_image, luminance_t lt,
+                   double *min, double *max)
 {
   Imlib_Image current_image; /* save image pointer */
-  int height, width; /* image dimensions */
+  int w, h; /* image dimensions */
   int xi,yi; /* iteration variables */
   Imlib_Color color; /* Imlib2 RGBA color structure */
-  int minval = MAXRGB;
   int lum = 0;
+
+  *min = MAXRGB;
+  *max = 0;
 
   /* save pointer to current image */
   current_image = imlib_context_get_image();
 
   /* get image dimensions */
   imlib_context_set_image(*source_image);
-  height = imlib_image_get_height();
-  width = imlib_image_get_width();
-
-  /* special value -1 for width or height means image width/height */
-  if(w == -1) w = width;
-  if(h == -1) h = width;
-
-  /* assure valid coordinates */
-  if(x+w > width) x = width-w;
-  if(y+h > height) y = height-h;
-  if(x<0) x=0;
-  if(y<0) y=0;
+  h = imlib_image_get_height();
+  w = imlib_image_get_width();
 
   /* find the minimum value in the image */
-  for(xi=0; (xi<w) && (xi<width); xi++) {
-    for(yi=0; (yi<h) && (yi<height); yi++) {
+  for(xi=0; xi<w; xi++) {
+    for(yi=0; yi<h; yi++) {
       imlib_image_query_pixel(xi, yi, &color);
       lum = clip(get_lum(&color, lt),0,255);
-      if(lum < minval) minval = lum;
+      if(lum < *min) *min = lum;
+      if(lum > *max) *max = lum;
     }
   }
 
   /* restore image from before function call */
   imlib_context_set_image(current_image);
-
-  return minval;
-}
-
-/* get maximum luminance value */
-double get_maxval(Imlib_Image *source_image, int x, int y, int w, int h,
-                 luminance_t lt)
-{
-  Imlib_Image current_image; /* save image pointer */
-  int height, width; /* image dimensions */
-  int xi,yi; /* iteration variables */
-  Imlib_Color color; /* Imlib2 RGBA color structure */
-  int lum = 0;
-  int maxval = 0;
-
-  /* save pointer to current image */
-  current_image = imlib_context_get_image();
-
-  /* get image dimensions */
-  imlib_context_set_image(*source_image);
-  height = imlib_image_get_height();
-  width = imlib_image_get_width();
-
-  /* special value -1 for width or height means image width/height */
-  if(w == -1) w = width;
-  if(h == -1) h = width;
-
-  /* assure valid coordinates */
-  if(x+w > width) x = width-w;
-  if(y+h > height) y = height-h;
-  if(x<0) x=0;
-  if(y<0) y=0;
-
-  /* find the minimum value in the image */
-  for(xi=0; (xi<w) && (xi<width); xi++) {
-    for(yi=0; (yi<h) && (yi<height); yi++) {
-      imlib_image_query_pixel(xi, yi, &color);
-      lum = clip(get_lum(&color, lt),0,255);
-      if(lum > maxval) maxval = lum;
-    }
-  }
-
-  /* restore image from before function call */
-  imlib_context_set_image(current_image);
-
-  return maxval;
 }
 
 /* draw a white (background) border around image, overwriting image contents

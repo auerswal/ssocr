@@ -141,13 +141,9 @@ double get_threshold(Imlib_Image *source_image, double fraction, luminance_t lt,
 double iterative_threshold(Imlib_Image *source_image, double thresh,
                            luminance_t lt, int x, int y, int w, int h);
 
-/* get minimum gray value */
-double get_minval(Imlib_Image *source_image, int x, int y, int w, int h,
-                 luminance_t lt);
-
-/* get maximum gray value */
-double get_maxval(Imlib_Image *source_image, int x, int y, int w, int h,
-                 luminance_t lt);
+/* get minimum and maximum gray (luminace) values */
+void get_minmaxval(Imlib_Image *source_image, luminance_t lt,
+                   double *min, double *max);
 
 /* compute luminance from RGB values */
 int get_lum(Imlib_Color *color, luminance_t lt);
