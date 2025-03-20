@@ -4,6 +4,7 @@ Noteworthy Changes in ssocr Releases
 Version ?.??.? (????-??-??):
 ----------------------------
  * Improved performance when reading image data via standard input
+ * Improved performance when using gray_stretch together with -g
 
 Version 2.24.1 (2024-12-11):
 ----------------------------
