@@ -765,11 +765,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i++;
-          new_image = dilation(&image, thresh, lt, n);
         } else {
+          n = 1;
           if(flags & VERBOSE) fputs(" processing dilation (1)\n", stderr);
-          new_image = dilation(&image, thresh, lt, 1);
         }
+        new_image = dilation(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
@@ -784,11 +784,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i++;
-          new_image = erosion(&image, thresh, lt, n);
         } else {
+          n = 1;
           if(flags & VERBOSE) fputs(" processing erosion (1)\n", stderr);
-          new_image = erosion(&image, thresh, lt, 1);
         }
+        new_image = erosion(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
@@ -803,11 +803,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i++;
-          new_image = opening(&image, thresh, lt, n);
         } else {
+          n = 1;
           if(flags & VERBOSE) fputs(" processing opening (1)\n", stderr);
-          new_image = opening(&image, thresh, lt, 1);
         }
+        new_image = opening(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
@@ -822,11 +822,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i++;
-          new_image = closing(&image, thresh, lt, n);
         } else {
+          n = 1;
           if(flags & VERBOSE) fputs(" processing closing (1)\n", stderr);
-          new_image = closing(&image, thresh, lt, 1);
         }
+        new_image = closing(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
@@ -852,13 +852,13 @@ int main(int argc, char **argv)
             }
             fprintf(stderr, "\n");
           }
-          new_image = white_border(&image, bdwidth);
           i++;
         } else {
+          bdwidth = 1;
           if(flags & VERBOSE)
             fputs(" processing white_border (1)\n", stderr);
-          new_image = white_border(&image, 1);
         }
+        new_image = white_border(&image, bdwidth);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
