@@ -55,7 +55,9 @@ is used. The default threshold is
 Do not adjust the threshold to the luminance values occurring in the image.
 Consider this option when using the
 .B dynamic_threshold
-command.
+or
+.B gray_stretch
+commands.
 .SS \-T, \-\-iter\-threshold
 Use an iterative method (one-dimensional k-means clustering) to determine the
 threshold. The starting value can be specified with the
@@ -374,8 +376,13 @@ the values
 and
 .B T2
 are interpreted as percentages.
+Consider using the
+.B \-\-absolute\-threshold
+option together with a manually adjusted
+.B \-\-threshold
+for predictable results.
 .SS dynamic_threshold W H
-Convert the image to monochrome using dynamic thresholding a.k.a local
+Convert the image to monochrome using dynamic thresholding a.k.a. local
 adaptive thresholding.
 A window of width
 .B W
