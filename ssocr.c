@@ -639,6 +639,8 @@ int main(int argc, char **argv)
         exit(99);
     }
   }
+  if((flags & ABSOLUTE_THRESHOLD) && (flags & DO_ITERATIVE_THRESHOLD))
+    fprintf(stderr, "%s: warning: -T has no effect due to -a\n", PROG);
   if(flags & DEBUG_OUTPUT) {
     fprintf(stderr, "================================================================================\n");
     fprintf(stderr, "VERSION=%s\n", VERSION);

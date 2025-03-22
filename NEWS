@@ -3,6 +3,8 @@ Noteworthy Changes in ssocr Releases
 
 Version ?.??.? (????-??-??):
 ----------------------------
+ * Print warning when the two options -a, --absolute-threshold and -T,
+   --iter-threshold are used together because -a inhibits -T
  * Improved performance when reading image data via standard input
  * Improved performance when using gray_stretch together with -g
  * Documentation improvements
