@@ -53,6 +53,8 @@ is used. The default threshold is
 .IR 50 .
 .SS \-a, \-\-absolute\-threshold
 Do not adjust the threshold to the luminance values occurring in the image.
+Using this option also inhibits iterative thresholding using option
+.BR \-\-iter\-threshold .
 Consider this option when using the
 .B dynamic_threshold
 or
@@ -63,6 +65,9 @@ Use an iterative method (one-dimensional k-means clustering) to determine the
 threshold. The starting value can be specified with the
 .B \-\-threshold
 option.
+Option
+.B \-\-absolute\-threshold
+inhibits iterative threshold determination.
 .SS \-n, \-\-number\-pixels NUMBER
 Set the number of foreground pixels that have to be found in a scanline to
 recognize a segment.
