@@ -3,6 +3,8 @@ Noteworthy Changes in ssocr Releases
 
 Version ?.??.? (????-??-??):
 ----------------------------
+ * New option -F, --adapt-after-crop to skip threshold adjustment directly
+   before cropping the image
  * Print warning when the two options -a, --absolute-threshold and -T,
    --iter-threshold are used together because -a inhibits -T
  * Improved performance when reading image data via standard input

@@ -339,10 +339,11 @@ int main(int argc, char **argv)
       {"print-spaces", 0, 0, 's'}, /* print spaces between distant digits */
       {"space-factor", 1, 0, 'A'}, /* relative distance to add spaces */
       {"space-average", 0, 0, 'G'}, /* avg instead of min dst for spaces */
+      {"adapt-after-crop", 0, 0, 'F'}, /* don't adapt threshold before crop */
       {0, 0, 0, 0} /* terminate long options */
     };
     c = getopt_long (argc, argv,
-                     "hVt:vaTn:N:i:d:r:m:M:o:O:D::pPf:b:Igl:SXCc:H:W:sA:G",
+                     "hVt:vaTn:N:i:d:r:m:M:o:O:D::pPf:b:Igl:SXCc:H:W:sA:GF",
                      long_options, &option_index);
     if (c == -1) break; /* leaves while (1) loop */
     switch (c) {
@@ -623,6 +624,13 @@ int main(int argc, char **argv)
                           flags & SPC_USE_AVG_DST);
         }
         break;
+      case 'F':
+        flags |= ADAPT_AFTER_CROP;
+        if(flags & DEBUG_OUTPUT) {
+          fprintf(stderr, "flags & ADAPT_AFTER_CROP=%d\n",
+                          flags & ADAPT_AFTER_CROP);
+        }
+        break;
       case '?':  /* missing argument or character not in optstring */
         short_usage(PROG,stderr);
         exit (2);
@@ -659,6 +667,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "flags & OMIT_DECIMAL=%d\n", flags & OMIT_DECIMAL);
     fprintf(stderr, "flags & PRINT_SPACES=%d\n", flags & PRINT_SPACES);
     fprintf(stderr, "flags & SPC_USE_AVG_DST=%d\n", flags & SPC_USE_AVG_DST);
+    fprintf(stderr, "flags & ADAPT_AFTER_CROP=%d\n", flags & ADAPT_AFTER_CROP);
     fprintf(stderr, "need_pixels = %d\n", need_pixels);
     fprintf(stderr, "min_segment = %d\n", min_segment);
     fprintf(stderr, "min_char_dims = %dx%d\n",min_char_dims.w,min_char_dims.h);
@@ -1047,7 +1056,8 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i += 4; /* skip the arguments to crop */
-          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
+          if(!(flags & ADAPT_AFTER_CROP))
+            thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = crop(&image, x, y, cw, ch);
           imlib_context_set_image(image);
           imlib_free_image();

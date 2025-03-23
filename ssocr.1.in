@@ -297,6 +297,15 @@ of the included characters.
 The default is
 .I full
 (recognizing all characters known to ssocr in the image).
+.SS \-F, \-\-adapt\-after\-crop
+When using the
+.B crop
+command,
+adjust (adapt) the threshold to image luminance values only after cropping,
+not also directly before.
+Using other commands before
+.B crop
+can still lead to adapting the threshold to the original image.
 .SH COMMANDS
 Most commands do not change the image dimensions.
 The

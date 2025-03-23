@@ -151,6 +151,8 @@ void usage(char *name, FILE *f)
   fprintf(f, "         -C, --omit-decimal-point omit decimal points from output\n");
   fprintf(f, "         -c, --charset=KEYWORD    select recognized characters\n");
   fprintf(f, "                                  use -c help for list of KEYWORDS\n");
+  fprintf(f, "         -F, --adapt-after-crop   do not adapt threshold to image directly\n"
+             "                                  before, only after, cropping\n");
   fprintf(f, "\nCommands: dilation [N]            [N times] dilation algorithm"
              "\n                                  (set_pixels_filter with mask"
              " of 1 pixel)\n");

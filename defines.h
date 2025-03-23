@@ -156,6 +156,7 @@
 #define OMIT_DECIMAL (1<<10)
 #define PRINT_SPACES (1<<11)
 #define SPC_USE_AVG_DST (1<<12)
+#define ADAPT_AFTER_CROP (1<<13)
 
 /* colors used by ssocr */
 #define SSOCR_BLACK 0
