@@ -1017,7 +1017,7 @@ int main(int argc, char **argv)
         image = new_image;
       } else if(strcasecmp("crop",argv[i]) == 0) {
         if(i+4<argc-1) {
-          int x, y, cw, ch; /* lw = crop width, lh = crop height */
+          int x, y, cw, ch; /* cw = crop width, ch = crop height */
           x = atoi(argv[i+1]);
           y = atoi(argv[i+2]);
           cw = atoi(argv[i+3]);
@@ -1033,7 +1033,6 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i += 4; /* skip the arguments to crop */
-          imlib_context_set_image(image);
           new_image = crop(&image, x, y, cw, ch);
           imlib_context_set_image(image);
           imlib_free_image();
