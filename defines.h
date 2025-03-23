@@ -23,7 +23,7 @@
 #define SSOCR2_DEFINES_H
 
 /* version number */
-#define VERSION "2.24.1+"
+#define VERSION "2.25.0"
 
 /* states */
 #define FIND_DARK 0

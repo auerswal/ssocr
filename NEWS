@@ -1,7 +1,7 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Version ?.??.? (????-??-??):
+Version 2.25.0 (2025-03-23):
 ----------------------------
  * New option -F, --adapt-after-crop to skip threshold adjustment directly
    before cropping the image
