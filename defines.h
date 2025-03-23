@@ -172,6 +172,10 @@
 /* default luminance formula */
 #define DEFAULT_LUM_FORMULA REC709
 
+/* when to adapt threshold values to the image */
+#define INITIAL 0  /* adapt threshold unless is was already adapted */
+#define UPDATE 1   /* adapt threshold even if it was adapted before */
+
 /* foreground and background */
 typedef enum fg_bg_e {
   FG,

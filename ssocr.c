@@ -735,9 +735,6 @@ int main(int argc, char **argv)
                     min, max);
   }
 
-  /* adapt threshold to image */
-  thresh = adapt_threshold(&image, thresh, lt, flags);
-
   /* process commands */
   if(flags & VERBOSE) /* then print found commands */ {
     if(optind >= argc-1) {
@@ -771,6 +768,7 @@ int main(int argc, char **argv)
           n = 1;
           if(flags & VERBOSE) fputs(" processing dilation (1)\n", stderr);
         }
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = dilation(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -790,6 +788,7 @@ int main(int argc, char **argv)
           n = 1;
           if(flags & VERBOSE) fputs(" processing erosion (1)\n", stderr);
         }
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = erosion(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -809,6 +808,7 @@ int main(int argc, char **argv)
           n = 1;
           if(flags & VERBOSE) fputs(" processing opening (1)\n", stderr);
         }
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = opening(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -828,18 +828,21 @@ int main(int argc, char **argv)
           n = 1;
           if(flags & VERBOSE) fputs(" processing closing (1)\n", stderr);
         }
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = closing(&image, thresh, lt, n);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("remove_isolated",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing remove_isolated\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = remove_isolated(&image, thresh, lt);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("make_mono",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing make_mono\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = make_mono(&image, thresh, lt);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -860,6 +863,7 @@ int main(int argc, char **argv)
           if(flags & VERBOSE)
             fputs(" processing white_border (1)\n", stderr);
         }
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = white_border(&image, bdwidth);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -874,6 +878,7 @@ int main(int argc, char **argv)
         }
         if(i+1<argc-1) {
           offset = (int) atoi(argv[++i]); /* sideeffect: increment i */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = shear(&image, offset);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -893,6 +898,7 @@ int main(int argc, char **argv)
         }
         if(i+1<argc-1) {
           mask = (int) atoi(argv[++i]); /* sideeffect: increment i */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = set_pixels_filter(&image, thresh, lt, mask);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -913,6 +919,7 @@ int main(int argc, char **argv)
         }
         if(i+1<argc-1) {
           mask = (int) atoi(argv[++i]); /* sideeffect: increment i */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = keep_pixels_filter(&image, thresh, lt, mask);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -935,6 +942,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i+=2; /* skip the arguments to dynamic_threshold */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = dynamic_threshold(&image, thresh, lt, ww, wh);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -946,30 +954,35 @@ int main(int argc, char **argv)
         }
       } else if(strcasecmp("rgb_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing rgb_threshold\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = make_mono(&image, thresh, MINIMUM);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("r_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing r_threshold\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = make_mono(&image, thresh, RED);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("g_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing g_threshold\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = make_mono(&image, thresh, GREEN);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("b_threshold",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing b_threshold\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = make_mono(&image, thresh, BLUE);
         imlib_context_set_image(image);
         imlib_free_image();
         image = new_image;
       } else if(strcasecmp("invert",argv[i]) == 0) {
         if(flags & VERBOSE) fputs(" processing invert\n", stderr);
+        thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
         new_image = invert(&image, thresh, lt);
         imlib_context_set_image(image);
         imlib_free_image();
@@ -1000,6 +1013,7 @@ int main(int argc, char **argv)
             }
           }
           i+=2; /* skip the arguments to gray_stretch */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = gray_stretch(&image, t1, t2, lt);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1033,6 +1047,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           i += 4; /* skip the arguments to crop */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = crop(&image, x, y, cw, ch);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1053,7 +1068,7 @@ int main(int argc, char **argv)
                             " (lum should be in [0,255])\n", min, max);
           }
           /* adapt threshold to cropped image */
-          thresh = adapt_threshold(&image, thresh, lt, flags);
+          thresh = adapt_threshold(&image, thresh, lt, flags, UPDATE);
         } else {
           fprintf(stderr, "%s: error: crop command needs 4 arguments\n", PROG);
           exit(99);
@@ -1068,6 +1083,7 @@ int main(int argc, char **argv)
             fprintf(stderr, "\n");
           }
           theta = atof(argv[++i]); /* sideeffect: increment i */
+          thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
           new_image = rotate(&image, theta);
           imlib_context_set_image(image);
           imlib_free_image();
@@ -1116,6 +1132,9 @@ int main(int argc, char **argv)
 
   /* exit if only image processing shall be done */
   if(flags & PROCESS_ONLY) exit(3);
+
+  /* adapt threshold to image (unless this is already done) */
+  thresh = adapt_threshold(&image, thresh, lt, flags, INITIAL);
 
   if(flags & USE_DEBUG_IMAGE) {
     /* copy processed image to debug image */

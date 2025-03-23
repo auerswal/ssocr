@@ -7,6 +7,8 @@ Version ?.??.? (????-??-??):
    --iter-threshold are used together because -a inhibits -T
  * Improved performance when reading image data via standard input
  * Improved performance when using gray_stretch together with -g
+ * Improved performance when using option -p, --process-only together
+   with only the grayscale and/or mirror commands
  * Documentation improvements
 
 Version 2.24.1 (2024-12-11):

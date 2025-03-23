@@ -466,10 +466,13 @@ Imlib_Image make_mono(Imlib_Image *source_image, double thresh, luminance_t lt)
 
 /* adapt threshold to image values values */
 double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt,
-                       unsigned int flags)
+                       unsigned int flags, int force_update)
 {
   double t = thresh;
-  if(!(flags & ABSOLUTE_THRESHOLD)) {
+  static int is_adapted = 0;
+  if(is_adapted && !force_update) {
+    fprintf(stderr, "threshold is already adjusted to image\n");
+  } else if(!(flags & ABSOLUTE_THRESHOLD)) {
     if(flags & DEBUG_OUTPUT)
       fprintf(stderr, "adjusting threshold to image: %f ->", t);
     t = get_threshold(image, thresh/100.0, lt, 0, 0, -1, -1);
@@ -482,6 +485,7 @@ double adapt_threshold(Imlib_Image *image, double thresh, luminance_t lt,
       if(flags & DEBUG_OUTPUT)
         fprintf(stderr, " %f\n", t);
     }
+    is_adapted = 1;
   }
   if((flags & VERBOSE) || (flags & DEBUG_OUTPUT)) {
     fprintf(stderr, "using threshold %.2f\n", t);
