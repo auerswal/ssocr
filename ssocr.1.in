@@ -474,8 +474,11 @@ Image dimensions do not change,
 pixels in background color are used for pixels that are outside the image
 and shifted inside.
 Pixels shifted out of the image are dropped.
-Many seven segment displays use slightly skewed digits,
-this command can be used to compensate this.
+A negative
+.B OFFSET
+results in a shear to the left.
+Many seven segment displays use slightly skewed digits.
+This command can be used to compensate this.
 Sometimes
 .BR ssocr (1)
 cannot separate a decimal point from the preceding digit

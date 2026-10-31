@@ -1,6 +1,10 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
+Version 2.XX.X (XXXX-XX-XX):
+----------------------------
+ * Enhance shear command to shear left with negative offset argument
+
 Version 2.25.1 (2025-10-31):
 ----------------------------
  * Fix one debug message to be printed only with -P, --debug-output

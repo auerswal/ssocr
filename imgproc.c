@@ -683,7 +683,8 @@ Imlib_Image white_border(Imlib_Image *source_image, int bdwidth)
  * the top line is unchanged
  * the bottom line is moved offset pixels to the right
  * the other lines are moved yPos*offset/(height-1) pixels to the right
- * white pixels are inserted at the left side */
+ * white pixels are inserted at the left side
+ * a negative offset results in moving lines to the left */
 Imlib_Image shear(Imlib_Image *source_image, int offset)
 {
   Imlib_Image new_image; /* construct filtered image here */
@@ -691,6 +692,7 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   int height, width; /* image dimensions */
   int x,y; /* iteration variables */
   int shift; /* current shift-width */
+  int src_x; /* x ccordinate of pixel to copy */
   Imlib_Color color_return; /* for imlib_query_pixel() */
 
   /* zero offset does not change the image */
@@ -718,14 +720,15 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   /* move every line to the right */
   for(y=1; y<height; y++) {
     shift = y * offset / (height-1);
-    /* copy pixels */
-    for(x=width-1; x>=shift; x--) {
-      imlib_image_query_pixel(x-shift, y, &color_return);
-      draw_color_pixel(&new_image, x, y, color_return);
-    }
-    /* fill with background */
-    for(x=0; x<shift; x++) {
-      draw_bg_pixel(&new_image, x, y);
+    /* set pixels of current image line */
+    for (x = 0; x < width; x++) {
+      src_x = x - shift;
+      if (src_x >= 0 && src_x < width) {
+        imlib_image_query_pixel(src_x, y, &color_return);
+        draw_color_pixel(&new_image, x, y, color_return);
+      } else {
+        draw_bg_pixel(&new_image, x, y);
+      }
     }
   }
 
