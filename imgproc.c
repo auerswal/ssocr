@@ -693,13 +693,26 @@ Imlib_Image shear(Imlib_Image *source_image, int offset)
   int shift; /* current shift-width */
   Imlib_Color color_return; /* for imlib_query_pixel() */
 
+  /* zero offset does not change the image */
+  if (!offset) {
+    return *source_image;
+  }
+
   /* save pointer to current image */
   current_image = imlib_context_get_image();
 
-  /* create a new image */
+  /* get source image dimensions */
   imlib_context_set_image(*source_image);
   height = imlib_image_get_height();
   width = imlib_image_get_width();
+
+  /* return image of height 1 unchanged */
+  if (height < 2) {
+    imlib_context_set_image(current_image);
+    return *source_image;
+  }
+
+  /* copy source image as base for the new image */
   new_image = imlib_clone_image();
 
   /* move every line to the right */
