@@ -920,6 +920,8 @@ Imlib_Image crop(Imlib_Image *source_image, int x, int y, int w, int h)
   /* get sane values */
   if(x < 0) x = 0;
   if(y < 0) y = 0;
+  if(w < 0) w = 0;
+  if(h < 0) h = 0;
   if(x >= width) x = width - 1;
   if(y >= height) y = height - 1;
   if(x + w > width) w = width - x;
