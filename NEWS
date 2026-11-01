@@ -1,7 +1,7 @@
 Noteworthy Changes in ssocr Releases
 ====================================
 
-Version 2.XX.X (XXXX-XX-XX):
+Version 2.26.0 (2026-11-01):
 ----------------------------
  * Enhance shear command to shear left with negative offset argument
 
